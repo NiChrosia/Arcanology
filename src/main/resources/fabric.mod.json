@@ -1,29 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "arcanology",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Arcanology",
+  "description": "A mod focused on integrating magic with technology.",
   "authors": [
-    "Me!"
+    "NiChrosia"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/NiChrosia/Arcanology",
+    "sources": "https://github.com/NiChrosia/Arcanology"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/arcanology/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleModKt::init"
+      {
+        "adapter": "kotlin",
+        "value": "nichrosia.arcanology.Arcanology"
+      }
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "arcanology.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.8.7",
