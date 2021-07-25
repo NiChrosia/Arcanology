@@ -1,4 +1,8 @@
 {
   "block.arcanology.velosium_ore_block": "Velosium Ore",
-  "item.arcanology.velosium_ore_item": "Velosium Ore"
+  "item.arcanology.velosium_ore_item": "Velosium Ore",
+
+  "block.arcanology.darkness_crystal_ore_block": "Darkness Crystal Ore",
+  "item.arcanology.darkness_crystal_ore_item":  "Darkness Crystal Ore",
+  "item.arcanology.darkness_crystal": "Darkness Crystal"
 }

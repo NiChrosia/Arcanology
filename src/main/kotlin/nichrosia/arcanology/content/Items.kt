@@ -14,8 +14,24 @@ open class Items : Loadable {
             Identifier("arcanology", "velosium_ore_item"),
             BlockItem(
                 Blocks.velosiumOre,
-                FabricItemSettings()
-                    .rarity(Rarity.RARE)
+                FabricItemSettings().rarity(Rarity.UNCOMMON)
+            )
+        )
+
+        darknessCrystalOre = Registry.register(
+            Registry.ITEM,
+            Identifier("arcanology", "darkness_crystal_ore_item"),
+            BlockItem(
+                Blocks.darknessCrystalOre,
+                FabricItemSettings().rarity(Rarity.UNCOMMON)
+            )
+        )
+
+        darknessCrystal = Registry.register(
+            Registry.ITEM,
+            Identifier("arcanology", "darkness_crystal"),
+            Item(
+                FabricItemSettings().rarity(Rarity.UNCOMMON)
             )
         )
     }
@@ -24,5 +40,8 @@ open class Items : Loadable {
         lateinit var velosiumOre: BlockItem
 
         lateinit var velosiumIngot: Item
+
+        lateinit var darknessCrystalOre: BlockItem
+        lateinit var darknessCrystal: Item
     }
 }

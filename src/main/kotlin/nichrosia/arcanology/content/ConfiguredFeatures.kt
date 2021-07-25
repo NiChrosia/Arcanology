@@ -1,3 +1,5 @@
+@file:Suppress("deprecation")
+
 package nichrosia.arcanology.content
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
@@ -13,7 +15,6 @@ import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.YOffset
 import net.minecraft.world.gen.feature.ConfiguredFeature
-import nichrosia.arcanology.math.intprovider.CustomIntProvider
 import nichrosia.arcanology.worldgen.CustomOreFeature
 import nichrosia.arcanology.worldgen.CustomOreFeatureConfig
 import kotlin.math.roundToInt
@@ -36,7 +37,7 @@ open class ConfiguredFeatures : Loadable {
                     2
                 ) { context ->
                     clamp(
-                        context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt(),
+                        context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 2000,
                         2,
                         15
                     )

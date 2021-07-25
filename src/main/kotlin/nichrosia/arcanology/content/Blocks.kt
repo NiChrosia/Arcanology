@@ -18,9 +18,22 @@ open class Blocks : Loadable {
                 .breakByTool(FabricToolTags.PICKAXES, 3)
             )
         )
+
+        darknessCrystalOre = Registry.register(
+            Registry.BLOCK,
+            Identifier("arcanology", "darkness_crystal_ore_block"),
+            OreBlock(
+                FabricBlockSettings.of(Materials.elementalCrystal)
+                    .requiresTool()
+                    .strength(5f, 100f)
+                    .breakByTool(FabricToolTags.PICKAXES, 3)
+            )
+        )
     }
 
     companion object {
         lateinit var velosiumOre: OreBlock
+
+        lateinit var darknessCrystalOre: OreBlock
     }
 }
