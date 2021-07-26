@@ -18,18 +18,18 @@ open class Items : Loadable {
             )
         )
 
-        darknessCrystalOre = Registry.register(
+        aegiriteOre = Registry.register(
             Registry.ITEM,
-            Identifier("arcanology", "darkness_crystal_ore_item"),
+            Identifier("arcanology", "aegirite_ore_item"),
             BlockItem(
-                Blocks.darknessCrystalOre,
+                Blocks.aegiriteOre,
                 FabricItemSettings().rarity(Rarity.UNCOMMON)
             )
         )
 
-        darknessCrystal = Registry.register(
+        aegirite = Registry.register(
             Registry.ITEM,
-            Identifier("arcanology", "darkness_crystal"),
+            Identifier("arcanology", "aegirite"),
             Item(
                 FabricItemSettings().rarity(Rarity.UNCOMMON)
             )
@@ -41,7 +41,7 @@ open class Items : Loadable {
 
         lateinit var velosiumIngot: Item
 
-        lateinit var darknessCrystalOre: BlockItem
-        lateinit var darknessCrystal: Item
+        lateinit var aegiriteOre: BlockItem
+        lateinit var aegirite: Item
     }
 }

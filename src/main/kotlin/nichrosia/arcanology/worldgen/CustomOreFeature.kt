@@ -16,7 +16,7 @@ import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
-open class CustomOreFeature(codec: Codec<OreFeatureConfig>) : OreFeature(codec) {
+open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
     lateinit var config: CustomOreFeatureConfig
     lateinit var context: FeatureContext<OreFeatureConfig>
 
@@ -184,8 +184,6 @@ open class CustomOreFeature(codec: Codec<OreFeatureConfig>) : OreFeature(codec) 
         return i > 0
     }
 
-    /** Due to bad code design, [CustomOreFeature] can only be used with one feature.
-     * A temporary fix would be to create an anonymous extension using the object keyword. */
     open fun configure(config: CustomOreFeatureConfig): ConfiguredFeature<*, *> {
         this.config = config
 
@@ -193,7 +191,13 @@ open class CustomOreFeature(codec: Codec<OreFeatureConfig>) : OreFeature(codec) 
     }
 
     companion object {
-        val instance = register("custom-ore", CustomOreFeature(OreFeatureConfig.CODEC))
+        var instances = 0
+
+        val instance: CustomOreFeature
+            get() {
+                instances++
+                return register("custom-ore-$instances", object : CustomOreFeature() {})
+            }
 
         private fun <C : FeatureConfig, F : Feature<C>> register(name: String, feature: F): F {
             return Registry.register(Registry.FEATURE, name, feature) as F

@@ -19,9 +19,9 @@ open class Blocks : Loadable {
             )
         )
 
-        darknessCrystalOre = Registry.register(
+        aegiriteOre = Registry.register(
             Registry.BLOCK,
-            Identifier("arcanology", "darkness_crystal_ore_block"),
+            Identifier("arcanology", "aegirite_ore_block"),
             OreBlock(
                 FabricBlockSettings.of(Materials.elementalCrystal)
                     .requiresTool()
@@ -34,6 +34,6 @@ open class Blocks : Loadable {
     companion object {
         lateinit var velosiumOre: OreBlock
 
-        lateinit var darknessCrystalOre: OreBlock
+        lateinit var aegiriteOre: OreBlock
     }
 }

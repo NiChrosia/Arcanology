@@ -49,15 +49,46 @@ open class ConfiguredFeatures : Loadable {
         )
 
         BiomeModifications.addFeature(
-            { context ->
-                context.biome.category == Biome.Category.THEEND
-            },
+            { context -> context.biome.category == Biome.Category.THEEND },
             GenerationStep.Feature.UNDERGROUND_ORES,
             velosiumOreEndRegistryKey
+        )
+
+        val aegiriteOreEndRegistryKey = RegistryKey.of(
+            Registry.CONFIGURED_FEATURE_KEY,
+            Identifier("arcanology", "aegirite_ore_end")
+        )
+
+        aegiriteOreEnd = Registry.register(
+            BuiltinRegistries.CONFIGURED_FEATURE,
+            aegiriteOreEndRegistryKey.value,
+            CustomOreFeature.instance.configure(
+                CustomOreFeatureConfig(
+                    BlockStateMatchRuleTest(Blocks.END_STONE.defaultState),
+                    ABlocks.aegiriteOre.defaultState,
+                    2
+                ) { context ->
+                    clamp(
+                        context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 4000,
+                        2,
+                        8
+                    )
+                }
+            )
+                .uniformRange(YOffset.aboveBottom(34), YOffset.fixed(56))
+                .spreadHorizontally()
+                .repeatRandomly(4)
+        )
+
+        BiomeModifications.addFeature(
+            { context -> context.biome.category == Biome.Category.THEEND },
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            aegiriteOreEndRegistryKey
         )
     }
 
     companion object {
         lateinit var velosiumOreEnd: ConfiguredFeature<*, *>
+        lateinit var aegiriteOreEnd: ConfiguredFeature<*, *>
     }
 }
