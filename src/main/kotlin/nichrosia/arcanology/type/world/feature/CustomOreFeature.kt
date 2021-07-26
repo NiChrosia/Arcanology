@@ -1,6 +1,5 @@
-package nichrosia.arcanology.worldgen
+package nichrosia.arcanology.type.world.feature
 
-import com.mojang.serialization.Codec
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.math.MathHelper

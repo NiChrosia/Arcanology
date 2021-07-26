@@ -34,6 +34,12 @@ open class Items : Loadable {
                 FabricItemSettings().rarity(Rarity.UNCOMMON)
             )
         )
+
+        reactiveBlock = Registry.register(
+            Registry.ITEM,
+            Identifier("arcanology", "reactive_block_item"),
+            BlockItem(Blocks.reactiveBlock, FabricItemSettings().rarity(Rarity.COMMON))
+        )
     }
 
     companion object {
@@ -43,5 +49,7 @@ open class Items : Loadable {
 
         lateinit var aegiriteOre: BlockItem
         lateinit var aegirite: Item
+
+        lateinit var reactiveBlock: BlockItem
     }
 }

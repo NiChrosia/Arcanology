@@ -5,14 +5,14 @@ import nichrosia.arcanology.content.*
 
 @Suppress("unused")
 open class Arcanology : ModInitializer {
-    companion object {
-        internal val content = arrayOf(
-            Materials(),
-            Blocks(),
-            ConfiguredFeatures(),
-            Items()
-        )
-    }
+    internal val content = arrayOf(
+        Materials(),
+        Blocks(),
+        BlockEntityTypes(),
+        ConfiguredFeatures(),
+        Items(),
+        StatusEffects()
+    )
 
     override fun onInitialize() {
         content.forEach(Loadable::load)

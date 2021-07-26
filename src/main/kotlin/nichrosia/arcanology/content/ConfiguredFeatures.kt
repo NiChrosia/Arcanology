@@ -4,7 +4,6 @@ package nichrosia.arcanology.content
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.OreBlock
@@ -18,11 +17,12 @@ import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.YOffset
+import net.minecraft.world.gen.decorator.Decoratable
 import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
-import nichrosia.arcanology.worldgen.CustomOreFeature
-import nichrosia.arcanology.worldgen.CustomOreFeatureConfig
+import nichrosia.arcanology.type.world.feature.CustomOreFeature
+import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import kotlin.math.roundToInt
 import nichrosia.arcanology.content.Blocks as ABlocks
 
@@ -34,11 +34,7 @@ open class ConfiguredFeatures : Loadable {
             ABlocks.velosiumOre,
             2,
             { context ->
-                clamp(
-                    context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 2000,
-                    2,
-                    15
-                )
+                clamp(context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 2000, 2, 15)
             },
             12 to 65,
             3,
@@ -61,6 +57,18 @@ open class ConfiguredFeatures : Loadable {
         )
     }
 
+    open fun <R> Decoratable<R>.uniformRange(min: Int, max: Int): R {
+        return uniformRange(YOffset.aboveBottom(min), YOffset.fixed(max))
+    }
+
+    open fun <R> Decoratable<R>.uniformRange(pair: Pair<Int, Int>): R {
+        return uniformRange(pair.first, pair.second)
+    }
+
+    open fun <R> Decoratable<R>.repeat(amount: Int, randomly: Boolean): R {
+        return if (randomly) repeatRandomly(amount) else repeat(amount)
+    }
+
     open fun registerOre(
         identifier: Identifier,
         blockToReplace: Block,
@@ -72,37 +80,23 @@ open class ConfiguredFeatures : Loadable {
         repeatRandomly: Boolean = false,
         selector: BiomeSelector
     ): ConfiguredFeature<*, *> {
-        val key = RegistryKey.of(
-            Registry.CONFIGURED_FEATURE_KEY,
-            identifier
-        )
+        val key = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, identifier)
 
         val oreFeature = Registry.register(
             BuiltinRegistries.CONFIGURED_FEATURE,
             key.value,
             CustomOreFeature.instance.configure(
                 CustomOreFeatureConfig(
-                    BlockStateMatchRuleTest(blockToReplace.defaultState),
-                    oreBlock.defaultState,
-                    size,
-                    getSize
+                    BlockStateMatchRuleTest(blockToReplace.defaultState), oreBlock.defaultState,
+                    size, getSize
                 )
             )
-                .uniformRange(YOffset.aboveBottom(verticalRange.first), YOffset.fixed(verticalRange.second))
+                .uniformRange(verticalRange)
                 .spreadHorizontally()
+                .repeat(repeat, repeatRandomly)
         )
 
-        if (repeatRandomly) {
-            oreFeature.repeatRandomly(repeat)
-        } else {
-            oreFeature.repeat(repeat)
-        }
-
-        BiomeModifications.addFeature(
-            selector.environment,
-            GenerationStep.Feature.UNDERGROUND_ORES,
-            key
-        )
+        BiomeModifications.addFeature(selector.environment, GenerationStep.Feature.UNDERGROUND_ORES, key)
 
         return oreFeature
     }

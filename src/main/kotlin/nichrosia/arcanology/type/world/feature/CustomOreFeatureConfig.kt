@@ -1,4 +1,4 @@
-package nichrosia.arcanology.worldgen
+package nichrosia.arcanology.type.world.feature
 
 import net.minecraft.block.BlockState
 import net.minecraft.structure.rule.RuleTest
