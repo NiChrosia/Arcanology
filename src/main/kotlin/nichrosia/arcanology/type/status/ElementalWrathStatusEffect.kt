@@ -1,9 +1,11 @@
 package nichrosia.arcanology.type.status
 
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.attribute.AttributeContainer
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectType
+import net.minecraft.particle.ParticleTypes
 import net.minecraft.util.math.BlockPos
 import nichrosia.arcanology.math.clamp
 
@@ -15,13 +17,17 @@ open class ElementalWrathStatusEffect : StatusEffect(StatusEffectType.HARMFUL, 0
         return true
     }
 
+    override fun onRemoved(entity: LivingEntity, attributes: AttributeContainer, amplifier: Int) {
+        super.onRemoved(entity, attributes, amplifier)
+    }
+
     open fun applyUpdateEffect(entity: LivingEntity, amplifier: Int, origin: BlockPos) {
         super.applyUpdateEffect(entity, amplifier)
 
         val multiplier = clamp(
-            (10.0 - entity.squaredDistanceTo(origin.x.toDouble(), origin.y.toDouble(), origin.z.toDouble())) / 5.0,
+            (15.0 - entity.squaredDistanceTo(origin.x.toDouble(), origin.y.toDouble(), origin.z.toDouble())) / 5.0,
             0.0,
-            2.0
+            3.0
         )
 
         damageCounter++
@@ -31,5 +37,16 @@ open class ElementalWrathStatusEffect : StatusEffect(StatusEffectType.HARMFUL, 0
 
             damageCounter = 0
         }
+
+        entity.world.addParticle(
+            ParticleTypes.ENCHANTED_HIT,
+            false,
+            origin.x.toDouble(),
+            origin.y.toDouble(),
+            origin.z.toDouble(),
+            0.0,
+            0.0,
+            0.0
+        )
     }
 }

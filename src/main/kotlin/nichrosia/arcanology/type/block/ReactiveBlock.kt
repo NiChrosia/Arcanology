@@ -11,7 +11,7 @@ import nichrosia.arcanology.type.blockentity.ReactiveBlockEntity
 
 open class ReactiveBlock(settings: Settings) : BlockWithEntity(settings) {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return ReactiveBlockEntity(pos, state, null)
+        return ReactiveBlockEntity(pos, state)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {
@@ -31,7 +31,11 @@ open class ReactiveBlock(settings: Settings) : BlockWithEntity(settings) {
         placer: LivingEntity?,
         itemStack: ItemStack
     ) {
-        (world.getBlockEntity(pos) as ReactiveBlockEntity?)?.owner = placer as PlayerEntity?
+        (world.getBlockEntity(pos) as ReactiveBlockEntity?)?.let { blockEntity ->
+            placer?.let { player ->
+                blockEntity.owner = player as PlayerEntity
+            }
+        }
 
         super.onPlaced(world, pos, state, placer, itemStack)
     }
