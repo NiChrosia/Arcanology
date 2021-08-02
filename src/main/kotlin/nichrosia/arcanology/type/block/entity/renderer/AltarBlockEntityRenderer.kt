@@ -15,8 +15,6 @@ import nichrosia.arcanology.type.block.entity.AltarBlockEntity
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : BlockEntityRenderer<AltarBlockEntity> {
-    protected val elementalHeartStack = ItemStack(AItems.arcaneHeart)
-
     override fun render(
         entity: AltarBlockEntity,
         tickDelta: Float,
@@ -25,7 +23,7 @@ open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context)
         light: Int,
         overlay: Int
     ) {
-        matrices.run {
+        matrices.apply {
             push()
 
             translate(0.5, 1.25, 0.5)
@@ -34,7 +32,7 @@ open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context)
 
             val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
             MinecraftClient.getInstance().itemRenderer.renderItem(
-                elementalHeartStack,
+                entity.let { if (it.heartInitialized) ItemStack(it.heart) else ItemStack.EMPTY },
                 ModelTransformation.Mode.GROUND,
                 lightAbove,
                 overlay,

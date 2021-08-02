@@ -10,9 +10,9 @@ object Arcanology : ModInitializer {
         ABlocks,
         ABlockEntityTypes,
         AConfiguredFeatures,
+        AItemGroups,
         AItems,
-        AStatusEffects,
-        AItemGroups
+        AStatusEffects
     )
 
     const val modID = "arcanology"

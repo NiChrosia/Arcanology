@@ -18,5 +18,9 @@
   "item.arcanology.celestial_heart": "Celestial Heart",
   "item.arcanology.arcane_heart": "Arcane Heart",
 
-  "itemGroup.arcanology.main": "Arcanology"
+  "item.arcanology.nickel_zinc_battery": "Nickel-Zinc Battery",
+
+  "itemGroup.arcanology.main": "Arcanology",
+  "itemGroup.arcanology.magic": "Arcanology: Magic",
+  "itemGroup.arcanology.tech": "Arcanology: Tech"
 }

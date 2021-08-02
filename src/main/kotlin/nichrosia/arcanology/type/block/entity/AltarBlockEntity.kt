@@ -5,13 +5,17 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
-import nichrosia.arcanology.type.element.ElementalHeart
+import nichrosia.arcanology.content.AItems
+import nichrosia.arcanology.type.item.HeartItem
 
 open class AltarBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.altarBlockEntity, pos, state) {
-    var heart = ElementalHeart.Arcane
+    lateinit var heart: HeartItem
+
+    val heartInitialized
+      get() = this::heart.isInitialized
 
     fun tick(world: World, pos: BlockPos, state: BlockState) {
-
+        heart = AItems.prismaticHeart
     }
 
     companion object {

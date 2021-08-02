@@ -5,15 +5,16 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 
 object AItemGroups : Content() {
-    lateinit var main: ItemGroup
+    lateinit var magic: ItemGroup
+    lateinit var tech: ItemGroup
 
     override fun load() {
-        main = FabricItemGroupBuilder.create(identify("main"))
+        magic = FabricItemGroupBuilder.create(identify("magic"))
             .icon { ItemStack(AItems.arcaneHeart) }
-            .appendItems {
-                AItems.all.forEach { item ->
-                    it.add(ItemStack(item))
-                }
-            }.build()
+            .build()
+
+        tech = FabricItemGroupBuilder.create(identify("tech"))
+            .icon { ItemStack(AItems.nickelZincBatteryItem) }
+            .build()
     }
 }
