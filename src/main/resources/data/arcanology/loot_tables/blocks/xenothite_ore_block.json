@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "arcanology:reactive_block_item",
+          "name": "arcanology:xenothite_ore_item",
 
           "functions": [
             {

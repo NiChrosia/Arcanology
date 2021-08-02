@@ -24,18 +24,28 @@ import net.minecraft.world.gen.feature.util.FeatureContext
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import kotlin.math.roundToInt
-import nichrosia.arcanology.content.Blocks as ABlocks
+import nichrosia.arcanology.content.ABlocks as ABlocks
 
-open class ConfiguredFeatures : Loadable {
+@Suppress("MemberVisibilityCanBePrivate")
+object AConfiguredFeatures : ArcanologyContent() {
+    lateinit var velosiumOreEnd: ConfiguredFeature<*, *>
+    lateinit var aegiriteOreEnd: ConfiguredFeature<*, *>
+    lateinit var xenothiteOreEnd: ConfiguredFeature<*, *>
+
+    @Suppress("unused")
+    enum class BiomeSelector(val environment: (BiomeSelectionContext) -> Boolean) {
+        Overworld({ it.biome.category == Biome.Category.NONE }),
+        TheNether({ it.biome.category == Biome.Category.NETHER }),
+        TheEnd({ it.biome.category == Biome.Category.THEEND })
+    }
+
     override fun load() {
         velosiumOreEnd = registerOre(
-            Identifier("arcanology", "velosium_ore_end"),
+            getIdentifier("velosium_ore_end"),
             Blocks.END_STONE,
             ABlocks.velosiumOre,
             2,
-            { context ->
-                clamp(context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 2000, 2, 15)
-            },
+            distanceToOreSize(2000, 2, 15),
             12 to 65,
             3,
             true,
@@ -43,33 +53,57 @@ open class ConfiguredFeatures : Loadable {
         )
 
         aegiriteOreEnd = registerOre(
-            Identifier("arcanology", "aegirite_ore_end"),
+            getIdentifier("aegirite_ore_end"),
             Blocks.END_STONE,
             ABlocks.aegiriteOre,
             2,
-            { context ->
-                clamp(context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt() / 4000, 2, 8)
-            },
+            distanceToOreSize(4000, 2, 8),
             34 to 56,
             4,
             true,
             BiomeSelector.TheEnd
         )
+
+        xenothiteOreEnd = registerOre(
+            getIdentifier("xenothite_ore_end"),
+            Blocks.END_STONE,
+            ABlocks.xenothiteOre,
+            2,
+            distanceToOreSize(10000, 1, 3),
+            12 to 56,
+            2,
+            false,
+            BiomeSelector.TheEnd
+        )
     }
 
-    open fun <R> Decoratable<R>.uniformRange(min: Int, max: Int): R {
+    fun <R> Decoratable<R>.uniformRange(min: Int, max: Int): R {
         return uniformRange(YOffset.aboveBottom(min), YOffset.fixed(max))
     }
 
-    open fun <R> Decoratable<R>.uniformRange(pair: Pair<Int, Int>): R {
+    fun <R> Decoratable<R>.uniformRange(pair: Pair<Int, Int>): R {
         return uniformRange(pair.first, pair.second)
     }
 
-    open fun <R> Decoratable<R>.repeat(amount: Int, randomly: Boolean): R {
+    fun <R> Decoratable<R>.repeat(amount: Int, randomly: Boolean): R {
         return if (randomly) repeatRandomly(amount) else repeat(amount)
     }
 
-    open fun registerOre(
+    fun distanceToOreSize(distancePerUnit: Int, min: Int, max: Int, useManhattan: Boolean = false): (FeatureContext<OreFeatureConfig>) -> Int {
+        return { context ->
+            clamp(
+                if (useManhattan) {
+                    context.origin.getManhattanDistance(Vec3i.ZERO)
+                } else {
+                    context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt()
+                } / distancePerUnit,
+                min,
+                max
+            )
+        }
+    }
+
+    fun registerOre(
         identifier: Identifier,
         blockToReplace: Block,
         oreBlock: OreBlock,
@@ -101,12 +135,10 @@ open class ConfiguredFeatures : Loadable {
         return oreFeature
     }
 
-    companion object {
-        lateinit var velosiumOreEnd: ConfiguredFeature<*, *>
-        lateinit var aegiriteOreEnd: ConfiguredFeature<*, *>
-
-        enum class BiomeSelector(val environment: (BiomeSelectionContext) -> Boolean) {
-            TheEnd({ it.biome.category == Biome.Category.THEEND })
-        }
+    override fun getAll(): Array<Any> {
+        return arrayOf(
+            velosiumOreEnd,
+            aegiriteOreEnd
+        )
     }
 }

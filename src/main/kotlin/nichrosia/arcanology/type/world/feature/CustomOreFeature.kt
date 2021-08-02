@@ -16,8 +16,8 @@ import kotlin.math.max
 import kotlin.math.sin
 
 open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
-    lateinit var config: CustomOreFeatureConfig
-    lateinit var context: FeatureContext<OreFeatureConfig>
+    private lateinit var config: CustomOreFeatureConfig
+    private lateinit var context: FeatureContext<OreFeatureConfig>
 
     override fun generate(context: FeatureContext<OreFeatureConfig>): Boolean {
         this.context = context
@@ -25,7 +25,7 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
         val random = context.random
         val blockPos = context.origin
         val structureWorldAccess = context.world
-        val veinSize = this.config.getSize(context)
+        val veinSize = config.getSize(context)
 
         val f = random.nextFloat() * 3.1415927f
         val g = veinSize.toFloat() / 8.0f
@@ -190,7 +190,7 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
     }
 
     companion object {
-        var instances = 0
+        private var instances = 0
 
         val instance: CustomOreFeature
             get() {

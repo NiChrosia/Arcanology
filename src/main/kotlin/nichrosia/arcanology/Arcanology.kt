@@ -4,17 +4,19 @@ import net.fabricmc.api.ModInitializer
 import nichrosia.arcanology.content.*
 
 @Suppress("unused")
-open class Arcanology : ModInitializer {
+object Arcanology : ModInitializer {
     internal val content = arrayOf(
-        Materials(),
-        Blocks(),
-        BlockEntityTypes(),
-        ConfiguredFeatures(),
-        Items(),
-        StatusEffects()
+        AMaterials,
+        ABlocks,
+        ABlockEntityTypes,
+        AConfiguredFeatures,
+        AItems,
+        AStatusEffects
     )
 
+    const val modID = "arcanology"
+
     override fun onInitialize() {
-        content.forEach(Loadable::load)
+        content.forEach(ArcanologyContent::load)
     }
 }
