@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " H ",
+    "ASA",
+    "SCS"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:aegirite_crystals"
+    },
+    "S": {
+      "item": "minecraft:stone_bricks"
+    },
+    "C": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "H": {
+      "tag": "c:elemental_hearts"
+    }
+  },
+  "result": {
+    "item": "arcanology:altar_item",
+    "count": 1
+  }
+}

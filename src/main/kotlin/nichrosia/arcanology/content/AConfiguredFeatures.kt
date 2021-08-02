@@ -27,7 +27,7 @@ import kotlin.math.roundToInt
 import nichrosia.arcanology.content.ABlocks as ABlocks
 
 @Suppress("MemberVisibilityCanBePrivate")
-object AConfiguredFeatures : ArcanologyContent() {
+object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(BuiltinRegistries.CONFIGURED_FEATURE) {
     lateinit var velosiumOreEnd: ConfiguredFeature<*, *>
     lateinit var aegiriteOreEnd: ConfiguredFeature<*, *>
     lateinit var xenothiteOreEnd: ConfiguredFeature<*, *>
@@ -41,7 +41,7 @@ object AConfiguredFeatures : ArcanologyContent() {
 
     override fun load() {
         velosiumOreEnd = registerOre(
-            getIdentifier("velosium_ore_end"),
+            identify("velosium_ore_end"),
             Blocks.END_STONE,
             ABlocks.velosiumOre,
             2,
@@ -53,7 +53,7 @@ object AConfiguredFeatures : ArcanologyContent() {
         )
 
         aegiriteOreEnd = registerOre(
-            getIdentifier("aegirite_ore_end"),
+            identify("aegirite_ore_end"),
             Blocks.END_STONE,
             ABlocks.aegiriteOre,
             2,
@@ -65,7 +65,7 @@ object AConfiguredFeatures : ArcanologyContent() {
         )
 
         xenothiteOreEnd = registerOre(
-            getIdentifier("xenothite_ore_end"),
+            identify("xenothite_ore_end"),
             Blocks.END_STONE,
             ABlocks.xenothiteOre,
             2,
@@ -116,8 +116,7 @@ object AConfiguredFeatures : ArcanologyContent() {
     ): ConfiguredFeature<*, *> {
         val key = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, identifier)
 
-        val oreFeature = Registry.register(
-            BuiltinRegistries.CONFIGURED_FEATURE,
+        val oreFeature = register(
             key.value,
             CustomOreFeature.instance.configure(
                 CustomOreFeatureConfig(
@@ -135,10 +134,4 @@ object AConfiguredFeatures : ArcanologyContent() {
         return oreFeature
     }
 
-    override fun getAll(): Array<Any> {
-        return arrayOf(
-            velosiumOreEnd,
-            aegiriteOreEnd
-        )
-    }
 }

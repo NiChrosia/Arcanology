@@ -1,0 +1,12 @@
+{
+  "replace": "false",
+  "values": [
+    "arcanology:arcane_heart",
+    "arcanology:celestial_heart",
+    "arcanology:desolate_heart",
+    "arcanology:molten_heart",
+    "arcanology:prismatic_heart",
+    "arcanology:terrene_heart",
+    "arcanology:tidal_heart"
+  ]
+}

@@ -4,5 +4,16 @@
 
   "block.arcanology.aegirite_ore_block": "Aegirite Ore",
   "item.arcanology.aegirite_ore_item":  "Aegirite Ore",
-  "item.arcanology.aegirite": "Aegirite"
+  "item.arcanology.aegirite": "Aegirite",
+
+  "block.arcanology.altar_block": "Altar",
+  "item.arcanology.altar_item": "Altar",
+
+  "item.arcanology.prismatic_heart": "Prismatic Heart",
+  "item.arcanology.desolate_heart": "Desolate Heart",
+  "item.arcanology.molten_heart": "Molten Heart",
+  "item.arcanology.tidal_heart": "Tidal Heart",
+  "item.arcanology.terrene_heart": "Terrene Heart",
+  "item.arcanology.celestial_heart": "Celestial Heart",
+  "item.arcanology.arcane_heart": "Arcane Heart"
 }

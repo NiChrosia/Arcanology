@@ -23,6 +23,12 @@
         "adapter": "kotlin",
         "value": "nichrosia.arcanology.Arcanology"
       }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "nichrosia.arcanology.ArcanologyClient"
+      }
     ]
   },
   "mixins": [

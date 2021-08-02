@@ -7,7 +7,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.type.blockentity.ReactiveBlockEntity
+import nichrosia.arcanology.type.block.entity.ReactiveBlockEntity
 
 open class ReactiveBlock(settings: Settings) : BlockWithEntity(settings) {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {

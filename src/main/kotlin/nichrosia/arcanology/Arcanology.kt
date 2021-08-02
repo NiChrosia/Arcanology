@@ -17,6 +17,6 @@ object Arcanology : ModInitializer {
     const val modID = "arcanology"
 
     override fun onInitialize() {
-        content.forEach(ArcanologyContent::load)
+        content.forEach(Content::load)
     }
 }

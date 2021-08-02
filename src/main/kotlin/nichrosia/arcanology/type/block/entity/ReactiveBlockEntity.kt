@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.blockentity
+package nichrosia.arcanology.type.block.entity
 
 import net.minecraft.SharedConstants
 import net.minecraft.block.BlockState
