@@ -1,12 +1,13 @@
 {
   "block.arcanology.velosium_ore_block": "Velosium Ore",
-  "item.arcanology.velosium_ore_item": "Velosium Ore",
-
   "block.arcanology.aegirite_ore_block": "Aegirite Ore",
-  "item.arcanology.aegirite_ore_item":  "Aegirite Ore",
-  "item.arcanology.aegirite": "Aegirite",
-
+  "block.arcanology.xenothite_ore_block": "Xenothite Ore",
   "block.arcanology.altar_block": "Altar",
+
+  "item.arcanology.velosium_ore_item": "Velosium Ore",
+  "item.arcanology.aegirite_ore_item":  "Aegirite Ore",
+  "item.arcanology.xenothite_ore_item":  "Xenothite Ore",
+  "item.arcanology.aegirite": "Aegirite",
   "item.arcanology.altar_item": "Altar",
 
   "item.arcanology.prismatic_heart": "Prismatic Heart",
@@ -15,5 +16,7 @@
   "item.arcanology.tidal_heart": "Tidal Heart",
   "item.arcanology.terrene_heart": "Terrene Heart",
   "item.arcanology.celestial_heart": "Celestial Heart",
-  "item.arcanology.arcane_heart": "Arcane Heart"
+  "item.arcanology.arcane_heart": "Arcane Heart",
+
+  "itemGroup.arcanology.main": "Arcanology"
 }

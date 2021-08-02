@@ -12,6 +12,4 @@ abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
     fun <T : B> register(name: String, content: T): T {
         return register(identify(name), content)
     }
-
-    fun identify(name: String) = Identifier(Arcanology.modID, name)
 }

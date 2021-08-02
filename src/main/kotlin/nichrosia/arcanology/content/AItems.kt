@@ -5,6 +5,7 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.HeartItem
 
@@ -29,6 +30,12 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
     lateinit var celestialHeart: HeartItem
     lateinit var arcaneHeart: HeartItem
 
+    val all: List<Item>
+      get() = Registry.ITEM.filter { Registry.ITEM.getId(it).namespace == Arcanology.modID }
+
+    val settings: FabricItemSettings
+        get() = FabricItemSettings()
+
     override fun load() {
         // Ores
         velosiumOre = register("velosium_ore_item", BlockItem(ABlocks.velosiumOre, settings.rarity(Rarity.COMMON)))
@@ -52,7 +59,4 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
         // Misc
         altar = register("altar_item", BlockItem(ABlocks.altar, settings.rarity(Rarity.EPIC)))
     }
-
-    val settings
-      get() = FabricItemSettings()
 }
