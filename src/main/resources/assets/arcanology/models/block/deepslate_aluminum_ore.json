@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "arcanology:block/deepslate_aluminum_ore"
+  }
+}

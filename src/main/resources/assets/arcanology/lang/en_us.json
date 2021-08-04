@@ -1,14 +1,24 @@
 {
-  "block.arcanology.velosium_ore_block": "Velosium Ore",
-  "block.arcanology.aegirite_ore_block": "Aegirite Ore",
-  "block.arcanology.xenothite_ore_block": "Xenothite Ore",
-  "block.arcanology.altar_block": "Altar",
+  "block.arcanology.velosium_ore": "Velosium Ore",
+  "block.arcanology.aegirite_ore": "Aegirite Ore",
+  "block.arcanology.xenothite_ore": "Xenothite Ore",
+  "block.arcanology.altar": "Altar",
+  
+  "block.arcanology.raw_velosium_block": "Raw Velosium Block",
+  "block.arcanology.raw_xenothite_block": "Raw Xenothite Block",
+
+  "item.arcanology.raw_velosium": "Raw Velosium",
+  "item.arcanology.raw_xenothite": "Raw Xenothite",
+  
+  "item.arcanology.velosium_ingot": "Velosium Ingot",
+  "item.arcanology.xenothite_ingot": "Xenothite Ingot",
 
   "item.arcanology.velosium_ore_item": "Velosium Ore",
   "item.arcanology.aegirite_ore_item":  "Aegirite Ore",
   "item.arcanology.xenothite_ore_item":  "Xenothite Ore",
-  "item.arcanology.aegirite": "Aegirite",
-  "item.arcanology.altar_item": "Altar",
+  "item.arcanology.aegirite_crystal": "Aegirite",
+
+  "item.arcanology.altar": "Altar",
 
   "item.arcanology.prismatic_heart": "Prismatic Heart",
   "item.arcanology.desolate_heart": "Desolate Heart",
@@ -17,10 +27,24 @@
   "item.arcanology.terrene_heart": "Terrene Heart",
   "item.arcanology.celestial_heart": "Celestial Heart",
   "item.arcanology.arcane_heart": "Arcane Heart",
+  
+  "block.arcanology.aluminum_ore": "Aluminum Ore",
+  "block.arcanology.deepslate_aluminum_ore": "Deepslate Aluminum Ore",
+  
+  "block.arcanology.raw_aluminum_block": "Raw Aluminum Block",
+  
+  "item.arcanology.raw_aluminum": "Raw Aluminum",
+  
+  "item.arcanology.aluminum_ingot": "Aluminum Ingot",
 
   "item.arcanology.nickel_zinc_battery": "Nickel-Zinc Battery",
 
+  "item.arcanology.aluminum_wire": "Aluminum Wire",
+
   "itemGroup.arcanology.main": "Arcanology",
   "itemGroup.arcanology.magic": "Arcanology: Magic",
-  "itemGroup.arcanology.tech": "Arcanology: Tech"
+  "itemGroup.arcanology.tech": "Arcanology: Tech",
+
+  "item.arcanology.arcane_almanac": "Arcane Almanac",
+  "item.arcanology.component_compendium": "Component Compendium"
 }

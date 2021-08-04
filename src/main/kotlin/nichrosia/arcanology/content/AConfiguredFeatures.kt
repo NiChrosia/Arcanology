@@ -2,12 +2,12 @@
 
 package nichrosia.arcanology.content
 
+import com.google.common.collect.ImmutableList
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
 import net.minecraft.block.Block
-import net.minecraft.block.Blocks
 import net.minecraft.block.OreBlock
-import net.minecraft.client.util.MonitorTracker.clamp
 import net.minecraft.structure.rule.BlockStateMatchRuleTest
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3i
@@ -19,70 +19,31 @@ import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.YOffset
 import net.minecraft.world.gen.decorator.Decoratable
 import net.minecraft.world.gen.feature.ConfiguredFeature
+import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
+import nichrosia.arcanology.math.Math.clamp
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import kotlin.math.roundToInt
-import nichrosia.arcanology.content.ABlocks as ABlocks
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(BuiltinRegistries.CONFIGURED_FEATURE) {
-    lateinit var velosiumOreEnd: ConfiguredFeature<*, *>
-    lateinit var aegiriteOreEnd: ConfiguredFeature<*, *>
-    lateinit var xenothiteOreEnd: ConfiguredFeature<*, *>
-
     @Suppress("unused")
     enum class BiomeSelector(val environment: (BiomeSelectionContext) -> Boolean) {
-        Overworld({ it.biome.category == Biome.Category.NONE }),
+        Overworld({ BiomeSelectors.foundInOverworld().test(it)  }),
         TheNether({ it.biome.category == Biome.Category.NETHER }),
         TheEnd({ it.biome.category == Biome.Category.THEEND })
     }
 
-    override fun load() {
-        velosiumOreEnd = registerOre(
-            identify("velosium_ore_end"),
-            Blocks.END_STONE,
-            ABlocks.velosiumOre,
-            2,
-            distanceToOreSize(2000, 2, 15),
-            12 to 65,
-            3,
-            true,
-            BiomeSelector.TheEnd
-        )
+    override fun load() {}
 
-        aegiriteOreEnd = registerOre(
-            identify("aegirite_ore_end"),
-            Blocks.END_STONE,
-            ABlocks.aegiriteOre,
-            2,
-            distanceToOreSize(4000, 2, 8),
-            34 to 56,
-            4,
-            true,
-            BiomeSelector.TheEnd
-        )
-
-        xenothiteOreEnd = registerOre(
-            identify("xenothite_ore_end"),
-            Blocks.END_STONE,
-            ABlocks.xenothiteOre,
-            2,
-            distanceToOreSize(10000, 1, 3),
-            12 to 56,
-            2,
-            false,
-            BiomeSelector.TheEnd
-        )
+    fun <R> Decoratable<R>.uniformRange(min: Int, max: Int, generateToBottom: Boolean): R {
+        return uniformRange(if (!generateToBottom) YOffset.aboveBottom(min) else YOffset.getBottom(), YOffset.fixed(max))
     }
 
-    fun <R> Decoratable<R>.uniformRange(min: Int, max: Int): R {
-        return uniformRange(YOffset.aboveBottom(min), YOffset.fixed(max))
-    }
-
-    fun <R> Decoratable<R>.uniformRange(pair: Pair<Int, Int>): R {
-        return uniformRange(pair.first, pair.second)
+    fun <R> Decoratable<R>.uniformRange(pair: Pair<Int, Int>, generateToBottom: Boolean): R {
+        return uniformRange(pair.first, pair.second, generateToBottom)
     }
 
     fun <R> Decoratable<R>.repeat(amount: Int, randomly: Boolean): R {
@@ -91,15 +52,11 @@ object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(Builti
 
     fun distanceToOreSize(distancePerUnit: Int, min: Int, max: Int, useManhattan: Boolean = false): (FeatureContext<OreFeatureConfig>) -> Int {
         return { context ->
-            clamp(
-                if (useManhattan) {
-                    context.origin.getManhattanDistance(Vec3i.ZERO)
-                } else {
-                    context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt()
-                } / distancePerUnit,
-                min,
-                max
-            )
+            (if (useManhattan) {
+                context.origin.getManhattanDistance(Vec3i.ZERO)
+            } else {
+                context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt()
+            } / distancePerUnit).clamp(min, max)
         }
     }
 
@@ -110,28 +67,48 @@ object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(Builti
         size: Int,
         getSize: (FeatureContext<OreFeatureConfig>) -> Int,
         verticalRange: Pair<Int, Int>,
+        generateToBottom: Boolean = false,
         repeat: Int,
         repeatRandomly: Boolean = false,
-        selector: BiomeSelector
+        selector: BiomeSelector,
+        deepslateVariant: Boolean = false,
+        deepslateOre: OreBlock? = null
     ): ConfiguredFeature<*, *> {
+        deepslateOre ?: if (deepslateVariant) {
+            throw IllegalArgumentException("Deepslate ore cannot be null while deepslate variant is enabled.")
+        }
+
         val key = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, identifier)
 
-        val oreFeature = register(
-            key.value,
-            CustomOreFeature.instance.configure(
-                CustomOreFeatureConfig(
-                    BlockStateMatchRuleTest(blockToReplace.defaultState), oreBlock.defaultState,
-                    size, getSize
-                )
-            )
-                .uniformRange(verticalRange)
+        val oreFeature = if (selector == BiomeSelector.Overworld && deepslateVariant) {
+            register(key.value,
+                Feature.ORE.configure(OreFeatureConfig(
+                    ImmutableList.of(
+                        OreFeatureConfig.createTarget(
+                            OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
+                            oreBlock.defaultState
+                        ),
+                        OreFeatureConfig.createTarget(
+                            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+                            deepslateOre!!.defaultState,
+                        )
+                    ), size
+                ))
+                .uniformRange(verticalRange, generateToBottom)
                 .spreadHorizontally()
-                .repeat(repeat, repeatRandomly)
-        )
+                .repeat(repeat, repeatRandomly))
+        } else {
+            register(key.value,
+                CustomOreFeature.instance.configure(
+                    CustomOreFeatureConfig(BlockStateMatchRuleTest(blockToReplace.defaultState), oreBlock.defaultState, size, getSize)
+                )
+                .uniformRange(verticalRange, generateToBottom)
+                .spreadHorizontally()
+                .repeat(repeat, repeatRandomly))
+        }
 
         BiomeModifications.addFeature(selector.environment, GenerationStep.Feature.UNDERGROUND_ORES, key)
 
         return oreFeature
     }
-
 }

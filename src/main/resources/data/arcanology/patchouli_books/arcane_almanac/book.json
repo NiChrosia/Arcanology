@@ -1,0 +1,11 @@
+{
+  "name": "Arcane Almanac",
+  "landing_text": "<placeholder>",
+  "book_texture": "patchouli:textures/gui/book_blue.png",
+  "model": "arcanology:arcane_almanac",
+  "creative_tab": "arcanology.magic",
+  "index_icon": "arcanology:arcane_almanac",
+  "pause_game": false,
+  "dont_generate_book": true,
+  "version": 1
+}

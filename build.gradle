@@ -20,9 +20,18 @@ repositories {
             includeGroup "dev.technici4n"
         }
     }
+
     maven {
         name = "BuildCraft"
         url = "https://mod-buildcraft.com/maven"
+    }
+
+    maven {
+        name = "Patchouli"
+        url = "https://maven.blamejared.com"
+        content {
+            includeGroup "vazkii.patchouli"
+        }
     }
 }
 
@@ -35,6 +44,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     modApi include("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    modImplementation include("vazkii.patchouli:Patchouli:${project.patchouli_version}")
 }
 
 processResources {
@@ -48,7 +58,6 @@ processResources {
 tasks.withType(JavaCompile) {
     it.options.encoding = "UTF-8"
 
-    // Minecraft 1.17 (21w19a) upwards uses Java 16.
     it.options.release = 16
 }
 

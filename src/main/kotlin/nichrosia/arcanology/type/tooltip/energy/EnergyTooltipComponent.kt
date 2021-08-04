@@ -14,10 +14,12 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.Matrix4f
 import nichrosia.arcanology.util.getEnergyString
 
+/** @author GabrielOlvH */
+@Suppress("MemberVisibilityCanBePrivate")
 class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
     override fun getHeight(): Int = 18
 
-    override fun getWidth(textRenderer: TextRenderer?): Int = 18
+    override fun getWidth(textRenderer: TextRenderer): Int = 18
 
     override fun drawItems(
         textRenderer: TextRenderer,
@@ -42,7 +44,7 @@ class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
     ) {
         val percentage = data.energy * 100 / data.maxEnergy
         val text =
-            LiteralText("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+            LiteralText("${getEnergyString(data.energy)} / ${getEnergyString(data.maxEnergy)} EF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
         textRenderer.draw(text, x.toFloat() + 19, (y.toFloat() + 9) - textRenderer.fontHeight / 2, -1, true, matrix4f, immediate, false, 0, 15728880)
     }
 }

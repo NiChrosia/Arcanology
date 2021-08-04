@@ -1,9 +1,9 @@
 {
   "required": true,
   "package": "nichrosia.arcanology.mixin",
-
-  "mixins": [],
-
+  "mixins": [
+    "client.MixinScreen"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

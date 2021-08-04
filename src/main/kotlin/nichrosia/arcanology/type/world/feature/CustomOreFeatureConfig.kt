@@ -6,8 +6,9 @@ import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
 
 open class CustomOreFeatureConfig(
-    test: RuleTest,
-    state: BlockState,
+    targets: List<Target>,
     size: Int,
     val getSize: (FeatureContext<OreFeatureConfig>) -> Int = { size }
-) : OreFeatureConfig(test, state, size)
+) : OreFeatureConfig(targets, size, 0.0f) {
+    constructor(test: RuleTest, state: BlockState, size: Int, getSize: (FeatureContext<OreFeatureConfig>) -> Int = { size }) : this(listOf(createTarget(test, state)), size, getSize)
+}

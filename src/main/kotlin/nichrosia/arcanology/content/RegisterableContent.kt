@@ -5,8 +5,14 @@ import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
 
 abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
+    val all = mutableListOf<B>()
+    
     fun <T : B> register(identifier: Identifier, content: T): T {
-        return Registry.register(type, identifier, content)
+        val registeredContent = Registry.register(type, identifier, content)
+
+        all.add(registeredContent)
+
+        return registeredContent
     }
 
     fun <T : B> register(name: String, content: T): T {

@@ -5,6 +5,7 @@ import nichrosia.arcanology.type.tooltip.CustomTooltipData
 import nichrosia.arcanology.type.tooltip.CustomTooltipDataProvider
 import nichrosia.arcanology.util.energyOf
 
+/** @author GabrielOlvH */
 interface EnergyTooltipDataProvider : CustomTooltipDataProvider {
     override fun getData(stack: ItemStack): List<CustomTooltipData> {
         val handler = energyOf(stack) ?: return emptyList()
