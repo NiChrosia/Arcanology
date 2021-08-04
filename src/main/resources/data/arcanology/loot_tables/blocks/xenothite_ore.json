@@ -39,7 +39,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "arcanology:xenothite_raw_ore"
+              "name": "arcanology:raw_xenothite"
             }
           ]
         }

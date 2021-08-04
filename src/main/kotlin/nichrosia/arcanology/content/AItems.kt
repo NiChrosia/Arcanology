@@ -9,7 +9,7 @@ import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.integration.patchouli.GuideBookItem
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.HeartItem
-import nichrosia.arcanology.type.item.MaterialHelper
+import nichrosia.arcanology.data.MaterialHelper
 import nichrosia.arcanology.type.item.energy.BatteryItem
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -60,6 +60,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 150f)
             .addRawOre()
             .addIngot()
+            .generateData()
 
         MaterialHelper("aegirite", false, Rarity.COMMON, 3)
             .addOre("aegirite_ore",
@@ -74,6 +75,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 true,
                 100f)
             .addCrystal()
+            .generateData()
 
         MaterialHelper("xenothite", false, Rarity.UNCOMMON, 4)
             .addOre("xenothite_ore",
@@ -88,6 +90,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 false)
             .addRawOre()
             .addIngot()
+            .generateData()
 
         MaterialHelper("aluminum", true, Rarity.COMMON, 2)
             .addOre("aluminum_ore",
@@ -98,6 +101,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
             .addRawOre()
             .addIngot()
             .addWire()
+            .generateData()
 
         // Circuits
 

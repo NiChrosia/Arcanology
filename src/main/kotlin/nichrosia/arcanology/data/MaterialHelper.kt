@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.item
+package nichrosia.arcanology.data
 
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -17,7 +17,11 @@ import nichrosia.arcanology.content.AItems.techSettings
 import nichrosia.arcanology.type.item.energy.WireItem
 
 @Suppress("MemberVisibilityCanBePrivate")
-data class MaterialHelper(val name: String, private val isTech: Boolean, private val rarity: Rarity, private val miningLevel: Int) {
+data class MaterialHelper(val name: String,
+                          private val isTech: Boolean,
+                          private val rarity: Rarity,
+                          private val miningLevel: Int,
+                          private val dropDust: Boolean = false) {
     val settings: Item.Settings
       get() = (if (isTech) techSettings else magicSettings).rarity(rarity)
 
@@ -85,7 +89,7 @@ data class MaterialHelper(val name: String, private val isTech: Boolean, private
 
                 deepslateOreItem = register("deepslate_${oreID.path}", BlockItem(deepslateOre, settings))
 
-                registerOre(ore, AConfiguredFeatures.BiomeSelector.Overworld, true, Blocks.NETHER_GOLD_ORE as OreBlock)
+                registerOre(ore, AConfiguredFeatures.BiomeSelector.Overworld, true, deepslateOre)
             } else {
                 registerOre(ore, AConfiguredFeatures.BiomeSelector.Overworld)
             }
@@ -132,6 +136,73 @@ data class MaterialHelper(val name: String, private val isTech: Boolean, private
 
     fun addCrystal(name: String = "${this.name}_crystal"): MaterialHelper {
         crystal = register(name, Item(settings))
+
+        return this
+    }
+
+    fun generateData(): MaterialHelper {
+        if (this::ore.isInitialized) {
+            DataGenerator.normalBlockstate(ore)
+            DataGenerator.normalBlockModel(ore)
+
+            if (this::oreItem.isInitialized) {
+                DataGenerator.blockItemModel(oreItem)
+            }
+
+            if (this::rawOre.isInitialized) {
+                DataGenerator.rawOreLootTable(ore, rawOre)
+                DataGenerator.normalItemModel(rawOre)
+
+                if (this::deepslateOre.isInitialized && !dropDust) {
+                    DataGenerator.normalBlockstate(deepslateOre)
+                    DataGenerator.normalBlockModel(deepslateOre)
+                    DataGenerator.rawOreLootTable(deepslateOre, rawOre)
+
+                    if (this::deepslateOreItem.isInitialized) {
+                        DataGenerator.blockItemModel(deepslateOreItem)
+                    }
+                }
+            }
+
+            if (this::crystal.isInitialized) {
+                DataGenerator.rawOreLootTable(ore, crystal)
+                DataGenerator.normalItemModel(crystal)
+            }
+
+            if (this::dust.isInitialized) {
+                if (dropDust) DataGenerator.rawOreLootTable(ore, dust)
+
+                DataGenerator.normalItemModel(dust)
+
+                if (this::deepslateOre.isInitialized && dropDust) {
+                    DataGenerator.normalBlockstate(deepslateOre)
+                    DataGenerator.normalBlockModel(deepslateOre)
+                    DataGenerator.rawOreLootTable(deepslateOre, dust)
+
+                    if (this::deepslateOreItem.isInitialized) {
+                        DataGenerator.blockItemModel(deepslateOreItem)
+                    }
+                }
+            }
+
+            if (this::ingot.isInitialized) {
+                DataGenerator.normalItemModel(ingot)
+            }
+
+            if (this::wire.isInitialized) {
+                DataGenerator.normalItemModel(wire)
+            }
+
+            if (this::rawOreBlock.isInitialized) {
+                DataGenerator.normalBlockstate(rawOreBlock)
+                DataGenerator.normalBlockModel(rawOreBlock)
+
+                if (this::rawOreBlockItem.isInitialized) {
+                    DataGenerator.normalBlockLootTable(rawOreBlock, rawOreBlockItem)
+                    DataGenerator.blockItemModel(rawOreBlockItem)
+                }
+            }
+        }
 
         return this
     }

@@ -85,7 +85,7 @@ object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(Builti
                 Feature.ORE.configure(OreFeatureConfig(
                     ImmutableList.of(
                         OreFeatureConfig.createTarget(
-                            OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
+                            OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
                             oreBlock.defaultState
                         ),
                         OreFeatureConfig.createTarget(

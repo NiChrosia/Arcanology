@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "arcanology:block/velosium_ore" }
+    "": {
+      "model": "arcanology:block/velosium_ore"
+    }
   }
 }

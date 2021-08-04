@@ -25,7 +25,7 @@
                   }
                 }
               ],
-              "name": "arcanology:velosium_ore"
+              "name": "arcanology:deepslate_aluminum_ore"
             },
             {
               "type": "minecraft:item",
@@ -39,7 +39,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "arcanology:raw_velosium"
+              "name": "arcanology:raw_aluminum"
             }
           ]
         }
