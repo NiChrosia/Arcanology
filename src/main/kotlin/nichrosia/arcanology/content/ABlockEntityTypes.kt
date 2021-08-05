@@ -3,6 +3,7 @@ package nichrosia.arcanology.content
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.registry.Registry
+import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.type.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.block.entity.ReactiveBlockEntity
 

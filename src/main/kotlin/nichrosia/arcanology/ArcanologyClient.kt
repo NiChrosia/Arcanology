@@ -1,7 +1,7 @@
 package nichrosia.arcanology
 
 import net.fabricmc.api.ClientModInitializer
-import nichrosia.arcanology.content.Content
+import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.content.client.*
 
 object ArcanologyClient : ClientModInitializer {

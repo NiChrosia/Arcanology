@@ -13,19 +13,19 @@ import nichrosia.arcanology.energy.EnergyTier
  * Batteries:
  *
  * Nickel-zinc battery ([EnergyTier.T1]): comprised mainly of nickel and zinc, which offers a minor power capacity
- * (`1K EF`, Electric Flux)
+ * (`5K EF`, Electric Flux)
  *
  * Lithium-ion battery ([EnergyTier.T2]): composed of lithium and cobalt, which offers a medium power capacity
- * (`10K EF`)
+ * (`25K EF`)
  *
  * Lithium-sulfur battery ([EnergyTier.T3]): made up of lithium and sulfuric acid, which offers a large power
- * capacity  (`50K EF`)
+ * capacity  (`100K EF`)
  *
  * Solid-state battery ([EnergyTier.T4]): made up of lithium, sulfuric acid, and a thermosetting plastic, such as
- * fiberglass, which offers a very large power capacity (`200K EF`)
+ * fiberglass, which offers a very large power capacity (`750K EF`)
  *
- * Supercapacitor battery ([EnergyTier.T5]): comprised of supercapacitors made up of lead, sulfuric acid, and carbon,
- * which offers a massive power capacity (`1M EF`) */
+ * Supercapacitor battery ([EnergyTier.T5]): A heavily compacted mass of supercapacitors made up of lead, sulfuric acid,
+ * and carbon, which offers a massive power capacity and (dis)charging speed. (`10M EF`) */
 @Suppress("MemberVisibilityCanBePrivate", "LeakingThis")
 open class BatteryItem(settings: Settings, protected val tier: EnergyTier) : EnergyItem(settings) {
     init {

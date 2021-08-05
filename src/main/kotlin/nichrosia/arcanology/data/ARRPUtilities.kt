@@ -41,17 +41,25 @@ object ARRPUtilities {
 
         return array
     }
-    
-    /** @author Azagwen */
+
+    private fun JsonObject.addAndReturn(property: String, value: JsonElement): JsonObject {
+        add(property, value)
+
+        return this
+    }
+
+    private fun JsonObject.addPropertyAndReturn(property: String, value: String): JsonObject {
+        addProperty(property, value)
+
+        return this
+    }
+
     fun silkTouchPredicate(): JCondition {
-        val enchantment = JsonObject()
-        enchantment.addProperty("enchantment", "minecraft:silk_touch")
-        enchantment.add("levels", jsonObject("min" to 1))
-
-        val predicate = JsonObject()
-        predicate.add("enchantments", jsonArray(enchantment))
-
         return predicateFunction("minecraft:match_tool")
-            .parameter("predicate", predicate)
+            .parameter("predicate", JsonObject().addAndReturn("enchantments", jsonArray(
+                JsonObject()
+                    .addPropertyAndReturn("enchantment", "minecraft:silk_touch")
+                    .addAndReturn("levels", jsonObject("min" to 1))
+            )))
     }
 }

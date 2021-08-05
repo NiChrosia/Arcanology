@@ -1,12 +1,12 @@
-package nichrosia.arcanology.content
+package nichrosia.arcanology.content.type
 
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
 abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
-    private val all = mutableListOf<B>()
+    protected val all = mutableListOf<B>()
     
-    fun <T : B> register(identifier: Identifier, content: T): T {
+    open fun <T : B> register(identifier: Identifier, content: T): T {
         val registeredContent = Registry.register(type, identifier, content)
 
         all.add(registeredContent)
@@ -14,7 +14,7 @@ abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
         return registeredContent
     }
 
-    fun <T : B> register(name: String, content: T): T {
+    open fun <T : B> register(name: String, content: T): T {
         return register(identify(name), content)
     }
 }

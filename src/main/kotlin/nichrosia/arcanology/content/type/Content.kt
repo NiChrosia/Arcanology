@@ -1,4 +1,4 @@
-package nichrosia.arcanology.content
+package nichrosia.arcanology.content.type
 
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology

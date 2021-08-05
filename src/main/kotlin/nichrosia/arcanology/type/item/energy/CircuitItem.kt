@@ -13,13 +13,13 @@ import nichrosia.arcanology.energy.EnergyTier
  *
  * Rudimentary Circuit ([EnergyTier.T1]): A simple but bulky circuit crafted by hand from aluminum wiring.
  *
- * Basic Circuit ([EnergyTier.T2]): A simple machine made circuit comprised of copper wiring and nickel-zinc batteries.
+ * Basic Circuit ([EnergyTier.T2]): A simple machine made circuit comprised of copper wiring.
  *
- * Advanced Circuit (([EnergyTier.T3])): A more advanced machine-crafted circuit made up of gold wires and a lithium-sulfur battery.
+ * Advanced Circuit (([EnergyTier.T3])): A more advanced machine-crafted circuit made up of gold wires
  *
- * Supercircuit ([EnergyTier.T4]): An incredibly powerful circuit meticulously crafted by machinery, made up of pure silver wiring and
- * solid state batteries.
+ * Hypercircuit ([EnergyTier.T4]): An incredibly powerful circuit meticulously crafted by machinery, made up of pure
+ * silver wiring.
  *
- * Superconductor circuit ([EnergyTier.T5]): An extremely powerful circuit, made up of niobium-titanium alloy, with no
- * energy loss over distance, incredibly fast transfer rates, and supercapacitor batteries. */
+ * Supercircuit ([EnergyTier.T5]): An extremely powerful circuit, made up of niobium-titanium alloy, with no
+ * energy loss over distance, and incredibly fast transfer rates. */
 open class CircuitItem(settings: Settings) : Item(settings)

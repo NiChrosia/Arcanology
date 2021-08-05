@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.*
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
+import net.minecraft.item.Items
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
@@ -12,20 +13,24 @@ import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AConfiguredFeatures
+import nichrosia.arcanology.content.AItems.generateLang
 import nichrosia.arcanology.content.AItems.magicSettings
 import nichrosia.arcanology.content.AItems.techSettings
 import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.HeartItem
 import nichrosia.arcanology.type.item.energy.BatteryItem
+import nichrosia.arcanology.type.item.energy.CircuitItem
 import nichrosia.arcanology.type.item.energy.WireItem
+import nichrosia.arcanology.data.DataGenerator.itemTagID
 
 @Suppress("MemberVisibilityCanBePrivate")
 data class MaterialHelper(val name: String,
                           private val isTech: Boolean,
                           private val rarity: Rarity,
                           private val miningLevel: Int = 0,
-                          private val dropDust: Boolean = false) {
+                          private val dropDust: Boolean = false,
+                          private val autogenerateLang: Boolean = true) {
     val settings: Item.Settings
       get() = (if (isTech) techSettings else magicSettings).rarity(rarity)
 
@@ -42,7 +47,8 @@ data class MaterialHelper(val name: String,
     lateinit var wire: WireItem
     lateinit var dust: Item
     lateinit var crystal: Item
-    lateinit var batteryItem: BatteryItem
+    lateinit var battery: BatteryItem
+    lateinit var circuit: CircuitItem
 
     lateinit var heart: HeartItem
 
@@ -131,11 +137,16 @@ data class MaterialHelper(val name: String,
     fun addIngot(name: String = "${this.name}_ingot"): MaterialHelper {
         ingot = register(name, Item(settings))
 
+        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(ingot))
+
         return this
     }
 
     fun addWire(name: String = "${this.name}_wire"): MaterialHelper {
         wire = register(name, WireItem(settings))
+
+        if (this::ingot.isInitialized) DataGenerator.wireRecipe(ingot, wire)
+        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(wire))
 
         return this
     }
@@ -143,17 +154,37 @@ data class MaterialHelper(val name: String,
     fun addDust(name: String = "${this.name}_dust"): MaterialHelper {
         dust = register(name, Item(settings))
 
+        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(dust))
+
         return this
     }
 
     fun addCrystal(name: String = "${this.name}_crystal"): MaterialHelper {
         crystal = register(name, Item(settings))
 
+        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(crystal))
+
         return this
     }
 
     fun addBattery(name: String = "${this.name}_battery", tier: EnergyTier): MaterialHelper {
-        batteryItem = register(name, BatteryItem(settings, tier))
+        battery = register(name, BatteryItem(settings, tier))
+
+        DataGenerator.addTags(itemTagID(name.replace("battery", "batteries")), Registry.ITEM.getId(battery))
+
+        return this
+    }
+
+    fun addCircuit(
+        name: String = "${this.name}_circuit",
+        wire: WireItem = this.wire,
+        insulator: Item = Items.GLASS
+    ): MaterialHelper {
+        circuit = register(name, CircuitItem(settings))
+
+        DataGenerator.circuitRecipe(insulator, wire, circuit)
+        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(circuit))
+        DataGenerator.addTags(itemTagID("insulators"), Registry.ITEM.getId(insulator))
 
         return this
     }
@@ -164,19 +195,26 @@ data class MaterialHelper(val name: String,
         return this
     }
 
+    fun addBlock(name: String, type: (String) -> Block): MaterialHelper {
+        val block = type(name)
+
+        register(name, block)
+        register(name, BlockItem(block, settings))
+
+        return this
+    }
+
     private fun <T : Item> register(name: String, content: T): T {
         val registeredContent = Registry.register(Registry.ITEM, Identifier(Arcanology.modID, name), content)
 
-        println("Attempting to register content")
-        println("Content is ${content.name.asString()}")
-
         if (registeredContent is BlockItem) {
-            println("BlockItem")
             DataGenerator.blockItemModel(registeredContent)
         } else {
-            println("Item")
             DataGenerator.normalItemModel(registeredContent)
         }
+
+        val id = Registry.ITEM.getId(registeredContent)
+        DataGenerator.lang.item(id, generateLang(id.path))
 
         return registeredContent
     }
@@ -184,13 +222,11 @@ data class MaterialHelper(val name: String,
     private fun <T : Block> register(name: String, content: T): T {
         val registeredContent = Registry.register(Registry.BLOCK, Identifier(Arcanology.modID, name), content)
 
-        println("Attempting to register content")
-        println("Content is ${registeredContent.name.asString()}")
-
-        println("blockstate")
         DataGenerator.normalBlockstate(registeredContent)
-        println("block model")
         DataGenerator.normalBlockModel(registeredContent)
+
+        val id = Registry.BLOCK.getId(registeredContent)
+        DataGenerator.lang.block(id, generateLang(id.path))
 
         return registeredContent
     }
