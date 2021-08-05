@@ -14,13 +14,17 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AConfiguredFeatures
 import nichrosia.arcanology.content.AItems.magicSettings
 import nichrosia.arcanology.content.AItems.techSettings
+import nichrosia.arcanology.energy.EnergyTier
+import nichrosia.arcanology.type.element.ElementalHeart
+import nichrosia.arcanology.type.item.HeartItem
+import nichrosia.arcanology.type.item.energy.BatteryItem
 import nichrosia.arcanology.type.item.energy.WireItem
 
 @Suppress("MemberVisibilityCanBePrivate")
 data class MaterialHelper(val name: String,
                           private val isTech: Boolean,
                           private val rarity: Rarity,
-                          private val miningLevel: Int,
+                          private val miningLevel: Int = 0,
                           private val dropDust: Boolean = false) {
     val settings: Item.Settings
       get() = (if (isTech) techSettings else magicSettings).rarity(rarity)
@@ -38,6 +42,9 @@ data class MaterialHelper(val name: String,
     lateinit var wire: WireItem
     lateinit var dust: Item
     lateinit var crystal: Item
+    lateinit var batteryItem: BatteryItem
+
+    lateinit var heart: HeartItem
 
     fun addOre(
         name: String = "${this.name}_ore",
@@ -103,6 +110,9 @@ data class MaterialHelper(val name: String,
     
     fun addRawOre(name: String = "raw_${this.name}", addRawOreBlock: Boolean = true, rawOreBlockResistance: Float = 100f): MaterialHelper {
         rawOre = register(name, Item(settings))
+
+        if (this::ore.isInitialized) DataGenerator.rawOreLootTable(ore, rawOre)
+        if (this::deepslateOre.isInitialized) DataGenerator.rawOreLootTable(deepslateOre, rawOre)
         
         if (addRawOreBlock) {
             rawOreBlock = register("${name}_block", Block(FabricBlockSettings.of(Material.METAL)
@@ -111,6 +121,8 @@ data class MaterialHelper(val name: String,
                 .breakByTool(FabricToolTags.PICKAXES, miningLevel)))
 
             rawOreBlockItem = register("${name}_block", BlockItem(rawOreBlock, settings))
+
+            DataGenerator.normalBlockLootTable(rawOreBlock, rawOreBlockItem)
         }
 
         return this
@@ -140,79 +152,47 @@ data class MaterialHelper(val name: String,
         return this
     }
 
-    fun generateData(): MaterialHelper {
-        if (this::ore.isInitialized) {
-            DataGenerator.normalBlockstate(ore)
-            DataGenerator.normalBlockModel(ore)
+    fun addBattery(name: String = "${this.name}_battery", tier: EnergyTier): MaterialHelper {
+        batteryItem = register(name, BatteryItem(settings, tier))
 
-            if (this::oreItem.isInitialized) {
-                DataGenerator.blockItemModel(oreItem)
-            }
+        return this
+    }
 
-            if (this::rawOre.isInitialized) {
-                DataGenerator.rawOreLootTable(ore, rawOre)
-                DataGenerator.normalItemModel(rawOre)
-
-                if (this::deepslateOre.isInitialized && !dropDust) {
-                    DataGenerator.normalBlockstate(deepslateOre)
-                    DataGenerator.normalBlockModel(deepslateOre)
-                    DataGenerator.rawOreLootTable(deepslateOre, rawOre)
-
-                    if (this::deepslateOreItem.isInitialized) {
-                        DataGenerator.blockItemModel(deepslateOreItem)
-                    }
-                }
-            }
-
-            if (this::crystal.isInitialized) {
-                DataGenerator.rawOreLootTable(ore, crystal)
-                DataGenerator.normalItemModel(crystal)
-            }
-
-            if (this::dust.isInitialized) {
-                if (dropDust) DataGenerator.rawOreLootTable(ore, dust)
-
-                DataGenerator.normalItemModel(dust)
-
-                if (this::deepslateOre.isInitialized && dropDust) {
-                    DataGenerator.normalBlockstate(deepslateOre)
-                    DataGenerator.normalBlockModel(deepslateOre)
-                    DataGenerator.rawOreLootTable(deepslateOre, dust)
-
-                    if (this::deepslateOreItem.isInitialized) {
-                        DataGenerator.blockItemModel(deepslateOreItem)
-                    }
-                }
-            }
-
-            if (this::ingot.isInitialized) {
-                DataGenerator.normalItemModel(ingot)
-            }
-
-            if (this::wire.isInitialized) {
-                DataGenerator.normalItemModel(wire)
-            }
-
-            if (this::rawOreBlock.isInitialized) {
-                DataGenerator.normalBlockstate(rawOreBlock)
-                DataGenerator.normalBlockModel(rawOreBlock)
-
-                if (this::rawOreBlockItem.isInitialized) {
-                    DataGenerator.normalBlockLootTable(rawOreBlock, rawOreBlockItem)
-                    DataGenerator.blockItemModel(rawOreBlockItem)
-                }
-            }
-        }
+    fun addHeart(name: String = "${this.name}_heart", elementalHeart: ElementalHeart): MaterialHelper {
+        heart = register(name, HeartItem(settings, elementalHeart))
 
         return this
     }
 
     private fun <T : Item> register(name: String, content: T): T {
-        return Registry.register(Registry.ITEM, Identifier(Arcanology.modID, name), content)
+        val registeredContent = Registry.register(Registry.ITEM, Identifier(Arcanology.modID, name), content)
+
+        println("Attempting to register content")
+        println("Content is ${content.name.asString()}")
+
+        if (registeredContent is BlockItem) {
+            println("BlockItem")
+            DataGenerator.blockItemModel(registeredContent)
+        } else {
+            println("Item")
+            DataGenerator.normalItemModel(registeredContent)
+        }
+
+        return registeredContent
     }
 
     private fun <T : Block> register(name: String, content: T): T {
-        return Registry.register(Registry.BLOCK, Identifier(Arcanology.modID, name), content)
+        val registeredContent = Registry.register(Registry.BLOCK, Identifier(Arcanology.modID, name), content)
+
+        println("Attempting to register content")
+        println("Content is ${registeredContent.name.asString()}")
+
+        println("blockstate")
+        DataGenerator.normalBlockstate(registeredContent)
+        println("block model")
+        DataGenerator.normalBlockModel(registeredContent)
+
+        return registeredContent
     }
 
     class DimensionSelector(val overworld: Boolean = false, val nether: Boolean = false, val end: Boolean = false)

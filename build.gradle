@@ -33,6 +33,12 @@ repositories {
             includeGroup "vazkii.patchouli"
         }
     }
+
+    maven {
+        url = uri("https://storage.googleapis.com/devan-maven/")
+        // for 0.4.2 and older
+        // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
+    }
 }
 
 dependencies {
@@ -42,6 +48,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+    modImplementation("net.devtech:arrp:0.4.4")
 
     modApi include("dev.technici4n:FastTransferLib:${project.ftl_version}")
     modImplementation include("vazkii.patchouli:Patchouli:${project.patchouli_version}")

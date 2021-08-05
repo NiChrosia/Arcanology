@@ -13,11 +13,11 @@ object AItemGroups : Content() {
 
     override fun load() {
         magic = FabricItemGroupBuilder.create(identify("magic"))
-            .icon { ItemStack(AItems.arcaneHeart) }
+            .icon { ItemStack(AItems.arcane.heart) }
             .build()
 
         tech = FabricItemGroupBuilder.create(identify("tech"))
-            .icon { ItemStack(AItems.nickelZincBatteryItem) }
+            .icon { ItemStack(AItems.nickelZinc.batteryItem) }
             .build()
     }
 }

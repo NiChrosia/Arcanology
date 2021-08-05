@@ -1,129 +1,109 @@
 package nichrosia.arcanology.data
 
+import net.devtech.arrp.api.RuntimeResourcePack.id
 import net.minecraft.block.Block
 import net.minecraft.block.OreBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.util.registry.Registry
-import java.io.File
+import net.devtech.arrp.json.loot.JLootTable.*
+import net.devtech.arrp.json.blockstate.JState.*
+import net.devtech.arrp.json.blockstate.JState.model as blockModel
+import net.devtech.arrp.json.models.JModel.*
+import net.minecraft.util.Identifier
+import nichrosia.arcanology.Arcanology.modID
+import nichrosia.arcanology.Arcanology.resourcePack
 
-/** JSON data generator for use in development.
- *
- * WARNING: disable this if you are not NiChrosia or your copy of this repository is in the exact same location,
- * otherwise you will have a directory with all this stuff but no code.*/
 object DataGenerator {
-    private val userDir = File(System.getProperty("user.home"))
-    private val resourcesDir = File("${userDir.path}/IdeaProjects/Arcanology/src/main/resources")
-    private val assetsDir = File("${resourcesDir.path}/assets/arcanology")
-    private val dataDir = File("${resourcesDir.path}/data/arcanology")
-
-    enum class DataType {
-        BlockState, BlockModel, ItemModel, Recipe, BlockLootTable
-    }
+    private fun blockID(name: String) = Identifier(modID, "blocks/$name")
+    private fun blockModelID(name: String) = Identifier(modID, "block/$name")
+    private fun itemModelID(name: String) = Identifier(modID, "item/$name")
 
     fun normalBlockLootTable(block: Block, item: BlockItem) {
-        val lootDir = getDirectory(DataType.BlockLootTable)
+        val blockName = Registry.BLOCK.getId(block).path
+        val itemName = Registry.ITEM.getId(item).path
 
-        val json = DataTemplates.normalBlockLootTable(item)
-        val name = Registry.BLOCK.getId(block).path
-
-        val file = File("${lootDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
+        resourcePack.addLootTable(
+            blockID(blockName),
+            loot("minecraft:block")
+                .pool(pool()
+                    .rolls(1)
+                    .entry(entry()
+                        .type("minecraft:item")
+                        .name("arcanology:$itemName")
+                    )
+                    .condition(predicate("minecraft:survives_explosion"))
+                )
+        )
     }
 
     fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
-        val lootDir = getDirectory(DataType.BlockLootTable)
+        val blockName = Registry.BLOCK.getId(ore).path
+        val itemName = Registry.ITEM.getId(rawOre).path
 
-        val json = DataTemplates.oreBlockToRawOre(ore, rawOre)
-        val name = Registry.BLOCK.getId(ore).path
-
-        val file = File("${lootDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
+        resourcePack.addLootTable(
+            blockID(blockName),
+            loot("minecraft:block")
+                .pool(pool()
+                    .rolls(1)
+                    .bonus(0)
+                    .entry(entry()
+                        .type("minecraft:alternatives")
+                        .child(entry()
+                            .type("minecraft:item")
+                            .condition(ARRPUtilities.silkTouchPredicate())
+                            .name("arcanology:$blockName")
+                        )
+                        .child(entry()
+                            .type("minecraft:item")
+                            .function(function("apply_bonus")
+                                .parameter("enchantment", "minecraft:fortune")
+                                .parameter("formula", "minecraft:ore_drops")
+                            )
+                            .function(function("minecraft:explosion_decay"))
+                            .name("arcanology:$itemName")
+                        )
+                    )
+                )
+        )
     }
 
     fun normalBlockstate(block: Block) {
-        val blockstateDir = getDirectory(DataType.BlockState)
+        val blockName = Registry.BLOCK.getId(block).path
 
-        val json = DataTemplates.normalBlockstate(block)
-        val name = Registry.BLOCK.getId(block).path
-
-        val file = File("${blockstateDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
+        resourcePack.addBlockState(
+            state(variant(blockModel("arcanology:block/$blockName"))),
+            id("arcanology:$blockName")
+        )
     }
 
     fun normalBlockModel(block: Block) {
-        val blockModelDir = getDirectory(DataType.BlockModel)
-
-        val json = DataTemplates.normalBlockModel(block)
         val name = Registry.BLOCK.getId(block).path
 
-        val file = File("${blockModelDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
+        resourcePack.addModel(
+            model("block/cube_all")
+                .textures(textures().`var`("all", "arcanology:block/$name")),
+            blockModelID(name)
+        )
     }
 
     fun blockItemModel(item: BlockItem) {
-        val itemModelDir = getDirectory(DataType.ItemModel)
+        val itemName = Registry.ITEM.getId(item).path
+        val blockName = Registry.BLOCK.getId(item.block).path
 
-        val json = DataTemplates.blockItemModel(item)
-        val name = Registry.ITEM.getId(item).path
-
-        val file = File("${itemModelDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
+        resourcePack.addModel(
+            model("arcanology:block/$blockName"),
+            itemModelID(itemName)
+        )
     }
 
     fun normalItemModel(item: Item) {
-        val itemModelDir = getDirectory(DataType.ItemModel)
-
-        val json = DataTemplates.normalItemModel(item)
         val name = Registry.ITEM.getId(item).path
 
-        val file = File("${itemModelDir.path}/$name.json")
-
-        if (!file.exists()) {
-            file.createNewFile()
-            file.mkdirs()
-        }
-
-        file.writeText(json)
-    }
-
-    private fun getDirectory(type: DataType): File {
-        return when(type) {
-            DataType.BlockState -> File("${assetsDir.path}/blockstates")
-            DataType.BlockModel -> File("${assetsDir.path}/models/block")
-            DataType.ItemModel -> File("${assetsDir.path}/models/item")
-            DataType.Recipe -> File("${dataDir.path}/recipes")
-            DataType.BlockLootTable -> File("${dataDir.path}/loot_tables/blocks")
-        }
+        resourcePack.addModel(
+            model("item/generated")
+                .textures(textures().layer0("arcanology:item/$name")),
+            itemModelID(name)
+        )
     }
 }

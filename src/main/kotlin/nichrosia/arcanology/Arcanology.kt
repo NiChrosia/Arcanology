@@ -1,5 +1,7 @@
 package nichrosia.arcanology
 
+import net.devtech.arrp.api.RRPCallback
+import net.devtech.arrp.api.RuntimeResourcePack
 import net.fabricmc.api.ModInitializer
 import nichrosia.arcanology.content.*
 
@@ -15,9 +17,15 @@ object Arcanology : ModInitializer {
         AStatusEffects
     )
 
+    internal val resourcePack = RuntimeResourcePack.create("arcanology:main")
+
     const val modID = "arcanology"
 
     override fun onInitialize() {
         content.forEach(Content::load)
+
+        RRPCallback.BEFORE_VANILLA.register { it.add(resourcePack) }
+
+        resourcePack.dump()
     }
 }

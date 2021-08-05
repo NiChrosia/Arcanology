@@ -8,23 +8,16 @@ import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.integration.patchouli.GuideBookItem
 import nichrosia.arcanology.type.element.ElementalHeart
-import nichrosia.arcanology.type.item.HeartItem
 import nichrosia.arcanology.data.MaterialHelper
-import nichrosia.arcanology.type.item.energy.BatteryItem
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AItems : RegisterableContent<Item>(Registry.ITEM) {
     lateinit var altar: BlockItem
 
-    lateinit var prismaticHeart: HeartItem
-    lateinit var desolateHeart: HeartItem
-    lateinit var moltenHeart: HeartItem
-    lateinit var tidalHeart: HeartItem
-    lateinit var terreneHeart: HeartItem
-    lateinit var celestialHeart: HeartItem
-    lateinit var arcaneHeart: HeartItem
-    
-    lateinit var nickelZincBatteryItem: BatteryItem
+    lateinit var prismatic: MaterialHelper
+    lateinit var arcane: MaterialHelper
+
+    lateinit var nickelZinc: MaterialHelper
 
     lateinit var arcaneAlmanac: GuideBookItem
     lateinit var componentCompendium: GuideBookItem
@@ -36,16 +29,27 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
         get() = FabricItemSettings().group(AItemGroups.tech)
 
     override fun load() {
-        // Elemental hearts
-        prismaticHeart = register("prismatic_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Prismatic))
-        desolateHeart = register("desolate_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Desolate))
-        moltenHeart = register("molten_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Molten))
-        tidalHeart = register("tidal_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Tidal))
-        terreneHeart = register("terrene_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Terrene))
-        celestialHeart = register("celestial_heart", HeartItem(magicSettings.rarity(Rarity.RARE), ElementalHeart.Celestial))
-        arcaneHeart = register("arcane_heart", HeartItem(magicSettings.rarity(Rarity.EPIC), ElementalHeart.Arcane))
+        prismatic = MaterialHelper("prismatic", false, Rarity.RARE)
+            .addHeart("prismatic_heart", ElementalHeart.Prismatic)
 
-        // Materials
+        MaterialHelper("desolate", false, Rarity.RARE)
+            .addHeart("desolate_heart", ElementalHeart.Prismatic)
+
+        MaterialHelper("molten", false, Rarity.RARE)
+            .addHeart("molten_heart", ElementalHeart.Prismatic)
+
+        MaterialHelper("tidal", false, Rarity.RARE)
+            .addHeart("tidal_heart", ElementalHeart.Prismatic)
+
+        MaterialHelper("terrene", false, Rarity.RARE)
+            .addHeart("terrene_heart", ElementalHeart.Prismatic)
+
+        MaterialHelper("celestial", false, Rarity.RARE)
+            .addHeart("celestial_heart", ElementalHeart.Prismatic)
+
+        arcane = MaterialHelper("arcane", false, Rarity.EPIC)
+            .addHeart("arcane_heart", ElementalHeart.Prismatic)
+
         MaterialHelper("velosium", false, Rarity.COMMON, 3)
             .addOre("velosium_ore",
                 MaterialHelper.DimensionSelector(end = true),
@@ -60,7 +64,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 150f)
             .addRawOre()
             .addIngot()
-            .generateData()
+
 
         MaterialHelper("aegirite", false, Rarity.COMMON, 3)
             .addOre("aegirite_ore",
@@ -75,7 +79,6 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 true,
                 100f)
             .addCrystal()
-            .generateData()
 
         MaterialHelper("xenothite", false, Rarity.UNCOMMON, 4)
             .addOre("xenothite_ore",
@@ -90,7 +93,6 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
                 false)
             .addRawOre()
             .addIngot()
-            .generateData()
 
         MaterialHelper("aluminum", true, Rarity.COMMON, 2)
             .addOre("aluminum_ore",
@@ -101,15 +103,10 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
             .addRawOre()
             .addIngot()
             .addWire()
-            .generateData()
 
-        // Circuits
+        nickelZinc = MaterialHelper("nickel_zinc", true, Rarity.COMMON)
+            .addBattery("nickel_zinc_battery", EnergyTier.T1)
 
-
-        // Batteries
-        nickelZincBatteryItem = register("nickel_zinc_battery", BatteryItem(techSettings, EnergyTier.T1))
-
-        // Misc
         altar = register("altar", BlockItem(ABlocks.altar, magicSettings.rarity(Rarity.EPIC)))
 
         arcaneAlmanac = register("arcane_almanac", GuideBookItem(magicSettings, "arcane_almanac"))

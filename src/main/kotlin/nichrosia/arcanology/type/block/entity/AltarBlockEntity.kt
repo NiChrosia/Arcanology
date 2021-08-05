@@ -15,7 +15,7 @@ open class AltarBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlo
       get() = this::heart.isInitialized
 
     fun tick(world: World, pos: BlockPos, state: BlockState) {
-        heart = AItems.prismaticHeart
+        heart = AItems.prismatic.heart
     }
 
     companion object {
