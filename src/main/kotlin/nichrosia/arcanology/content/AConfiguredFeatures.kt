@@ -2,7 +2,6 @@
 
 package nichrosia.arcanology.content
 
-import com.google.common.collect.ImmutableList
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
@@ -84,7 +83,7 @@ object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(Builti
         val oreFeature = if (selector == BiomeSelector.Overworld && deepslateVariant) {
             register(key.value,
                 Feature.ORE.configure(OreFeatureConfig(
-                    ImmutableList.of(
+                    listOf(
                         OreFeatureConfig.createTarget(
                             OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
                             oreBlock.defaultState

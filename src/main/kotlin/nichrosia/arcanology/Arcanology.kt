@@ -9,6 +9,7 @@ import nichrosia.arcanology.data.DataGenerator
 @Suppress("unused")
 object Arcanology : ModInitializer {
     internal val content = arrayOf(
+        AScreenHandlers,
         ABlockMaterials,
         ABlocks,
         ABlockEntityTypes,
@@ -16,6 +17,8 @@ object Arcanology : ModInitializer {
         AItemGroups,
         AItems,
         AStatusEffects,
+        ARuneTypes,
+        AToolMaterials,
         AMaterials,
 
         DataGenerator

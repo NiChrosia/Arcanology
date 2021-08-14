@@ -40,6 +40,11 @@ repositories {
         // for 0.4.2 and older
         // url uri("https://raw.githubusercontent.com/Devan-Kerman/Devan-Repo/master/")
     }
+
+    maven {
+        name = "CottonMC"
+        url = "https://server.bbkr.space/artifactory/libs-release"
+    }
 }
 
 dependencies {
@@ -47,12 +52,13 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-    modImplementation("net.devtech:arrp:0.4.4")
+    modImplementation include("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    modImplementation include("net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}")
+    modImplementation include("net.devtech:arrp:${project.arrp_version}")
 
     modApi include("dev.technici4n:FastTransferLib:${project.ftl_version}")
     modImplementation include("vazkii.patchouli:Patchouli:${project.patchouli_version}")
+    modImplementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
 }
 
 processResources {

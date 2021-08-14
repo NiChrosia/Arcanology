@@ -1,13 +1,12 @@
 package nichrosia.arcanology.type.item.energy
 
-import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.type.tooltip.energy.EnergyTooltipDataProvider
 import nichrosia.arcanology.util.energyOf
 import kotlin.math.roundToInt
 
 /** @author GabrielOlvH, with minor modifications by NiChrosia */
-open class EnergyItem(settings: Settings) : Item(settings), EnergyTooltipDataProvider {
+interface EnergyItem : EnergyTooltipDataProvider {
     fun getDurabilityBarProgress(stack: ItemStack): Int {
         val energyIo = energyOf(stack) ?: return 0
         return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity)

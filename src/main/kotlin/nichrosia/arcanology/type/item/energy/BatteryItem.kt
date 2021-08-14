@@ -2,6 +2,7 @@ package nichrosia.arcanology.type.item.energy
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.energy.EnergyTier
 
@@ -27,7 +28,7 @@ import nichrosia.arcanology.energy.EnergyTier
  * Supercapacitor battery ([EnergyTier.T5]): A heavily compacted mass of supercapacitors made up of lead, sulfuric acid,
  * and carbon, which offers a massive power capacity and (dis)charging speed. (`10M EF`) */
 @Suppress("MemberVisibilityCanBePrivate", "LeakingThis")
-open class BatteryItem(settings: Settings, protected val tier: EnergyTier) : EnergyItem(settings) {
+open class BatteryItem(settings: Settings, tier: EnergyTier) : Item(settings), EnergyItem {
     init {
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(
             tier.storage, 

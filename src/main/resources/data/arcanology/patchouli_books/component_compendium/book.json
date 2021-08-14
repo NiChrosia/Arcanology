@@ -1,9 +1,6 @@
 {
   "name": "Component Compendium",
   "landing_text": "<placeholder>",
-  "book_texture": "patchouli:textures/gui/book_blue.png",
-  "model": "arcanology:component_compendium",
-  "creative_tab": "arcanology.tech",
   "index_icon": "arcanology:component_compendium",
   "pause_game": false,
   "dont_generate_book": true,

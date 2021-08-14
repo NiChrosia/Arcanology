@@ -6,16 +6,18 @@ import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.content.type.RegisterableLangContent
+import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.data.DataGenerator
+import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.type.block.AltarBlock
+import nichrosia.arcanology.type.block.PulverizerBlock
 import nichrosia.arcanology.type.block.ReactiveBlock
 
 @Suppress("MemberVisibilityCanBePrivate")
-object ABlocks : RegisterableLangContent<Block>(Registry.BLOCK) {
+object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {
     lateinit var reactiveBlock: ReactiveBlock
-
     lateinit var altar: AltarBlock
+    lateinit var pulverizer: PulverizerBlock
 
     override fun load() {
         reactiveBlock = register(
@@ -35,6 +37,17 @@ object ABlocks : RegisterableLangContent<Block>(Registry.BLOCK) {
                 .requiresTool()
                 .strength(5f, 1000f)
                 .breakByTool(FabricToolTags.PICKAXES, 4)
+            )
+        )
+
+        pulverizer = register(
+            "pulverizer",
+            PulverizerBlock(
+                FabricBlockSettings.of(Material.METAL)
+                .requiresTool()
+                .strength(5f, 100f)
+                .breakByTool(FabricToolTags.PICKAXES, 1),
+                EnergyTier.T1
             )
         )
     }

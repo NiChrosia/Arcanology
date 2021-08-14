@@ -23,7 +23,8 @@ public abstract class MixinScreen {
     @Shadow
     public abstract List<Text> getTooltipFromItem(ItemStack stack);
 
-    @Shadow protected abstract void renderTooltipFromComponents(MatrixStack matrices, List<TooltipComponent> components, int x, int y);
+    @Shadow
+    protected abstract void renderTooltipFromComponents(MatrixStack matrices, List<TooltipComponent> components, int x, int y);
 
     /** @author GabrielOlvH */
     @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V", at = @At("INVOKE"), cancellable = true)

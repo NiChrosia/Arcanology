@@ -5,7 +5,8 @@ import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.content.client.*
 
 object ArcanologyClient : ClientModInitializer {
-    internal val content = arrayOf<Content>(
+    internal val content = arrayOf(
+        AScreens,
         ABlockEntityRenderers
     )
 

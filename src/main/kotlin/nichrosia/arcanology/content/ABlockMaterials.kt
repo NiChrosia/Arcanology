@@ -9,6 +9,8 @@ object ABlockMaterials : Content() {
     lateinit var velosium: Material
     lateinit var xenothite: Material
     lateinit var elementalCrystal: Material
+    lateinit var aluminum: Material
+    lateinit var silver: Material
 
     override fun load() {
         velosium = FabricMaterialBuilder(MapColor.MAGENTA).build()
@@ -16,6 +18,9 @@ object ABlockMaterials : Content() {
         xenothite = FabricMaterialBuilder(MapColor.TEAL).build()
 
         elementalCrystal = FabricMaterialBuilder(MapColor.MAGENTA).build()
-    }
 
+        aluminum = FabricMaterialBuilder(MapColor.LIGHT_GRAY).build()
+
+        silver = FabricMaterialBuilder(MapColor.LIGHT_GRAY).build()
+    }
 }

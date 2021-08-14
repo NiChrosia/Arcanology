@@ -5,10 +5,10 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.content.type.LangContent
+import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.data.DataGenerator
 
-object AItemGroups : LangContent() {
+object AItemGroups : Content() {
     lateinit var magic: ItemGroup
     lateinit var tech: ItemGroup
 

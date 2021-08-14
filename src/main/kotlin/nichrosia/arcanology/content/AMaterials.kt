@@ -1,10 +1,12 @@
 package nichrosia.arcanology.content
 
 import net.minecraft.util.Rarity
+import nichrosia.arcanology.content.AItems
 import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.data.MaterialHelper
 import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.type.element.ElementalHeart
+import nichrosia.arcanology.type.item.magic.RunicPickaxeItem
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AMaterials : Content() {
@@ -12,6 +14,8 @@ object AMaterials : Content() {
     lateinit var arcane: MaterialHelper
 
     lateinit var nickelZinc: MaterialHelper
+
+    lateinit var silver: MaterialHelper
 
     override fun load() {
         prismatic = MaterialHelper("prismatic", false, Rarity.RARE)
@@ -83,12 +87,23 @@ object AMaterials : Content() {
             .addOre("aluminum_ore",
                 MaterialHelper.DimensionSelector(overworld = true),
                 true,
+                ABlockMaterials.aluminum,
                 range = 0 to 64,
                 generateToBottom = true)
             .addRawOre()
             .addIngot()
             .addWire()
             .addCircuit()
+
+        silver = MaterialHelper("silver", true, Rarity.COMMON, 2)
+            .addOre("silver_ore",
+                MaterialHelper.DimensionSelector(overworld = true),
+                true,
+                ABlockMaterials.silver,
+                range = 12 to 72)
+            .addRawOre()
+            .addIngot()
+            .addPickaxe("silver_pickaxe", RunicPickaxeItem(AToolMaterials.silver, 1, -2.9f, AItems.magicSettings))
 
         nickelZinc = MaterialHelper("nickel_zinc", true, Rarity.COMMON, 4)
             .addBattery("nickel_zinc_battery", EnergyTier.T1)

@@ -3,6 +3,7 @@ package nichrosia.arcanology.content.type
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
     protected val all = mutableListOf<B>()
     

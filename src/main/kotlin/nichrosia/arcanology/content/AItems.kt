@@ -6,14 +6,15 @@ import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.content.type.RegisterableLangContent
+import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.data.DataGenerator
 import nichrosia.arcanology.data.DataGenerator.itemTagID
 import nichrosia.arcanology.integration.patchouli.GuideBookItem
 
 @Suppress("MemberVisibilityCanBePrivate")
-object AItems : RegisterableLangContent<Item>(Registry.ITEM) {
+object AItems : RegisterableContent<Item>(Registry.ITEM) {
     lateinit var altar: BlockItem
+//    lateinit var pulverizer: BlockItem
 
     lateinit var wireCutter: Item
 
@@ -28,6 +29,7 @@ object AItems : RegisterableLangContent<Item>(Registry.ITEM) {
 
     override fun load() {
         altar = register("altar", BlockItem(ABlocks.altar, magicSettings.rarity(Rarity.EPIC)))
+//        pulverizer = register("pulverizer", BlockItem(ABlocks.pulverizer, techSettings))
 
         wireCutter = register("wire_cutter", Item(techSettings))
 

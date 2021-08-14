@@ -3,7 +3,9 @@ package nichrosia.arcanology.data
 import net.devtech.arrp.api.RRPCallback
 import net.devtech.arrp.api.RuntimeResourcePack.id
 import net.devtech.arrp.json.blockstate.JState.*
+import net.devtech.arrp.json.lang.JLang
 import net.devtech.arrp.json.lang.JLang.lang
+import net.devtech.arrp.json.loot.JCondition
 import net.devtech.arrp.json.loot.JLootTable.*
 import net.devtech.arrp.json.models.JModel.*
 import net.devtech.arrp.json.recipe.JIngredient.ingredient
@@ -18,6 +20,8 @@ import net.minecraft.block.Block
 import net.minecraft.block.OreBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
+import net.minecraft.item.MiningToolItem
+import net.minecraft.item.PickaxeItem
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology.commonResourcePack
@@ -27,17 +31,19 @@ import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.type.block.AltarBlock
 import nichrosia.arcanology.type.item.energy.CircuitItem
 import nichrosia.arcanology.type.item.energy.WireItem
+import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem
 import net.devtech.arrp.json.blockstate.JState.model as blockModel
 
 object DataGenerator : Content() {
     private val tags = mutableMapOf<Identifier, MutableList<Identifier>>()
-    val lang = lang()
+    val lang: JLang = lang()
+
+    private fun predicate() = JCondition()
 
     private fun blockID(name: String) = Identifier(modID, "blocks/$name")
     private fun blockModelID(name: String) = Identifier(modID, "block/$name")
     private fun itemModelID(name: String) = Identifier(modID, "item/$name")
 
-    fun blockTagID(name: String) = Identifier("c", "blocks/$name")
     fun itemTagID(name: String) = Identifier("c", "items/$name")
 
     fun normalBlockLootTable(block: Block, item: BlockItem) {
@@ -51,7 +57,7 @@ object DataGenerator : Content() {
                     .rolls(1)
                     .entry(entry()
                         .type("minecraft:item")
-                        .name("arcanology:$itemName")
+                        .name("${modID}:$itemName")
                     )
                     .condition(predicate("minecraft:survives_explosion"))
                 )
@@ -73,7 +79,7 @@ object DataGenerator : Content() {
                         .child(entry()
                             .type("minecraft:item")
                             .condition(ARRPUtilities.silkTouchPredicate())
-                            .name("arcanology:$blockName")
+                            .name("${modID}:$blockName")
                         )
                         .child(entry()
                             .type("minecraft:item")
@@ -82,7 +88,7 @@ object DataGenerator : Content() {
                                 .parameter("formula", "minecraft:ore_drops")
                             )
                             .function(function("minecraft:explosion_decay"))
-                            .name("arcanology:$itemName")
+                            .name("${modID}:$itemName")
                         )
                     )
                 )
@@ -93,8 +99,8 @@ object DataGenerator : Content() {
         val blockName = Registry.BLOCK.getId(block).path
 
         resourcePack.addBlockState(
-            state(variant(blockModel("arcanology:block/$blockName"))),
-            id("arcanology:$blockName")
+            state(variant(blockModel("${modID}:block/$blockName"))),
+            id("${modID}:$blockName")
         )
     }
 
@@ -103,7 +109,7 @@ object DataGenerator : Content() {
 
         resourcePack.addModel(
             model("block/cube_all")
-                .textures(textures().`var`("all", "arcanology:block/$name")),
+                .textures(textures().`var`("all", "${modID}:block/$name")),
             blockModelID(name)
         )
     }
@@ -113,7 +119,7 @@ object DataGenerator : Content() {
         val blockName = Registry.BLOCK.getId(item.block).path
 
         resourcePack.addModel(
-            model("arcanology:block/$blockName"),
+            model("${modID}:block/$blockName"),
             itemModelID(itemName)
         )
     }
@@ -123,7 +129,82 @@ object DataGenerator : Content() {
 
         resourcePack.addModel(
             model("item/generated")
-                .textures(textures().layer0("arcanology:item/$name")),
+                .textures(textures().layer0("${modID}:item/$name")),
+            itemModelID(name)
+        )
+    }
+
+    fun crossbowItemModel(item: OpenCrossbowItem) {
+        val name = Registry.ITEM.getId(item).path
+
+        resourcePack.addModel(
+            model("item/generated")
+                .textures(
+                    textures().layer0("${modID}:item/${name}_standby")
+                ).display(
+                    display()
+                        .setThirdperson_righthand(position()
+                            .rotation(-90f, 0f, -60f)
+                            .translation(2f, 0.1f, -3f)
+                            .scale(0.9f, 0.9f, 0.9f))
+                        .setThirdperson_lefthand(position()
+                            .rotation(-90f, 0f, 30f)
+                            .translation(2f, 0.1f, -3f)
+                            .scale(0.9f, 0.9f, 0.9f))
+                        .setFirstperson_righthand(position()
+                            .rotation(-90f, 0f, -55f)
+                            .translation(1.13f, -1f, 1.13f)
+                            .scale(0.68f, 0.68f, 0.68f))
+                        .setFirstperson_lefthand(position()
+                            .rotation(-90f, 0f, 35f)
+                            .translation(1.13f, -1f, 1.13f)
+                            .scale(0.68f, 0.68f, 0.68f))
+                ).addOverride(override(
+                    predicate().parameter("pulling", 1),
+                    itemModelID("${name}_pulling_0")
+                )).addOverride(override(
+                    predicate().parameter("pulling", 1).parameter("pull", 0.58),
+                    itemModelID("${name}_pulling_1")
+                )).addOverride(override(
+                    predicate().parameter("pulling", 1).parameter("pull", 0.99),
+                    itemModelID("${name}_pulling_2")
+                )).addOverride(override(
+                    predicate().parameter("charged", 1),
+                    itemModelID("${name}_arrow")
+                )).addOverride(override(
+                    predicate().parameter("charged", 1).parameter("firework", 1),
+                    itemModelID("${name}_firework")
+                )),
+            itemModelID(name)
+        )
+
+        for (i in 0..2) {
+            resourcePack.addModel(
+                model("${modID}:item/${name}")
+                    .textures(textures().layer0("${modID}:item/${name}_pulling_$i")),
+                itemModelID("${name}_pulling_$i")
+            )
+        }
+
+        resourcePack.addModel(
+            model("${modID}:item/${name}")
+                .textures(textures().layer0("${modID}:item/${name}_arrow")),
+            itemModelID("${name}_arrow")
+        )
+
+        resourcePack.addModel(
+            model("${modID}:item/${name}")
+                .textures(textures().layer0("${modID}:item/${name}_firework")),
+            itemModelID("${name}_firework")
+        )
+    }
+    
+    fun handheldItemModel(item: MiningToolItem) {
+        val name = Registry.ITEM.getId(item).path
+        
+        resourcePack.addModel(
+            model("item/handheld")
+                .textures(textures().layer0("${modID}:item/${name}")),
             itemModelID(name)
         )
     }
@@ -135,13 +216,13 @@ object DataGenerator : Content() {
             model("minecraft:block/cube")
                 .textures(
                     textures()
-                        .particle("arcanology:block/altar_top")
-                        .`var`("east", "arcanology:block/altar_side")
-                        .`var`("west", "arcanology:block/altar_side")
-                        .`var`("north", "arcanology:block/altar_side")
-                        .`var`("south", "arcanology:block/altar_side")
-                        .`var`("down", "arcanology:block/altar_bottom")
-                        .`var`("up", "arcanology:block/altar_top")
+                        .particle("${modID}:block/altar_top")
+                        .`var`("east", "${modID}:block/altar_side")
+                        .`var`("west", "${modID}:block/altar_side")
+                        .`var`("north", "${modID}:block/altar_side")
+                        .`var`("south", "${modID}:block/altar_side")
+                        .`var`("down", "${modID}:block/altar_bottom")
+                        .`var`("up", "${modID}:block/altar_top")
                 ),
             blockModelID(name)
         )
@@ -192,25 +273,24 @@ object DataGenerator : Content() {
         val ingotName = ingotID.path
 
         resourcePack.addRecipe(
-            id("arcanology:$wireName"),
+            id("${modID}:$wireName"),
             shapeless(
                 ingredients()
                     .add(ingredient().tag("c:wire_cutters"))
                     .add(ingredient().tag("c:${ingotName}s")),
-                result("arcanology:$wireName")
+                result("${modID}:$wireName")
             )
         )
     }
 
     fun circuitRecipe(insulator: Item, wire: WireItem, circuitItem: CircuitItem) {
         val circuitID = Registry.ITEM.getId(circuitItem)
-        val circuitName = circuitID.path
 
         val wireID = Registry.ITEM.getId(wire)
         val wireName = wireID.path
 
         resourcePack.addRecipe(
-            id("arcanology:$circuitName"),
+            id("$circuitID"),
             shaped(
                 pattern()
                     .row1(" GW")
@@ -219,12 +299,31 @@ object DataGenerator : Content() {
                 keys()
                     .key("W", ingredient().tag("c:${wireName}s"))
                     .key("G", ingredient().item(insulator)),
-                result("arcanology:$circuitName")
+                result("$circuitID")
+            )
+        )
+    }
+
+    fun pickaxeRecipe(pickaxeItem: PickaxeItem, ingot: Item, stick: Item) {
+        val pickaxeID = Registry.ITEM.getId(pickaxeItem)
+        val ingotID = Registry.ITEM.getId(ingot)
+
+        resourcePack.addRecipe(
+            id("$pickaxeID"),
+            shaped(
+                pattern()
+                    .row1("III")
+                    .row2(" S ")
+                    .row3(" S "),
+                keys()
+                    .key("I", ingredient().tag("c:${ingotID.path}s"))
+                    .key("S", ingredient().item(stick)),
+                result("$pickaxeID")
             )
         )
     }
 
     private fun createLang() {
-        resourcePack.addLang(id("arcanology:en_us"), lang)
+        resourcePack.addLang(id("${modID}:en_us"), lang)
     }
 }
