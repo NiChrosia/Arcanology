@@ -1,3 +1,5 @@
+# Ideas
+
 A silver tool/armor set which heavily utilizes runes. (T3)
 
 A rune infuser, which takes an empty rune (Made of calcite/diamond/xenothite), and applies a pattern to it using elemental crystals.

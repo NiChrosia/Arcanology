@@ -1,3 +1,5 @@
+# Minerals
+
 ## Tech
 
 "Accumulite." A unique metal that rather than conducting electricity, it simply absorbs it, seemingly to an nigh-infinite capacity. Naturally found extremely deep within any sort of large celestial body, as it seems to be formed primarily by gravity, as well as titanium for a base. It is almost always used in batteries.

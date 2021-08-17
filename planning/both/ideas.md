@@ -1,3 +1,5 @@
+# Ideas
+
 Cross-dimensional transport system using concentrated void element to destabilize space and create a wormhole. Also called a void driver. (T3-5)
 
 A shield comprised of warped spacetime created from antimatter and void element, that makes normal attacks utterly redundant. (T4)

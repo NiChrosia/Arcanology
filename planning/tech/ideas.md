@@ -1,3 +1,5 @@
+# Ideas
+
 An electric crossbow made of steel, that uses magnetic force to help pull the string. (T2)
 
 A wireless storage connector that connects to a void driver to transport between locations. 

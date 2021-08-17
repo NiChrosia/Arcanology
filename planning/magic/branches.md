@@ -1,29 +1,28 @@
 # Magic Branches
 
 Void:
-  Gravity:
-  Space-time:
+- Gravity:
+- Space-time:
 
 Sky:
-  Electricity:
-  Gas:
+- Electricity:
+- Gas:
 
 Water:
-  Coolant:
-  Erosion:
+- Coolant:
+- Erosion:
 
 Light:
-  Lasers:
-  Solar electricity:
+- Lasers:
 
 Fire:
-  Forging:
-  Temperature:
+- Forging:
+- Temperature:
   
 Earth:
-  Magnetism:
-  Minerals:
+- Magnetism:
+- Minerals:
 
 Mana:
-  Vitality:
-  Knowledge:
+- Vitality:
+- Knowledge:
