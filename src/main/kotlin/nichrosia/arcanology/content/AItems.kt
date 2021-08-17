@@ -15,6 +15,7 @@ import nichrosia.arcanology.integration.patchouli.GuideBookItem
 object AItems : RegisterableContent<Item>(Registry.ITEM) {
     lateinit var altar: BlockItem
 //    lateinit var pulverizer: BlockItem
+    lateinit var runeInfuser: BlockItem
 
     lateinit var wireCutter: Item
 
@@ -30,6 +31,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
     override fun load() {
         altar = register("altar", BlockItem(ABlocks.altar, magicSettings.rarity(Rarity.EPIC)))
 //        pulverizer = register("pulverizer", BlockItem(ABlocks.pulverizer, techSettings))
+        runeInfuser = register("rune_infuser", BlockItem(ABlocks.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)))
 
         wireCutter = register("wire_cutter", Item(techSettings))
 

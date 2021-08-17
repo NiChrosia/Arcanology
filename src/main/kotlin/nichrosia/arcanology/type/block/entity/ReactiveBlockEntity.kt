@@ -9,7 +9,7 @@ import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.content.AStatusEffects
 import nichrosia.arcanology.type.status.ElementalWrathStatusEffectInstance
 
-open class ReactiveBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.reactiveBlockEntity, pos, state) {
+open class ReactiveBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.reactiveBlock, pos, state) {
     companion object {
         fun onBreak(pos: BlockPos, playerEntity: PlayerEntity) {
             playerEntity.removeStatusEffect(AStatusEffects.elementalWrath)

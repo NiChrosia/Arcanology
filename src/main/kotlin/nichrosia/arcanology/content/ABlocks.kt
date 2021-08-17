@@ -12,12 +12,14 @@ import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.type.block.AltarBlock
 import nichrosia.arcanology.type.block.PulverizerBlock
 import nichrosia.arcanology.type.block.ReactiveBlock
+import nichrosia.arcanology.type.block.RuneInfuserBlock
 
 @Suppress("MemberVisibilityCanBePrivate")
 object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {
     lateinit var reactiveBlock: ReactiveBlock
     lateinit var altar: AltarBlock
     lateinit var pulverizer: PulverizerBlock
+    lateinit var runeInfuser: RuneInfuserBlock
 
     override fun load() {
         reactiveBlock = register(
@@ -48,6 +50,16 @@ object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {
                 .strength(5f, 100f)
                 .breakByTool(FabricToolTags.PICKAXES, 1),
                 EnergyTier.T1
+            )
+        )
+
+        runeInfuser = register(
+            "rune_infuser",
+            RuneInfuserBlock(
+                FabricBlockSettings.of(ABlockMaterials.elementalCrystal)
+                    .requiresTool()
+                    .strength(5f, 150f)
+                    .breakByTool(FabricToolTags.PICKAXES, 3)
             )
         )
     }

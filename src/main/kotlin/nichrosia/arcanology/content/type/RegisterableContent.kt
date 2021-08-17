@@ -1,5 +1,6 @@
 package nichrosia.arcanology.content.type
 
+import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 

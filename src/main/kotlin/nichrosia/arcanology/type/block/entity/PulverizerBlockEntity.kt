@@ -23,7 +23,7 @@ open class PulverizerBlockEntity(
     pos: BlockPos,
     state: BlockState
 ) : BlockEntity(
-    ABlockEntityTypes.pulverizerBlockEntity,
+    ABlockEntityTypes.pulverizer,
     pos,
     state
 ), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, EnergyIo {
@@ -62,7 +62,7 @@ open class PulverizerBlockEntity(
     private val maxProgress = 100
 
     override val inputSlots = intArrayOf(1)
-    override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(9, ItemStack.EMPTY)
+    override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(2, ItemStack.EMPTY)
 
     override fun getPropertyDelegate() = delegate
     override fun getEnergy() = energy
@@ -123,7 +123,7 @@ open class PulverizerBlockEntity(
     }
 
     companion object {
-        fun tick(world: World, pos: BlockPos, state: BlockState, entity: AltarBlockEntity) {
+        fun tick(world: World, pos: BlockPos, state: BlockState, entity: PulverizerBlockEntity) {
             entity.tick(world, pos, state)
         }
     }
@@ -133,7 +133,7 @@ open class PulverizerBlockEntity(
     }
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? {
-        return PulverizerScreenHandler(syncId, inv, ScreenHandlerContext.create(world, pos))
+        return PulverizerScreenHandler(syncId, inv, ScreenHandlerContext.create(player.world, pos))
     }
 
     override fun getDisplayName(): Text {

@@ -37,8 +37,8 @@ open class PulverizerBlock(settings: Settings, val tier: EnergyTier) : BlockWith
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, ABlockEntityTypes.altarBlockEntity) { world1: World, pos: BlockPos, state1: BlockState, be: BlockEntity ->
-            AltarBlockEntity.tick(world1, pos, state1, be as AltarBlockEntity)
+        return checkType(type, ABlockEntityTypes.altar) { world1, pos, state1, be ->
+            PulverizerBlockEntity.tick(world1, pos, state1, be as PulverizerBlockEntity)
         }
     }
 

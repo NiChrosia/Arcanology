@@ -16,6 +16,7 @@ object Arcanology : ModInitializer {
         AConfiguredFeatures,
         AItemGroups,
         AItems,
+        ARunes,
         AStatusEffects,
         ARuneTypes,
         AToolMaterials,

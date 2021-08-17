@@ -7,12 +7,8 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
@@ -32,7 +28,7 @@ open class AltarBlock(settings: Settings) : BlockWithEntity(settings) {
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, ABlockEntityTypes.altarBlockEntity) { world1: World, pos: BlockPos, state1: BlockState, be: BlockEntity ->
+        return checkType(type, ABlockEntityTypes.altar) { world1: World, pos: BlockPos, state1: BlockState, be: BlockEntity ->
             AltarBlockEntity.tick(world1, pos, state1, be as AltarBlockEntity)
         }
     }

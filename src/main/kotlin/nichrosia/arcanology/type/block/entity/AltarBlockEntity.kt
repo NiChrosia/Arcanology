@@ -5,11 +5,10 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
-import nichrosia.arcanology.content.AItems
 import nichrosia.arcanology.content.AMaterials
 import nichrosia.arcanology.type.item.HeartItem
 
-open class AltarBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.altarBlockEntity, pos, state) {
+open class AltarBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.altar, pos, state) {
     lateinit var heart: HeartItem
 
     val heartInitialized

@@ -7,26 +7,33 @@ import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.type.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.block.entity.PulverizerBlockEntity
 import nichrosia.arcanology.type.block.entity.ReactiveBlockEntity
+import nichrosia.arcanology.type.block.entity.RuneInfuserBlockEntity
 
 object ABlockEntityTypes : RegisterableContent<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE) {
-    lateinit var reactiveBlockEntity: BlockEntityType<ReactiveBlockEntity>
-    lateinit var altarBlockEntity: BlockEntityType<AltarBlockEntity>
-    lateinit var pulverizerBlockEntity: BlockEntityType<PulverizerBlockEntity>
+    lateinit var reactiveBlock: BlockEntityType<ReactiveBlockEntity>
+    lateinit var altar: BlockEntityType<AltarBlockEntity>
+    lateinit var pulverizer: BlockEntityType<PulverizerBlockEntity>
+    lateinit var runeInfuser: BlockEntityType<RuneInfuserBlockEntity>
 
     override fun load() {
-        reactiveBlockEntity = register(
+        reactiveBlock = register(
             "reactive_block_entity",
             FabricBlockEntityTypeBuilder.create(::ReactiveBlockEntity, ABlocks.reactiveBlock).build(null)
         )
 
-        altarBlockEntity = register(
+        altar = register(
             "altar_block_entity",
             FabricBlockEntityTypeBuilder.create(::AltarBlockEntity, ABlocks.altar).build(null)
         )
 
-        pulverizerBlockEntity = register(
+        pulverizer = register(
             "pulverizer_block_entity",
             FabricBlockEntityTypeBuilder.create(::PulverizerBlockEntity, ABlocks.pulverizer).build(null)
+        )
+
+        runeInfuser = register(
+            "rune_infuser_block_entity",
+            FabricBlockEntityTypeBuilder.create(::RuneInfuserBlockEntity, ABlocks.runeInfuser).build(null)
         )
     }
 }

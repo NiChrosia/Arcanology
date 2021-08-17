@@ -5,21 +5,19 @@ import net.minecraft.util.math.MathHelper
 import nichrosia.arcanology.type.element.Element
 
 @Suppress("LeakingThis")
-open class RuneType(val name: String) {
+open class RuneType(open val name: String) {
     init {
         types += this
     }
 
     open val maxMana = 0
-
     open val minLevel = 1
     open val maxLevel = 1
-
     open val overrideItemBar = false
     open val miningSpeedMultiplier = 1f
-
     open val element = Element.Mana
 
+    open val item: ItemStack = ItemStack.EMPTY
     open var translationKey = "rune.arcanology.$name"
 
     open fun isItemBarVisible(stack: ItemStack) = false

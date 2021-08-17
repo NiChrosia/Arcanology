@@ -7,6 +7,6 @@ import nichrosia.arcanology.type.block.entity.renderer.AltarBlockEntityRenderer
 
 object ABlockEntityRenderers : Content() {
     override fun load() {
-        BlockEntityRendererRegistry.INSTANCE.register(ABlockEntityTypes.altarBlockEntity, ::AltarBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(ABlockEntityTypes.altar, ::AltarBlockEntityRenderer)
     }
 }

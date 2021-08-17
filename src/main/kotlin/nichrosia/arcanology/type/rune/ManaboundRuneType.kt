@@ -1,11 +1,16 @@
 package nichrosia.arcanology.type.rune
 
 import net.minecraft.item.ItemStack
+import nichrosia.arcanology.content.AMaterials
+import nichrosia.arcanology.content.ARunes
 import nichrosia.arcanology.type.rune.base.Rune.Companion.mana
 import nichrosia.arcanology.type.rune.base.RuneType
 import kotlin.math.roundToInt
 
 open class ManaboundRuneType : RuneType("manabound") {
+    override val item: ItemStack
+        get() = ARunes.runes["manabound"] ?: ItemStack.EMPTY
+
     override fun useDurability(itemStack: ItemStack): Boolean {
         return itemStack.mana <= 0
     }
