@@ -3,13 +3,13 @@
 Planning for the mod, primarily just has ideas, as well as more in-depth background info such as magic branches, minerals, and more.
 
 ## Table of contents
-[Magic](/magic/README.md)
-- [Magic Branches](/magic/branches.md)
-- [Magic Ideas](/magic/ideas.md)
+[Magic](/planning/magic/)
+- [Magic Branches](/planning/magic/branches.md)
+- [Magic Ideas](/planning/magic/ideas.md)
 
-[Tech](/tech/README.md)
-- [Tech Ideas](/tech/ideas.md)
+[Tech](/planning/tech/)
+- [Tech Ideas](/planning/tech/ideas.md)
 
-[Union](/both/README.md)
-- [Minerals](/both/minerals.md)
-- [Union Ideas](/both/ideas/md)
+[Union](/planning/both/)
+- [Minerals](/planning/both/minerals.md)
+- [Union Ideas](/planning/both/ideas/md)
