@@ -23,4 +23,4 @@ Mana is typically used similarly to electricity, to provide light, shelter, tran
 ## Elemental energy
 
 Elemental energy is an aspect of mana, and is embodied by its respective symbol. More information about the abilities of 
-each branch can be found in the (branches)[/planning/magic/branches.md].
+each branch can be found in the [branches](/planning/magic/branches.md).

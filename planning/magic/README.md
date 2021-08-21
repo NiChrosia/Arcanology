@@ -6,3 +6,4 @@ A strange ethereal force capable of seemingly bending the laws of physics
 
 - [Ideas](/planning/magic/ideas.md)
 - [Branches](/planning/magic/branches.md)
+- [Mana](/planning/magic/mana.md)
