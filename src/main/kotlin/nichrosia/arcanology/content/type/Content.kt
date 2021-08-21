@@ -3,14 +3,33 @@ package nichrosia.arcanology.content.type
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 
-abstract class Content {
-    abstract fun load()
+/** A general wrapper for all content classes, with helper methods for [Identifier]s, automatically generating lang
+ * files, and an abstract load method.
+ * @author NiChrosia */
+interface Content {
+    fun load()
 
-    open fun identify(name: String) = Identifier(Arcanology.modID, name)
-
-    open fun generateLang(name: String): String {
-        return name.split("_").joinToString(" ") { it[0].uppercaseChar() + it.substring(1) }
+    fun identify(name: String): Identifier {
+        return Identifier(Arcanology.modID, name)
     }
 
-    fun capitalize(word: String) = word[0].uppercaseChar() + word.substring(1)
+    fun String.capitalize(): String {
+        return replaceFirstChar { it.uppercaseChar() }
+    }
+
+    fun List<String>.joinToStringIndexed(separator: String, transformer: (Int, String) -> String): String {
+        return mapIndexed { index, element -> transformer(index, element) }.joinToString(separator)
+    }
+
+    fun String.mapWords(transformer: (String) -> String): String {
+        return split(" ").joinToString(" ") { transformer(it) }
+    }
+
+    fun String.mapWordsIndexed(transformer: (Int, String) -> String): String {
+        return split(" ").joinToStringIndexed(" ") { index, element -> transformer(index, element) }
+    }
+
+    fun generateLang(name: String): String {
+        return name.replace("_", " ").mapWords { it.capitalize() }
+    }
 }

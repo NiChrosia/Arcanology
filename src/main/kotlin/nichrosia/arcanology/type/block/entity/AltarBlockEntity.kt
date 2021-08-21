@@ -14,6 +14,7 @@ open class AltarBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlo
     val heartInitialized
       get() = this::heart.isInitialized
 
+    @Suppress("unused_parameter")
     fun tick(world: World, pos: BlockPos, state: BlockState) {
         heart = AMaterials.prismatic.heart
     }

@@ -4,7 +4,7 @@ Void:
 - Gravity:
 - Space-time:
 
-Sky:
+Air:
 - Electricity:
 - Gas:
 
@@ -14,6 +14,7 @@ Water:
 
 Light:
 - Lasers:
+- Information:
 
 Fire:
 - Forging:

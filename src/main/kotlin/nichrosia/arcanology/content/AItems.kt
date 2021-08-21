@@ -42,7 +42,7 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
     }
 
     override fun <T : Item> register(identifier: Identifier, content: T): T {
-        val registeredContent = Registry.register(type, identifier, content)
+        val registeredContent = super.register(identifier, content)
 
         if (registeredContent is BlockItem) {
             DataGenerator.blockItemModel(registeredContent)
@@ -52,8 +52,6 @@ object AItems : RegisterableContent<Item>(Registry.ITEM) {
 
         val id = Registry.ITEM.getId(registeredContent)
         DataGenerator.lang.item(id, generateLang(id.path))
-
-        all.add(registeredContent)
 
         return registeredContent
     }

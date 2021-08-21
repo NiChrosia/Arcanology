@@ -8,7 +8,7 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.data.DataGenerator
 
-object AItemGroups : Content() {
+object AItemGroups : Content {
     lateinit var magic: ItemGroup
     lateinit var tech: ItemGroup
 
@@ -29,6 +29,6 @@ object AItemGroups : Content() {
     }
 
     override fun generateLang(name: String): String {
-        return "${capitalize(Arcanology.modID)}: ${capitalize(name)}"
+        return "${Arcanology.modID.capitalize()}: ${name.capitalize()}"
     }
 }

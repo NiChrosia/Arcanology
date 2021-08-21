@@ -1,22 +1,15 @@
 package nichrosia.arcanology.content.type
 
-import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class RegisterableContent<B>(val type: Registry<B>) : Content() {
-    protected val all = mutableListOf<B>()
-    
-    open fun <T : B> register(identifier: Identifier, content: T): T {
-        val registeredContent = Registry.register(type, identifier, content)
-
-        all.add(registeredContent)
-
-        return registeredContent
+abstract class RegisterableContent<T>(open val registry: Registry<T>) : Content {
+    open fun <E : T> register(identifier: Identifier, content: E): E {
+        return Registry.register(registry, identifier, content)
     }
 
-    open fun <T : B> register(name: String, content: T): T {
+    open fun <E : T> register(name: String, content: E): E {
         return register(identify(name), content)
     }
 }

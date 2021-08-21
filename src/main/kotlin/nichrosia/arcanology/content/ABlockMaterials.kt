@@ -5,7 +5,7 @@ import net.minecraft.block.MapColor
 import net.minecraft.block.Material
 import nichrosia.arcanology.content.type.Content
 
-object ABlockMaterials : Content() {
+object ABlockMaterials : Content {
     lateinit var velosium: Material
     lateinit var xenothite: Material
     lateinit var elementalCrystal: Material

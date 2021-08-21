@@ -4,13 +4,14 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import net.minecraft.world.World
 import nichrosia.arcanology.math.Math.clamp
 import nichrosia.arcanology.type.rune.base.Rune
 
 interface RuneItem {
     fun appendTooltip(runes: Array<Rune>, text: MutableList<Text>, context: TooltipContext) {
         runes.forEach {
+            text.add(LiteralText("")) // For the gap between runes and other stuff
+
             text.add(TranslatableText(it.type.translationKey).append(" ${it.level.toRomanNumeral()}"))
         }
     }

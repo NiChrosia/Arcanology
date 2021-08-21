@@ -3,13 +3,10 @@ package nichrosia.arcanology.type.rune.base
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.MathHelper
 import nichrosia.arcanology.type.element.Element
+import kotlin.properties.Delegates
 
 @Suppress("LeakingThis")
 open class RuneType(open val name: String) {
-    init {
-        types += this
-    }
-
     open val maxMana = 0
     open val minLevel = 1
     open val maxLevel = 1
@@ -19,6 +16,14 @@ open class RuneType(open val name: String) {
 
     open val item: ItemStack = ItemStack.EMPTY
     open var translationKey = "rune.arcanology.$name"
+
+    open var id by Delegates.notNull<Int>()
+
+    init {
+        types += this
+
+        id = types.indexOf(this)
+    }
 
     open fun isItemBarVisible(stack: ItemStack) = false
     open fun getItemBarStep(stack: ItemStack) = 13

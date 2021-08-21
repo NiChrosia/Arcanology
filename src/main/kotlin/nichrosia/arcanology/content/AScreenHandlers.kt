@@ -8,7 +8,7 @@ import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.type.block.entity.screen.handler.PulverizerScreenHandler
 import nichrosia.arcanology.type.block.entity.screen.handler.RuneInfuserScreenHandler
 
-object AScreenHandlers : Content() {
+object AScreenHandlers : Content {
     lateinit var pulverizer: ScreenHandlerType<PulverizerScreenHandler>
     lateinit var runeInfuser: ScreenHandlerType<RuneInfuserScreenHandler>
 

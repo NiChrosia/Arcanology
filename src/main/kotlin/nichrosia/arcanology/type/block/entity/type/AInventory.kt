@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block.entity
+package nichrosia.arcanology.type.block.entity.type
 
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventories

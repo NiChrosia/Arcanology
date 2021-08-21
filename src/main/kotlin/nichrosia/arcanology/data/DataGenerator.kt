@@ -34,7 +34,7 @@ import nichrosia.arcanology.type.item.energy.WireItem
 import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem
 import net.devtech.arrp.json.blockstate.JState.model as blockModel
 
-object DataGenerator : Content() {
+object DataGenerator : Content {
     private val tags = mutableMapOf<Identifier, MutableList<Identifier>>()
     val lang: JLang = lang()
 

@@ -37,12 +37,12 @@ enum class Element {
      * Capable of manipulating ground and metals. */
     Earth,
 
-    /** The sky element.
+    /** The air element.
      *
      * Found in: the sky of the Overworld, in floating islands.
      *
      * Capable of creating, and manipulating electricity, as well as the wind. */
-    Sky,
+    Air,
 
     /** The element of life, or experience.
      *

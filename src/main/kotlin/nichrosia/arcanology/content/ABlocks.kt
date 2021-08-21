@@ -65,7 +65,7 @@ object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {
     }
 
     override fun <T : Block> register(identifier: Identifier, content: T): T {
-        val registeredContent = Registry.register(type, identifier, content)
+        val registeredContent = Registry.register(registry, identifier, content)
 
         if (content is AltarBlock) {
             DataGenerator.normalBlockstate(registeredContent)
@@ -77,8 +77,6 @@ object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {
 
         val id = Registry.BLOCK.getId(registeredContent)
         DataGenerator.lang.block(id, generateLang(id.path))
-
-        all.add(registeredContent)
 
         return registeredContent
     }

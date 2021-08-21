@@ -3,15 +3,15 @@ package nichrosia.arcanology.type.block.entity.screen.handler
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
-import io.github.cottonmc.cotton.gui.widget.data.Axis
-import io.github.cottonmc.cotton.gui.widget.data.InputResult
-import io.github.cottonmc.cotton.gui.widget.data.Insets
+import io.github.cottonmc.cotton.gui.widget.data.*
 import net.fabricmc.fabric.api.util.TriState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.util.Identifier
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AScreenHandlers
 import nichrosia.arcanology.type.rune.base.RuneType
 
@@ -26,28 +26,39 @@ open class RuneInfuserScreenHandler(
     syncId,
     playerInventory,
     getBlockInventory(context, inventorySize),
-    getBlockPropertyDelegate(context, 2)
+    getBlockPropertyDelegate(context, 3)
 ) {
+    open val runeBackgroundPath: Identifier
+        get() = Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser_widget.png")
+
+    open val runeX = -1
+    open val runeY = -1
+
+    val runePanelWidth = 4
+    val runePanelHeight = 4
+
+    protected val root = WGridPanel().apply {
+        setSize(120, 150)
+        insets = Insets.ROOT_PANEL
+    }
+
+    protected val runeBackground: WSprite
     protected val runeSlot: WItemSlot
     protected val crystalSlot: WItemSlot
     protected val runePanel: WGridPanel
     protected val runeScrollPanel: WScrollPanel
 
     init {
-        val root = WGridPanel()
-        root.setSize(180, 150)
-        root.insets = Insets.ROOT_PANEL
-
         setRootPanel(root)
 
+        runeBackground = WSprite(runeBackgroundPath)
+        root.add(runeBackground, runeX, runeY, 6, 5)
+
         runeSlot = WItemSlot.of(blockInventory, 0)
-        root.add(runeSlot, 0, 2)
+        root.add(runeSlot, runeX + 2, runeY + 2)
 
         crystalSlot = WItemSlot.of(blockInventory, 1)
-        root.add(crystalSlot, 0, 3)
-
-        val runePanelWidth = 7
-        val runePanelHeight = 4
+        root.add(crystalSlot, runeX + 3, runeY + 2)
 
         runePanel = WGridPanel()
         runePanel.setSize(runePanelWidth * 18, runePanelHeight * 18)
@@ -56,8 +67,8 @@ open class RuneInfuserScreenHandler(
         var rowBox = WBox(Axis.HORIZONTAL)
 
         RuneType.types.forEachIndexed { i, r ->
-            val runeWidget = WRune(r.item) {
-
+            val runeWidget = WRune(r.item, r) {
+                propertyDelegate[2] = it.id
             }
 
             rowBox.add(runeWidget)
@@ -73,19 +84,29 @@ open class RuneInfuserScreenHandler(
 
         runePanel.add(box, 0, 0)
 
-        runeScrollPanel = WScrollPanel(runePanel)
-        runeScrollPanel.isScrollingHorizontally = TriState.FALSE
-        runeScrollPanel.isScrollingVertically = TriState.DEFAULT
-        runeScrollPanel.setSize(runePanelWidth * 18, runePanelHeight * 18)
+        runeScrollPanel = object : WScrollPanel(runePanel) {
+            init {
+                setSize(runePanelWidth * 18, runePanelHeight * 18)
 
-        root.add(runeScrollPanel, 2, 0, runePanelWidth, runePanelHeight)
+                isScrollingHorizontally = TriState.FALSE
+                isScrollingVertically = TriState.TRUE
+            }
+
+            override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                super.paint(matrices, x, y, mouseX, mouseY)
+
+                ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xAAB0B0B0.toInt())
+            }
+        }
+
+        root.add(runeScrollPanel, 5, 0, runePanelWidth, runePanelHeight)
 
         root.add(createPlayerInventoryPanel(), 0, 4)
 
         root.validate(this)
     }
 
-    open class WRune(val item: ItemStack, val clickListener: () -> Unit) : WWidget() {
+    open class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> Unit) : WWidget() {
         init {
             setSize(2 * 18, 2 * 18)
         }
@@ -95,13 +116,13 @@ open class RuneInfuserScreenHandler(
         override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
 
-            if (isHovering(mouseX, mouseY)) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cff.toInt())
+            if (isHovering(mouseX, mouseY)) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cFF.toInt())
 
             MinecraftClient.getInstance().itemRenderer.renderInGui(item, x + 1, y + 1)
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {
-            clickListener()
+            clickListener(runeType)
 
             return InputResult.PROCESSED
         }

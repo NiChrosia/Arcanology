@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3f
 import nichrosia.arcanology.content.AItems
 import nichrosia.arcanology.type.block.entity.AltarBlockEntity
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("MemberVisibilityCanBePrivate", "unused", "unused_parameter")
 open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : BlockEntityRenderer<AltarBlockEntity> {
     override fun render(
         entity: AltarBlockEntity,

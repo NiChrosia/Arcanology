@@ -4,7 +4,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.item.ToolMaterial as ToolMaterialInterface
 import nichrosia.arcanology.content.type.Content
 
-object AToolMaterials : Content() {
+object AToolMaterials : Content {
     lateinit var silver: ToolMaterial
     
     override fun load() {

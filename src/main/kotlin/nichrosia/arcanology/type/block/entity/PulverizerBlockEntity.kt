@@ -18,6 +18,7 @@ import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.math.Math.clamp
 import nichrosia.arcanology.type.block.PulverizerBlock
 import nichrosia.arcanology.type.block.entity.screen.handler.PulverizerScreenHandler
+import nichrosia.arcanology.type.block.entity.type.AInventory
 
 open class PulverizerBlockEntity(
     pos: BlockPos,
@@ -118,6 +119,7 @@ open class PulverizerBlockEntity(
         }
     }
 
+    @Suppress("unused_parameter")
     fun tick(world: World, pos: BlockPos, state: BlockState) {
 
     }
