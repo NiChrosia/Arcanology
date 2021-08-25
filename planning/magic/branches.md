@@ -23,6 +23,7 @@ Fire:
 Earth:
 - Magnetism:
 - Minerals:
+- Radioactivity:
 
 Mana:
 - Vitality:

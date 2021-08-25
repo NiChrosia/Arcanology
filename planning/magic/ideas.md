@@ -4,7 +4,10 @@ A silver tool/armor set which heavily utilizes runes. (T3)
 
 A rune infuser, which takes an empty rune (Made of calcite/diamond/xenothite), and applies a pattern to it using elemental crystals.
 Rune patterns are unlocked by finding them randomly in chests, or by artificially experimenting, which will give a random 
-(weighted, more likely to give a more common type, and can still give you ones you already have.) (T3-5)
+(weighted, more likely to give a more common type, and can still give you ones you already have.) 
+Specific details: Each recipe will use a set amount of items, rather than a value of "energy" to try to feel more vanilla.
+There will be six different elemental slots surrounding the rune slot, each to hold a crystal. Different runes require different
+crystals. (T3-5)
 
 A magical device which uses the mana element as a substitute for food, resulting in effective saturation as long as the device has mana. (T4)
 

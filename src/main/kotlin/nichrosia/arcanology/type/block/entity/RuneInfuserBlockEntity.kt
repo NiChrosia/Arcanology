@@ -57,8 +57,8 @@ open class RuneInfuserBlockEntity(
 
     open var runeID = 0
 
-    override val inputSlots = intArrayOf(1)
-    override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(2, ItemStack.EMPTY)
+    override val inputSlots = (0..6).toList().toIntArray()
+    override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(7, ItemStack.EMPTY)
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? {
         return RuneInfuserScreenHandler(syncId, inv, ScreenHandlerContext.create(player.world, pos))
@@ -74,6 +74,7 @@ open class RuneInfuserBlockEntity(
 
     override fun markDirty() {
         super<AInventory>.markDirty()
+        super<BlockEntity>.markDirty()
     }
 
     @Suppress("unused_parameter")
@@ -85,6 +86,20 @@ open class RuneInfuserBlockEntity(
         fun tick(world: World, pos: BlockPos, state: BlockState, entity: RuneInfuserBlockEntity) {
             entity.tick(world, pos, state)
         }
+    }
+
+    override fun writeNbt(nbt: NbtCompound): NbtCompound {
+        nbt.putInt("arcanologyRuneID", runeID)
+
+        return super.writeNbt(nbt)
+    }
+
+    override fun readNbt(nbt: NbtCompound) {
+        if (nbt.contains("arcanologyRuneID")) {
+            runeID = nbt.getInt("arcanologyRuneID")
+        }
+
+        super.readNbt(nbt)
     }
 
     override fun fromClientTag(tag: NbtCompound) {

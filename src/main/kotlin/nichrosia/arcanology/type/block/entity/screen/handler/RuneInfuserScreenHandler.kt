@@ -20,7 +20,7 @@ open class RuneInfuserScreenHandler(
     syncId: Int,
     playerInventory: PlayerInventory,
     context: ScreenHandlerContext,
-    inventorySize: Int = 2
+    inventorySize: Int = 7
 ) : SyncedGuiDescription(
     AScreenHandlers.runeInfuser,
     syncId,
@@ -28,40 +28,100 @@ open class RuneInfuserScreenHandler(
     getBlockInventory(context, inventorySize),
     getBlockPropertyDelegate(context, 3)
 ) {
-    open val runeBackgroundPath: Identifier
-        get() = Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser_widget.png")
+    open val runeX = -6
+    open val runeY = -10
 
-    open val runeX = -1
-    open val runeY = -1
+    val runePanelWidth = 72
+    val runePanelHeight = 72
 
-    val runePanelWidth = 4
-    val runePanelHeight = 4
-
-    protected val root = WGridPanel().apply {
+    protected val root = WPlainPanel().apply {
         setSize(120, 150)
         insets = Insets.ROOT_PANEL
     }
 
     protected val runeBackground: WSprite
     protected val runeSlot: WItemSlot
-    protected val crystalSlot: WItemSlot
+
+    protected val lightBackground: WSprite
+    protected val lightSlot: WItemSlot
+
+    protected val voidBackground: WSprite
+    protected val voidSlot: WItemSlot
+
+    protected val fireBackground: WSprite
+    protected val fireSlot: WItemSlot
+
+    protected val waterBackground: WSprite
+    protected val waterSlot: WItemSlot
+
+    protected val earthBackground: WSprite
+    protected val earthSlot: WItemSlot
+
+    protected val airBackground: WSprite
+    protected val airSlot: WItemSlot
+
     protected val runePanel: WGridPanel
     protected val runeScrollPanel: WScrollPanel
 
     init {
         setRootPanel(root)
 
-        runeBackground = WSprite(runeBackgroundPath)
-        root.add(runeBackground, runeX, runeY, 6, 5)
+        runeBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/rune_background.png"))
+        root.add(runeBackground, runeX + 31 + 5, runeY + 31 + 5, 18, 18)
 
         runeSlot = WItemSlot.of(blockInventory, 0)
-        root.add(runeSlot, runeX + 2, runeY + 2)
+        root.add(runeSlot, runeX + 36, runeY + 36)
 
-        crystalSlot = WItemSlot.of(blockInventory, 1)
-        root.add(crystalSlot, runeX + 3, runeY + 2)
+        // Elemental crystal slots; light
+
+        lightBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/light_background.png"))
+        root.add(lightBackground, runeX + 36, runeY + 36 + 18 + 9, 18, 18)
+
+        lightSlot = WItemSlot.of(blockInventory, 1)
+        root.add(lightSlot, runeX + 36, runeY + 36 + 18 + 9)
+
+        // void
+
+        voidBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/void_background.png"))
+        root.add(voidBackground, runeX + 36 + 18 + 9, runeY + 36 + 14, 18, 18)
+
+        voidSlot = WItemSlot.of(blockInventory, 2)
+        root.add(voidSlot, runeX + 36 + 18 + 9, runeY + 36 + 14)
+
+        // fire
+
+        fireBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/fire_background.png"))
+        root.add(fireBackground, runeX + 36 + 18 + 9, runeY + 36 - 14, 18, 18)
+
+        fireSlot = WItemSlot.of(blockInventory, 3)
+        root.add(fireSlot, runeX + 36 + 18 + 9, runeY + 36 - 14)
+
+        // water
+
+        waterBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/water_background.png"))
+        root.add(waterBackground, runeX + 36, runeY + 36 - 18 - 9, 18, 18)
+
+        waterSlot = WItemSlot.of(blockInventory, 4)
+        root.add(waterSlot, runeX + 36, runeY + 36 - 18 - 9)
+
+        // earth
+
+        earthBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/earth_background.png"))
+        root.add(earthBackground, runeX + 36 - 18 - 9, runeY + 36 - 14, 18, 18)
+
+        earthSlot = WItemSlot.of(blockInventory, 5)
+        root.add(earthSlot, runeX + 36 - 18 - 9, runeY + 36 - 14)
+
+        // air
+
+        airBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/air_background.png"))
+        root.add(airBackground, runeX + 36 - 18 - 9, runeY + 36 + 14, 18, 18)
+
+        airSlot = WItemSlot.of(blockInventory, 6)
+        root.add(airSlot, runeX + 36 - 18 - 9, runeY + 36 + 14)
 
         runePanel = WGridPanel()
-        runePanel.setSize(runePanelWidth * 18, runePanelHeight * 18)
+        runePanel.setSize(runePanelWidth, runePanelHeight)
 
         val box = WBox(Axis.VERTICAL)
         var rowBox = WBox(Axis.HORIZONTAL)
@@ -99,16 +159,16 @@ open class RuneInfuserScreenHandler(
             }
         }
 
-        root.add(runeScrollPanel, 5, 0, runePanelWidth, runePanelHeight)
+        root.add(runeScrollPanel, 90, 0, runePanelWidth, runePanelHeight)
 
-        root.add(createPlayerInventoryPanel(), 0, 4)
+        root.add(createPlayerInventoryPanel(), 0, 72)
 
         root.validate(this)
     }
 
     open class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> Unit) : WWidget() {
         init {
-            setSize(2 * 18, 2 * 18)
+            setSize(36, 36)
         }
 
         fun isHovering(mouseX: Int, mouseY: Int) = mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height
