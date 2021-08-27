@@ -18,11 +18,13 @@ import nichrosia.arcanology.content.AItems.techSettings
 import nichrosia.arcanology.data.DataGenerator.itemTagID
 import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.HeartItem
 import nichrosia.arcanology.type.item.energy.BatteryItem
 import nichrosia.arcanology.type.item.energy.CircuitItem
 import nichrosia.arcanology.type.item.energy.WireItem
+import nichrosia.arcanology.type.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem
 import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem.Companion.charged
 import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem.Companion.hasProjectile
@@ -53,6 +55,7 @@ data class MaterialHelper(val name: String,
     lateinit var battery: BatteryItem
     lateinit var circuit: CircuitItem
 
+    lateinit var magicCrystal: MagicCrystalItem
     lateinit var heart: HeartItem
 
     lateinit var crossbow: OpenCrossbowItem
@@ -201,6 +204,12 @@ data class MaterialHelper(val name: String,
         return this
     }
 
+    fun addMagicCrystal(name: String = "${this.name}_magic_crystal", element: Element, crystalItem: MagicCrystalItem = MagicCrystalItem(settings, element)): MaterialHelper {
+        magicCrystal = registerItem(name, crystalItem)
+
+        return this
+    }
+
     fun addBlock(name: String, type: Block): MaterialHelper {
         registerBlock(name, type)
         registerItem(name, BlockItem(type, settings))
@@ -260,9 +269,17 @@ data class MaterialHelper(val name: String,
         }
 
         val id = Registry.ITEM.getId(registeredContent)
-        DataGenerator.lang.item(id, generateLang(id.path))
+
+        DataGenerator.lang.item(id, when(registeredContent) {
+            is MagicCrystalItem -> generateCrystalLang(id.path)
+            else -> generateLang(id.path)
+        })
 
         return registeredContent
+    }
+
+    fun generateCrystalLang(name: String): String {
+        return generateLang(name.replace("_magic_", "_"))
     }
 
     private fun <T : Block> registerBlock(name: String, content: T): T {

@@ -1,0 +1,24 @@
+{
+    "type": "arcanology:rune_recipe",
+    "light_item": {
+        "item": "arcanology:prismatic_magic_crystal"
+    },
+    "void_item": {
+        "item": "arcanology:desolate_magic_crystal"
+    },
+    "fire_item": {
+        "item": "arcanology:molten_magic_crystal"
+    },
+    "water_item": {
+        "item": "arcanology:tidal_magic_crystal"
+    },
+    "earth_item": {
+        "item": "arcanology:terrene_magic_crystal"
+    },
+    "air_item": {
+        "item": "arcanology:celestial_magic_crystal"
+    },
+    "result": {
+        "item": "arcanology:rune_manabound"
+    }
+}

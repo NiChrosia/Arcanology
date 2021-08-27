@@ -18,10 +18,7 @@ import net.devtech.arrp.json.tags.JTag
 import net.devtech.arrp.json.tags.JTag.tag
 import net.minecraft.block.Block
 import net.minecraft.block.OreBlock
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
-import net.minecraft.item.MiningToolItem
-import net.minecraft.item.PickaxeItem
+import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology.commonResourcePack
@@ -43,6 +40,7 @@ object DataGenerator : Content {
     private fun blockID(name: String) = Identifier(modID, "blocks/$name")
     private fun blockModelID(name: String) = Identifier(modID, "block/$name")
     private fun itemModelID(name: String) = Identifier(modID, "item/$name")
+    private fun recipeID(name: String) = Identifier(modID, "recipes/$name")
 
     fun itemTagID(name: String) = Identifier("c", "items/$name")
 

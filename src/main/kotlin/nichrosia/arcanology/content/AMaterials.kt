@@ -1,10 +1,10 @@
 package nichrosia.arcanology.content
 
 import net.minecraft.util.Rarity
-import nichrosia.arcanology.content.AItems
 import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.data.MaterialHelper
 import nichrosia.arcanology.energy.EnergyTier
+import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.magic.RunicPickaxeItem
 
@@ -20,24 +20,31 @@ object AMaterials : Content {
     override fun load() {
         prismatic = MaterialHelper("prismatic", false, Rarity.RARE)
             .addHeart("prismatic_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Light)
 
         MaterialHelper("desolate", false, Rarity.RARE)
             .addHeart("desolate_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Void)
 
         MaterialHelper("molten", false, Rarity.RARE)
             .addHeart("molten_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Fire)
 
         MaterialHelper("tidal", false, Rarity.RARE)
             .addHeart("tidal_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Water)
 
         MaterialHelper("terrene", false, Rarity.RARE)
             .addHeart("terrene_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Earth)
 
         MaterialHelper("celestial", false, Rarity.RARE)
             .addHeart("celestial_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Air)
 
         arcane = MaterialHelper("arcane", false, Rarity.EPIC)
             .addHeart("arcane_heart", ElementalHeart.Prismatic)
+            .addMagicCrystal(element = Element.Mana)
 
         MaterialHelper("velosium", false, Rarity.COMMON, 3)
             .addOre("velosium_ore",

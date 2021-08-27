@@ -14,21 +14,25 @@ import nichrosia.arcanology.type.rune.base.RuneType
 object ARunes : RegisterableContent<Item>(Registry.ITEM) {
     val runes = mutableMapOf<String, ItemStack>()
 
+    lateinit var manabound: Item
+
     override fun load() {
-        register("manabound")
+        manabound = register("manabound")
 
         RuneType.types.forEach {
             register(it.name)
         }
     }
 
-    fun register(runeName: String) {
+    fun register(runeName: String): Item {
         val rune = register("rune_$runeName", Item(magicSettings))
 
         DataGenerator.normalItemModel(rune)
         DataGenerator.lang.entry("rune.${Arcanology.modID}.$runeName", runeName.capitalize())
 
         runes.putIfAbsent(runeName, ItemStack(rune))
+
+        return rune
     }
 
     override fun <T : Item> register(identifier: Identifier, content: T): T {

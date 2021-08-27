@@ -13,6 +13,7 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AScreenHandlers
+import nichrosia.arcanology.type.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.rune.base.RuneType
 
 @Suppress("LeakingThis", "MemberVisibilityCanBePrivate")
@@ -31,37 +32,37 @@ open class RuneInfuserScreenHandler(
     open val runeX = -6
     open val runeY = -10
 
-    val runePanelWidth = 72
-    val runePanelHeight = 72
+    open val runePanelWidth = 72
+    open val runePanelHeight = 72
 
-    protected val root = WPlainPanel().apply {
+    protected open val root = WPlainPanel().apply {
         setSize(120, 150)
         insets = Insets.ROOT_PANEL
     }
 
-    protected val runeBackground: WSprite
-    protected val runeSlot: WItemSlot
+    protected open val runeBackground: WSprite
+    protected open val runeSlot: WItemSlot
 
-    protected val lightBackground: WSprite
-    protected val lightSlot: WItemSlot
+    protected open val lightBackground: WSprite
+    protected open val lightSlot: WItemSlot
 
-    protected val voidBackground: WSprite
-    protected val voidSlot: WItemSlot
+    protected open val voidBackground: WSprite
+    protected open val voidSlot: WItemSlot
 
-    protected val fireBackground: WSprite
-    protected val fireSlot: WItemSlot
+    protected open val fireBackground: WSprite
+    protected open val fireSlot: WItemSlot
 
-    protected val waterBackground: WSprite
-    protected val waterSlot: WItemSlot
+    protected open val waterBackground: WSprite
+    protected open val waterSlot: WItemSlot
 
-    protected val earthBackground: WSprite
-    protected val earthSlot: WItemSlot
+    protected open val earthBackground: WSprite
+    protected open val earthSlot: WItemSlot
 
-    protected val airBackground: WSprite
-    protected val airSlot: WItemSlot
+    protected open val airBackground: WSprite
+    protected open val airSlot: WItemSlot
 
-    protected val runePanel: WGridPanel
-    protected val runeScrollPanel: WScrollPanel
+    protected open val runePanel: WGridPanel
+    protected open val runeScrollPanel: WScrollPanel
 
     init {
         setRootPanel(root)
@@ -69,7 +70,7 @@ open class RuneInfuserScreenHandler(
         runeBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/rune_background.png"))
         root.add(runeBackground, runeX + 31 + 5, runeY + 31 + 5, 18, 18)
 
-        runeSlot = WItemSlot.of(blockInventory, 0)
+        runeSlot = WItemSlot.of(blockInventory, 0).setInsertingAllowed(false)
         root.add(runeSlot, runeX + 36, runeY + 36)
 
         // Elemental crystal slots; light
@@ -77,7 +78,7 @@ open class RuneInfuserScreenHandler(
         lightBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/light_background.png"))
         root.add(lightBackground, runeX + 36, runeY + 36 + 18 + 9, 18, 18)
 
-        lightSlot = WItemSlot.of(blockInventory, 1)
+        lightSlot = WItemSlot.of(blockInventory, 1).setFilter { it.item is MagicCrystalItem }
         root.add(lightSlot, runeX + 36, runeY + 36 + 18 + 9)
 
         // void
@@ -85,7 +86,7 @@ open class RuneInfuserScreenHandler(
         voidBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/void_background.png"))
         root.add(voidBackground, runeX + 36 + 18 + 9, runeY + 36 + 14, 18, 18)
 
-        voidSlot = WItemSlot.of(blockInventory, 2)
+        voidSlot = WItemSlot.of(blockInventory, 2).setFilter { it.item is MagicCrystalItem }
         root.add(voidSlot, runeX + 36 + 18 + 9, runeY + 36 + 14)
 
         // fire
@@ -93,7 +94,7 @@ open class RuneInfuserScreenHandler(
         fireBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/fire_background.png"))
         root.add(fireBackground, runeX + 36 + 18 + 9, runeY + 36 - 14, 18, 18)
 
-        fireSlot = WItemSlot.of(blockInventory, 3)
+        fireSlot = WItemSlot.of(blockInventory, 3).setFilter { it.item is MagicCrystalItem }
         root.add(fireSlot, runeX + 36 + 18 + 9, runeY + 36 - 14)
 
         // water
@@ -101,7 +102,7 @@ open class RuneInfuserScreenHandler(
         waterBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/water_background.png"))
         root.add(waterBackground, runeX + 36, runeY + 36 - 18 - 9, 18, 18)
 
-        waterSlot = WItemSlot.of(blockInventory, 4)
+        waterSlot = WItemSlot.of(blockInventory, 4).setFilter { it.item is MagicCrystalItem }
         root.add(waterSlot, runeX + 36, runeY + 36 - 18 - 9)
 
         // earth
@@ -109,7 +110,7 @@ open class RuneInfuserScreenHandler(
         earthBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/earth_background.png"))
         root.add(earthBackground, runeX + 36 - 18 - 9, runeY + 36 - 14, 18, 18)
 
-        earthSlot = WItemSlot.of(blockInventory, 5)
+        earthSlot = WItemSlot.of(blockInventory, 5).setFilter { it.item is MagicCrystalItem }
         root.add(earthSlot, runeX + 36 - 18 - 9, runeY + 36 - 14)
 
         // air
@@ -117,7 +118,7 @@ open class RuneInfuserScreenHandler(
         airBackground = WSprite(Identifier(Arcanology.modID, "textures/gui/widget/rune_infuser/air_background.png"))
         root.add(airBackground, runeX + 36 - 18 - 9, runeY + 36 + 14, 18, 18)
 
-        airSlot = WItemSlot.of(blockInventory, 6)
+        airSlot = WItemSlot.of(blockInventory, 6).setFilter { it.item is MagicCrystalItem }
         root.add(airSlot, runeX + 36 - 18 - 9, runeY + 36 + 14)
 
         runePanel = WGridPanel()

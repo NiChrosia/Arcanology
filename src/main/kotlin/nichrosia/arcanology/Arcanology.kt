@@ -21,6 +21,7 @@ object Arcanology : ModInitializer {
         ARuneTypes,
         AToolMaterials,
         AMaterials,
+        ARecipes,
 
         DataGenerator
     )
