@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WBar
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.util.getEnergyString
+import nichrosia.arcanology.util.formatted
 
 open class WEnergyBar(
     direction: Direction = Direction.UP,
@@ -24,7 +24,7 @@ open class WEnergyBar(
         val energy = properties[field]
         val max = properties[max]
 
-        information.add(TranslatableText("arcanology.gui.widget.energy", "${getEnergyString(energy.toDouble())} / ${getEnergyString(max.toDouble())} EF"))
+        information.add(TranslatableText("arcanology.gui.widget.energy", "${energy.formatted} / ${max.formatted} LF"))
     }
 
     @Suppress("unused")

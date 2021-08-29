@@ -1,5 +1,6 @@
 package nichrosia.arcanology.type.block
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
@@ -19,11 +20,16 @@ import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.energy.EnergyTier
-import nichrosia.arcanology.type.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.block.entity.PulverizerBlockEntity
 
-@Suppress("deprecation")
+@Suppress("deprecation", "LeakingThis")
 open class PulverizerBlock(settings: Settings, val tier: EnergyTier) : BlockWithEntity(settings), InventoryProvider {
+    init {
+        EnergyApi.SIDED.registerForBlocks({ _, _, _, blockEntity, _ ->
+            blockEntity as? PulverizerBlockEntity
+        }, this)
+    }
+
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
         return PulverizerBlockEntity(pos, state)
     }

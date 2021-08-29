@@ -1,6 +1,6 @@
 # Mana
 
-An explanation of how the system for mana functions, including obtainment, usage, and elemental energy, cores, and countermeasures.
+An explanation of how the system for mana functions, including obtainment, usage, and elemental energy, cores, and countermeasures, etc.
 
 ## Obtainment
 
@@ -12,6 +12,12 @@ when near an elemental hotspot or a hotspot of mana itself. Such hotspots includ
 - Deep Ocean (Water, Overworld)
 - Extreme Hills (Earth, Overworld)
 - Strongholds (Mana, Overworld)
+
+## Transfer
+
+Mana is transferred in item form, with varying capacities depending on the item. This is primarily done to make it feel more "vanilla", as energy networks are complicated and very
+non vanilla-esque, due to the sheer complexity and small details (Vanilla doesn't have any content that goes to 1000ths of precision as far as I know, as well as having little
+complicated stuff, (crossbows, looms, and other complex things are quite simple in Minecraft.))
 
 ## Usage
 
@@ -29,7 +35,7 @@ each branch can be found in the [branches](/planning/magic/branches.md).
 A core is a small organic crystal capable of manipulating mana. Synthetic forms also exist, capable of extremely high precision, speed, and power, resulting in
 being far superior to an organic copy when handled by appropriate machinery. Training an organic core is significantly more difficult, but allows for greater control
 in case of an unlikely malfunction. Creation of synthetic cores is done by coalescing magical energy into a suitable form, with quality depending on the metal/crystal
-used, as well as the quality of the mana used in the infusion. An example of the materials used in a high-qualtiy artificial core would be a xenothite base, and an
+used, as well as the quality of the mana used in the infusion. An example of the materials used in a high-quality artificial core would be a xenothite base, and an
 arcane infuser positioned nearby a stronghold, to take advantage of the rich natural mana.
 
 ## Countermeasures

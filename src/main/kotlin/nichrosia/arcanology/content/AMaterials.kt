@@ -11,6 +11,7 @@ import nichrosia.arcanology.type.item.magic.RunicPickaxeItem
 @Suppress("MemberVisibilityCanBePrivate")
 object AMaterials : Content {
     lateinit var prismatic: MaterialHelper
+    lateinit var terrene: MaterialHelper
     lateinit var arcane: MaterialHelper
 
     lateinit var nickelZinc: MaterialHelper
@@ -34,7 +35,7 @@ object AMaterials : Content {
             .addHeart("tidal_heart", ElementalHeart.Prismatic)
             .addMagicCrystal(element = Element.Water)
 
-        MaterialHelper("terrene", false, Rarity.RARE)
+        terrene = MaterialHelper("terrene", false, Rarity.RARE)
             .addHeart("terrene_heart", ElementalHeart.Prismatic)
             .addMagicCrystal(element = Element.Earth)
 

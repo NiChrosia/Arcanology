@@ -1,6 +1,7 @@
 package nichrosia.arcanology.type.block.entity
 
 import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import net.minecraft.block.BlockState
@@ -28,6 +29,12 @@ open class PulverizerBlockEntity(
     pos,
     state
 ), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, EnergyIo {
+    init {
+        EnergyApi.SIDED.registerForBlockEntities({ blockEntity, _ ->
+            blockEntity as? PulverizerBlockEntity
+        }, type)
+    }
+
     private val delegate = object : PropertyDelegate {
         override fun get(index: Int): Int {
             return when(index) {

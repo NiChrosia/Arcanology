@@ -21,8 +21,6 @@ import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.recipe.RuneRecipe
 import nichrosia.arcanology.type.block.entity.screen.handler.RuneInfuserScreenHandler
 import nichrosia.arcanology.type.block.entity.type.AInventory
-import nichrosia.arcanology.type.rune.base.RuneType
-import nichrosia.arcanology.util.toNullable
 
 open class RuneInfuserBlockEntity(
     pos: BlockPos,
@@ -102,7 +100,7 @@ open class RuneInfuserBlockEntity(
     @Suppress("unused_parameter")
     fun tick(world: World, pos: BlockPos, state: BlockState) {
         if (items.subList(1, 6).all { !it.isEmpty } && !world.isClient) {
-            world.recipeManager.getFirstMatch(RuneRecipe.Companion.Type, this, world).toNullable()?.let {
+            world.recipeManager.getFirstMatch(RuneRecipe.type, this, world).ifPresent {
                 setStack(resultSlotID, it.result.copy())
             }
         }

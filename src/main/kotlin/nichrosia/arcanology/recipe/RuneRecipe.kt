@@ -50,9 +50,11 @@ open class RuneRecipe(
     override fun getOutput(): ItemStack = result.copy()
     override fun getSerializer() = Serializer
     override fun getType() = Type
-    override fun getId() = Identifier(Arcanology.modID, Type.ID)
+    override fun getId() = Identifier(Arcanology.modID, ID)
 
     companion object {
+        const val ID = "rune_recipe"
+
         val types = mutableListOf<RuneRecipe>()
 
         fun of(id: Int): RuneRecipe {
@@ -60,8 +62,6 @@ open class RuneRecipe(
         }
 
         object Type : RecipeType<RuneRecipe> {
-            const val ID = "rune_recipe"
-
             init {
                 RecipeType.register<RuneRecipe>(ID)
             }
@@ -69,8 +69,6 @@ open class RuneRecipe(
 
         @Suppress("MemberVisibilityCanBePrivate")
         object Serializer : RecipeSerializer<RuneRecipe> {
-            const val ID = "rune_recipe_serializer"
-
             init {
                 RecipeSerializer.register(ID, this)
             }
@@ -128,5 +126,11 @@ open class RuneRecipe(
                 }
             }
         }
+
+        val type: Type
+            get() = Type
+
+        val serializer: Serializer
+            get() = Serializer
     }
 }

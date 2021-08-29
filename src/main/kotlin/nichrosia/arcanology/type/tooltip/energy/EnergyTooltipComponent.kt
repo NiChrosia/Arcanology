@@ -12,7 +12,7 @@ import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Matrix4f
-import nichrosia.arcanology.util.getEnergyString
+import nichrosia.arcanology.util.formatted
 
 /** @author GabrielOlvH */
 @Suppress("MemberVisibilityCanBePrivate")
@@ -44,7 +44,7 @@ class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
     ) {
         val percentage = data.energy * 100 / data.maxEnergy
         val text =
-            LiteralText("${getEnergyString(data.energy)} / ${getEnergyString(data.maxEnergy)} EF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+            LiteralText("${data.energy.formatted} / ${data.maxEnergy.formatted} EF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
         textRenderer.draw(text, x.toFloat() + 19, (y.toFloat() + 9) - textRenderer.fontHeight / 2, -1, true, matrix4f, immediate, false, 0, 15728880)
     }
 }
