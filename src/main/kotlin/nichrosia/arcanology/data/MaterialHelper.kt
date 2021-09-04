@@ -17,7 +17,7 @@ import nichrosia.arcanology.content.AItems.magicSettings
 import nichrosia.arcanology.content.AItems.techSettings
 import nichrosia.arcanology.data.DataGenerator.itemTagID
 import nichrosia.arcanology.energy.EnergyTier
-import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.func.clamp
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.item.HeartItem

@@ -18,10 +18,15 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
+import nichrosia.arcanology.func.decrement
+import nichrosia.arcanology.func.mergeCount
 import nichrosia.arcanology.recipe.RuneRecipe
 import nichrosia.arcanology.type.block.entity.screen.handler.RuneInfuserScreenHandler
 import nichrosia.arcanology.type.block.entity.type.AInventory
+import nichrosia.arcanology.type.rune.base.RuneType
+import kotlin.reflect.KMutableProperty0
 
+@Suppress("MemberVisibilityCanBePrivate", "NestedLambdaShadowedImplicitParameter")
 open class RuneInfuserBlockEntity(
     pos: BlockPos,
     state: BlockState
@@ -55,30 +60,18 @@ open class RuneInfuserBlockEntity(
     open var progress = 0
     open val maxProgress = 100
 
-    open var runeID = 0
+    open var runeID = -1
 
     override val inputSlots = (1..6).toList().toIntArray()
     override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(7, ItemStack.EMPTY)
 
-    val resultSlotID = 0
-
-    val lightSlot: ItemStack
-        get() = items[inputSlots[0]]
-
-    val voidSlot: ItemStack
-        get() = items[inputSlots[1]]
-
-    val fireSlot: ItemStack
-        get() = items[inputSlots[2]]
-
-    val waterSlot: ItemStack
-        get() = items[inputSlots[3]]
-
-    val earthSlot: ItemStack
-        get() = items[inputSlots[4]]
-
-    val airSlot: ItemStack
-        get() = items[inputSlots[5]]
+    var resultSlot by ItemSlot<RuneInfuserBlockEntity>(0)
+    var lightSlot by ItemSlot<RuneInfuserBlockEntity>(1)
+    var voidSlot by ItemSlot<RuneInfuserBlockEntity>(2)
+    var fireSlot by ItemSlot<RuneInfuserBlockEntity>(3)
+    var waterSlot by ItemSlot<RuneInfuserBlockEntity>(4)
+    var earthSlot by ItemSlot<RuneInfuserBlockEntity>(5)
+    var airSlot by ItemSlot<RuneInfuserBlockEntity>(6)
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? {
         return RuneInfuserScreenHandler(syncId, inv, ScreenHandlerContext.create(player.world, pos))
@@ -92,16 +85,17 @@ open class RuneInfuserBlockEntity(
         return delegate
     }
 
-    override fun markDirty() {
-        super<AInventory>.markDirty()
-        super<BlockEntity>.markDirty()
-    }
-
     @Suppress("unused_parameter")
     fun tick(world: World, pos: BlockPos, state: BlockState) {
         if (items.subList(1, 6).all { !it.isEmpty } && !world.isClient) {
             world.recipeManager.getFirstMatch(RuneRecipe.type, this, world).ifPresent {
-                setStack(resultSlotID, it.result.copy())
+                if (RuneType.types.any { it.id == runeID }) {
+                    resultSlot = it.result.mergeCount(resultSlot)
+
+                    arrayOf(
+                        ::lightSlot, ::voidSlot, ::fireSlot, ::waterSlot, ::earthSlot, ::airSlot
+                    ).forEach(KMutableProperty0<ItemStack>::decrement)
+                }
             }
         }
     }

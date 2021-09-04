@@ -7,12 +7,14 @@ import io.github.cottonmc.cotton.gui.widget.data.*
 import net.fabricmc.fabric.api.util.TriState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AScreenHandlers
+import nichrosia.arcanology.func.asBoolean
 import nichrosia.arcanology.type.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.rune.base.RuneType
 
@@ -129,7 +131,7 @@ open class RuneInfuserScreenHandler(
 
         RuneType.types.forEachIndexed { i, r ->
             val runeWidget = WRune(r.item, r) {
-                propertyDelegate[2] = it.id
+                propertyDelegate.set(2, it.id)
             }
 
             rowBox.add(runeWidget)
@@ -167,7 +169,7 @@ open class RuneInfuserScreenHandler(
         root.validate(this)
     }
 
-    open class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> Unit) : WWidget() {
+    inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> Unit) : WWidget() {
         init {
             setSize(36, 36)
         }
@@ -177,7 +179,7 @@ open class RuneInfuserScreenHandler(
         override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
 
-            if (isHovering(mouseX, mouseY)) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cFF.toInt())
+            if (isHovering(mouseX, mouseY) || propertyDelegate.get(2) != -1) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cFF.toInt())
 
             MinecraftClient.getInstance().itemRenderer.renderInGui(item, x + 1, y + 1)
         }

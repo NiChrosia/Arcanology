@@ -10,8 +10,7 @@ import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.math.Math.clamp
-import nichrosia.arcanology.math.Math.product
+import nichrosia.arcanology.func.*
 import nichrosia.arcanology.type.rune.base.Rune.Companion.mana
 import nichrosia.arcanology.type.rune.base.Rune.Companion.runes
 

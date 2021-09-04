@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WBar
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.util.formatted
+import nichrosia.arcanology.func.formatted
 
 open class WEnergyBar(
     direction: Direction = Direction.UP,

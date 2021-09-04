@@ -81,15 +81,6 @@ interface AInventory : SidedInventory {
         items.clear()
     }
 
-    /**
-     * Marks the state as dirty.
-     * Must be called after changes in the inventory, so that the game can properly save
-     * the inventory contents and notify neighboring blocks of inventory changes.
-     */
-    override fun markDirty() {
-        // Override if you want behavior.
-    }
-
     override fun canPlayerUse(player: PlayerEntity): Boolean {
         return true
     }

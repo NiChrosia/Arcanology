@@ -7,7 +7,7 @@ import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectType
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.util.math.BlockPos
-import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.func.clamp
 
 open class ElementalWrathStatusEffect : StatusEffect(StatusEffectType.HARMFUL, 0xBD00DE) {
     private var damageCounter = 0

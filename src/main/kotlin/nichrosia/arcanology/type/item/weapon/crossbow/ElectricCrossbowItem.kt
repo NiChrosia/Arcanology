@@ -6,7 +6,7 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.energy.EnergyTier
 import nichrosia.arcanology.type.item.energy.EnergyItem
-import nichrosia.arcanology.util.energyIO
+import nichrosia.arcanology.func.energyIO
 
 @Suppress("MemberVisibilityCanBePrivate", "LeakingThis")
 open class ElectricCrossbowItem(settings: Settings, val energyUsage: Double, tier: EnergyTier) : OpenCrossbowItem(settings), EnergyItem {

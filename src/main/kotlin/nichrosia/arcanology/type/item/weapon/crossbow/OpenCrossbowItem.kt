@@ -30,7 +30,7 @@ import net.minecraft.util.UseAction
 import net.minecraft.util.math.Quaternion
 import net.minecraft.util.math.Vec3f
 import net.minecraft.world.World
-import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.func.*
 import java.util.*
 import java.util.function.Predicate
 

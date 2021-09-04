@@ -4,7 +4,7 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.func.clamp
 import nichrosia.arcanology.type.rune.base.Rune
 
 interface RuneItem {

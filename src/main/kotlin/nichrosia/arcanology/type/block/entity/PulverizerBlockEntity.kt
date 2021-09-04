@@ -16,7 +16,7 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
-import nichrosia.arcanology.math.Math.clamp
+import nichrosia.arcanology.func.clamp
 import nichrosia.arcanology.type.block.PulverizerBlock
 import nichrosia.arcanology.type.block.entity.screen.handler.PulverizerScreenHandler
 import nichrosia.arcanology.type.block.entity.type.AInventory
@@ -135,10 +135,6 @@ open class PulverizerBlockEntity(
         fun tick(world: World, pos: BlockPos, state: BlockState, entity: PulverizerBlockEntity) {
             entity.tick(world, pos, state)
         }
-    }
-
-    override fun markDirty() {
-        super<AInventory>.markDirty()
     }
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? {
