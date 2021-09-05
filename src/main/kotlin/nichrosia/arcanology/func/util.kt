@@ -7,6 +7,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import net.minecraft.item.ItemStack
 import java.util.*
 import kotlin.reflect.KMutableProperty0
+import net.minecraft.client.MinecraftClient as RealMinecraftClient
 
 private fun getEnergyString(energy: Double): String {
     return when {
@@ -54,3 +55,6 @@ internal val Int.asBoolean: Boolean
 
         throw IllegalStateException("Cannot convert a non-binary integer to a boolean.")
     }
+
+internal val minecraftClient: RealMinecraftClient
+    get() = RealMinecraftClient.getInstance()

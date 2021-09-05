@@ -22,7 +22,7 @@ open class RuneType(open val name: String) {
     init {
         types += this
 
-        id = types.indexOf(this)
+        id = types.size - 1
     }
 
     open fun isItemBarVisible(stack: ItemStack) = false

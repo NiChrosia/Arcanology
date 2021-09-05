@@ -3,18 +3,18 @@ package nichrosia.arcanology.type.block.entity.screen.handler
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
-import io.github.cottonmc.cotton.gui.widget.data.*
+import io.github.cottonmc.cotton.gui.widget.data.Axis
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
+import io.github.cottonmc.cotton.gui.widget.data.Insets
 import net.fabricmc.fabric.api.util.TriState
-import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AScreenHandlers
-import nichrosia.arcanology.func.asBoolean
+import nichrosia.arcanology.func.minecraftClient
 import nichrosia.arcanology.type.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.rune.base.RuneType
 
@@ -132,6 +132,8 @@ open class RuneInfuserScreenHandler(
         RuneType.types.forEachIndexed { i, r ->
             val runeWidget = WRune(r.item, r) {
                 propertyDelegate.set(2, it.id)
+
+                InputResult.PROCESSED
             }
 
             rowBox.add(runeWidget)
@@ -169,7 +171,7 @@ open class RuneInfuserScreenHandler(
         root.validate(this)
     }
 
-    inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> Unit) : WWidget() {
+    inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> InputResult) : WWidget() {
         init {
             setSize(36, 36)
         }
@@ -181,13 +183,11 @@ open class RuneInfuserScreenHandler(
 
             if (isHovering(mouseX, mouseY) || propertyDelegate.get(2) != -1) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cFF.toInt())
 
-            MinecraftClient.getInstance().itemRenderer.renderInGui(item, x + 1, y + 1)
+            minecraftClient.itemRenderer.renderInGui(item, x + 1, y + 1)
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {
-            clickListener(runeType)
-
-            return InputResult.PROCESSED
+            return clickListener(runeType)
         }
     }
 }

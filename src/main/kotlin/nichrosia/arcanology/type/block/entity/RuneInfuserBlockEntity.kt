@@ -95,6 +95,8 @@ open class RuneInfuserBlockEntity(
                     arrayOf(
                         ::lightSlot, ::voidSlot, ::fireSlot, ::waterSlot, ::earthSlot, ::airSlot
                     ).forEach(KMutableProperty0<ItemStack>::decrement)
+
+                    runeID = -1 // reset back to -1 to only craft once
                 }
             }
         }
