@@ -10,7 +10,7 @@ interface Content {
     fun load()
 
     fun identify(name: String): Identifier {
-        return Identifier(Arcanology.modID, name)
+        return Arcanology.idOf(name)
     }
 
     fun String.capitalize(): String {

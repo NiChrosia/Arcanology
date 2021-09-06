@@ -29,7 +29,7 @@ open class WEnergyBar(
 
     @Suppress("unused")
     companion object {
-        val empty = Identifier(Arcanology.modID, "textures/gui/widget/energy_bar_empty.png")
-        val full = Identifier(Arcanology.modID, "textures/gui/widget/energy_bar_empty.png")
+        val empty = Arcanology.idOf("textures/gui/widget/energy_bar_empty.png")
+        val full = Arcanology.idOf("textures/gui/widget/energy_bar_empty.png")
     }
 }

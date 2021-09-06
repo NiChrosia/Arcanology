@@ -33,6 +33,11 @@ open class RuneRecipe(
     open val inputItems: Array<KProperty0<ItemStack?>>
         get() = arrayOf(::lightItem, ::voidItem, ::fireItem, ::waterItem, ::earthItem, ::airItem)
 
+    override fun getOutput(): ItemStack = result.copy()
+    override fun getSerializer() = Serializer
+    override fun getType() = Type
+    override fun getId() = ID
+
     override fun matches(inventory: RuneInfuserBlockEntity, world: World): Boolean {
         return (lightItem?.item == inventory.lightSlot.item || lightItem?.isEmpty == true) &&
                 (voidItem?.item == inventory.voidSlot.item || voidItem?.isEmpty == true) &&
@@ -52,13 +57,8 @@ open class RuneRecipe(
         return true
     }
 
-    override fun getOutput(): ItemStack = result.copy()
-    override fun getSerializer() = Serializer
-    override fun getType() = Type
-    override fun getId() = ID
-
     companion object {
-        val ID = Identifier(Arcanology.modID, "rune_recipe")
+        val ID = Arcanology.idOf("rune_recipe")
 
         val types = mutableListOf<RuneRecipe>()
 

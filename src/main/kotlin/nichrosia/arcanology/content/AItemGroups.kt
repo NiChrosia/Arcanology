@@ -23,7 +23,7 @@ object AItemGroups : Content {
 
         DataGenerator.lang.apply {
             arrayOf("magic", "tech").forEach {
-                itemGroup(Identifier(Arcanology.modID, it), generateLang(it))
+                itemGroup(Arcanology.idOf(it), generateLang(it))
             }
         }
     }

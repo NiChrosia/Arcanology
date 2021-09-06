@@ -5,9 +5,10 @@ import net.fabricmc.api.ModInitializer
 import nichrosia.arcanology.content.*
 import nichrosia.arcanology.content.type.Content
 import nichrosia.arcanology.data.DataGenerator
+import nichrosia.arcanology.type.mod.IdentifiedModInitializer
 
 @Suppress("unused")
-object Arcanology : ModInitializer {
+object Arcanology : IdentifiedModInitializer {
     internal val content = arrayOf(
         AScreenHandlers,
         ABlockMaterials,
@@ -29,7 +30,7 @@ object Arcanology : ModInitializer {
     internal val resourcePack = RuntimeResourcePack.create("arcanology:main")
     internal val commonResourcePack = RuntimeResourcePack.create("c:arcanology")
 
-    const val modID = "arcanology"
+    override val modID = "arcanology"
 
     override fun onInitialize() {
         content.forEach(Content::load)

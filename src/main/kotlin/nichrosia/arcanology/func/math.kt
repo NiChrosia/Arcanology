@@ -1,5 +1,8 @@
 package nichrosia.arcanology.func
 
+import nichrosia.arcanology.math.Vec2
+import kotlin.math.PI
+
 private fun clamp(value: Double, min: Double = 0.0, max: Double = value): Double {
     return when {
         value < min -> min
@@ -52,6 +55,14 @@ fun Int.clamp(min: Int = 0, max: Int = this): Int {
 fun Float.clamp(min: Float = 0f, max: Float = this): Float {
     return clamp(this, min, max)
 }
+
+fun hexagon(origin: Vec2, distance: Float): Array<Vec2> {
+    return (0..5).map {
+        origin + Vec2().trns((it + 1) * 60f, distance)
+    }.toTypedArray()
+}
+
+const val degreesToRadians = PI.toFloat() / 180
 
 private val Boolean.asBinaryInt: Int
     get() {

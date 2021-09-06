@@ -27,7 +27,7 @@ open class WProcessBar(
     }
 
     companion object {
-        val PROCESS_EMPTY = Identifier(Arcanology.modID, "textures/gui/widget/processing_empty.png")
-        val PROCESS_FULL = Identifier(Arcanology.modID, "textures/gui/widget/processing_full.png")
+        val PROCESS_EMPTY = Arcanology.idOf("textures/gui/widget/processing_empty.png")
+        val PROCESS_FULL = Arcanology.idOf("textures/gui/widget/processing_full.png")
     }
 }

@@ -74,7 +74,7 @@ data class MaterialHelper(val name: String,
         randomizeVeinsPerChunk: Boolean = false,
         oreResistance: Float = 100f
     ): MaterialHelper {
-        val oreID = Identifier(Arcanology.modID, name)
+        val oreID = Arcanology.idOf(name)
         ore = registerBlock(oreID.path, OreBlock(FabricBlockSettings.of(material)
             .requiresTool()
             .strength(5f, oreResistance)
@@ -89,7 +89,7 @@ data class MaterialHelper(val name: String,
             deepslateOre: OreBlock? = null
         ) {
             AConfiguredFeatures.registerOre(
-                Identifier(Arcanology.modID, "${oreID.path}_feature"), when(biomeSelector) {
+                Arcanology.idOf("${oreID.path}_feature"), when(biomeSelector) {
                    AConfiguredFeatures.BiomeSelector.Overworld -> Blocks.STONE
                    AConfiguredFeatures.BiomeSelector.TheNether -> Blocks.NETHERRACK
                    AConfiguredFeatures.BiomeSelector.TheEnd -> Blocks.END_STONE
@@ -232,7 +232,7 @@ data class MaterialHelper(val name: String,
     }
 
     private fun <T : Item> registerItem(name: String, content: T): T {
-        val registeredContent = Registry.register(Registry.ITEM, Identifier(Arcanology.modID, name), content)
+        val registeredContent = Registry.register(Registry.ITEM, Arcanology.idOf(name), content)
 
         when(registeredContent) {
             is BlockItem -> DataGenerator.blockItemModel(registeredContent)
@@ -283,7 +283,7 @@ data class MaterialHelper(val name: String,
     }
 
     private fun <T : Block> registerBlock(name: String, content: T): T {
-        val registeredContent = Registry.register(Registry.BLOCK, Identifier(Arcanology.modID, name), content)
+        val registeredContent = Registry.register(Registry.BLOCK, Arcanology.idOf(name), content)
 
         DataGenerator.normalBlockstate(registeredContent)
         DataGenerator.normalBlockModel(registeredContent)
