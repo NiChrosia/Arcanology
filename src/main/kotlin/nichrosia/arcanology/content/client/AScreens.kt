@@ -3,8 +3,8 @@ package nichrosia.arcanology.content.client
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import nichrosia.arcanology.content.AScreenHandlers
 import nichrosia.arcanology.content.type.Content
-import nichrosia.arcanology.type.block.entity.screen.PulverizerScreen
-import nichrosia.arcanology.type.block.entity.screen.RuneInfuserScreen
+import nichrosia.arcanology.type.screen.PulverizerScreen
+import nichrosia.arcanology.type.screen.RuneInfuserScreen
 
 object AScreens : Content {
     override fun load() {

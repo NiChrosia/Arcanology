@@ -13,6 +13,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.block.entity.RuneInfuserBlockEntity
+import kotlin.reflect.KProperty0
 
 @Suppress("LeakingThis")
 open class RuneRecipe(
@@ -29,6 +30,9 @@ open class RuneRecipe(
 
         types.indexOf(this)
     }
+
+    open val inputItems: Array<KProperty0<ItemStack>>
+        get() = arrayOf(::lightItem, ::voidItem, ::fireItem, ::waterItem, ::earthItem, ::airItem)
 
     override fun matches(inventory: RuneInfuserBlockEntity, world: World): Boolean {
         return lightItem.item == inventory.lightSlot.item &&

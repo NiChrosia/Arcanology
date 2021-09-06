@@ -1,7 +1,9 @@
-package nichrosia.arcanology.type.block.entity.screen.handler
+package nichrosia.arcanology.type.screen.description
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
+import io.github.cottonmc.cotton.gui.networking.NetworkSide
+import io.github.cottonmc.cotton.gui.networking.ScreenNetworking
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
@@ -19,7 +21,7 @@ import nichrosia.arcanology.type.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.rune.base.RuneType
 
 @Suppress("LeakingThis", "MemberVisibilityCanBePrivate")
-open class RuneInfuserScreenHandler(
+open class RuneInfuserGUIDescription(
     syncId: Int,
     playerInventory: PlayerInventory,
     context: ScreenHandlerContext,
@@ -29,7 +31,7 @@ open class RuneInfuserScreenHandler(
     syncId,
     playerInventory,
     getBlockInventory(context, inventorySize),
-    getBlockPropertyDelegate(context, 3)
+    getBlockPropertyDelegate(context, 4)
 ) {
     open val runeX = -6
     open val runeY = -10
@@ -65,6 +67,9 @@ open class RuneInfuserScreenHandler(
 
     protected open val runePanel: WGridPanel
     protected open val runeScrollPanel: WScrollPanel
+
+    val clientNetworking: ScreenNetworking = ScreenNetworking.of(this, NetworkSide.CLIENT)
+    val serverNetworking: ScreenNetworking = ScreenNetworking.of(this, NetworkSide.SERVER)
 
     init {
         setRootPanel(root)
@@ -130,8 +135,10 @@ open class RuneInfuserScreenHandler(
         var rowBox = WBox(Axis.HORIZONTAL)
 
         RuneType.types.forEachIndexed { i, r ->
-            val runeWidget = WRune(r.item, r) {
-                propertyDelegate.set(2, it.id)
+            val runeWidget = WRune(r.item, r) { runeType ->
+                if (propertyDelegate[3] == 1) clientNetworking.send(Identifier(Arcanology.modID, "change_rune_id")) {
+                    it.writeInt(runeType.id)
+                }
 
                 InputResult.PROCESSED
             }
@@ -169,6 +176,10 @@ open class RuneInfuserScreenHandler(
         root.add(createPlayerInventoryPanel(), 0, 72)
 
         root.validate(this)
+
+        serverNetworking.receive(Identifier(Arcanology.modID, "change_rune_id")) {
+            propertyDelegate[2] = it.readInt()
+        }
     }
 
     inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> InputResult) : WWidget() {

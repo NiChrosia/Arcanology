@@ -24,7 +24,7 @@ open class WEnergyBar(
         val energy = properties[field]
         val max = properties[max]
 
-        information.add(TranslatableText("arcanology.gui.widget.energy", "${energy.formatted} / ${max.formatted} LF"))
+        information.add(TranslatableText("arcanology.gui.widget.energy", "${energy.toDouble().formatted} / ${max.toDouble().formatted} LF"))
     }
 
     @Suppress("unused")

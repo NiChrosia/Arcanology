@@ -18,10 +18,12 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.content.ABlockEntityTypes
+import nichrosia.arcanology.func.asBinaryInt
 import nichrosia.arcanology.func.decrement
+import nichrosia.arcanology.func.merge
 import nichrosia.arcanology.func.mergeCount
 import nichrosia.arcanology.recipe.RuneRecipe
-import nichrosia.arcanology.type.block.entity.screen.handler.RuneInfuserScreenHandler
+import nichrosia.arcanology.type.screen.description.RuneInfuserGUIDescription
 import nichrosia.arcanology.type.block.entity.type.AInventory
 import nichrosia.arcanology.type.rune.base.RuneType
 import kotlin.reflect.KMutableProperty0
@@ -41,6 +43,7 @@ open class RuneInfuserBlockEntity(
                 0 -> progress
                 1 -> maxProgress
                 2 -> runeID
+                3 -> recipeValid
                 else -> -1
             }
         }
@@ -49,11 +52,12 @@ open class RuneInfuserBlockEntity(
             when(index) {
                 0 -> progress = value
                 2 -> runeID = value
+                3 -> if (value == 0 || value == 1) recipeValid = value
             }
         }
 
         override fun size(): Int {
-            return 3
+            return 4
         }
     }
 
@@ -61,6 +65,7 @@ open class RuneInfuserBlockEntity(
     open val maxProgress = 100
 
     open var runeID = -1
+    open var recipeValid = false.asBinaryInt
 
     override val inputSlots = (1..6).toList().toIntArray()
     override val items: DefaultedList<ItemStack> = DefaultedList.ofSize(7, ItemStack.EMPTY)
@@ -73,8 +78,11 @@ open class RuneInfuserBlockEntity(
     var earthSlot by ItemSlot<RuneInfuserBlockEntity>(5)
     var airSlot by ItemSlot<RuneInfuserBlockEntity>(6)
 
+    val inputSlotStacks: Array<KMutableProperty0<ItemStack>>
+        get() = arrayOf(::lightSlot, ::voidSlot, ::fireSlot, ::waterSlot, ::earthSlot, ::airSlot)
+
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? {
-        return RuneInfuserScreenHandler(syncId, inv, ScreenHandlerContext.create(player.world, pos))
+        return RuneInfuserGUIDescription(syncId, inv, ScreenHandlerContext.create(player.world, pos))
     }
 
     override fun getDisplayName(): Text {
@@ -86,17 +94,18 @@ open class RuneInfuserBlockEntity(
     }
 
     @Suppress("unused_parameter")
-    fun tick(world: World, pos: BlockPos, state: BlockState) {
+    open fun tick(world: World, pos: BlockPos, state: BlockState) {
         if (items.subList(1, 6).all { !it.isEmpty } && !world.isClient) {
             world.recipeManager.getFirstMatch(RuneRecipe.type, this, world).ifPresent {
+                if (ingredientsValid(it)) recipeValid = true.asBinaryInt
+
                 if (RuneType.types.any { it.id == runeID }) {
                     resultSlot = it.result.mergeCount(resultSlot)
 
-                    arrayOf(
-                        ::lightSlot, ::voidSlot, ::fireSlot, ::waterSlot, ::earthSlot, ::airSlot
-                    ).forEach(KMutableProperty0<ItemStack>::decrement)
+                    consumeRecipeIngredients(it)
 
                     runeID = -1 // reset back to -1 to only craft once
+                    recipeValid = 0
                 }
             }
         }
@@ -126,6 +135,14 @@ open class RuneInfuserBlockEntity(
         tag.putInt("arcanologyRuneID", runeID)
         
         return tag
+    }
+
+    open fun consumeRecipeIngredients(recipe: RuneRecipe) {
+        recipe.inputItems.merge(inputSlotStacks).forEach { if (it.first.get().item == it.second.get().item) it.second.decrement() }
+    }
+
+    open fun ingredientsValid(recipe: RuneRecipe): Boolean {
+        return recipe.inputItems.merge(inputSlotStacks).all { it.first.get().item == it.second.get().item }
     }
 
     companion object {

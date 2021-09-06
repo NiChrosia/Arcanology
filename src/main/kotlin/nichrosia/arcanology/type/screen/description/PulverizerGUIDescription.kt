@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block.entity.screen.handler
+package nichrosia.arcanology.type.screen.description
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
@@ -14,7 +14,7 @@ import nichrosia.arcanology.gui.WEnergyBar
 import nichrosia.arcanology.gui.WProcessBar
 
 @Suppress("MemberVisibilityCanBePrivate", "JoinDeclarationAndAssignment", "LeakingThis")
-open class PulverizerScreenHandler(
+open class PulverizerGUIDescription(
     syncId: Int,
     playerInventory: PlayerInventory,
     context: ScreenHandlerContext,
