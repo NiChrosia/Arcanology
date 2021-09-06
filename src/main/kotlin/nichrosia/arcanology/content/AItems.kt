@@ -9,7 +9,7 @@ import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.data.DataGenerator
 import nichrosia.arcanology.data.DataGenerator.itemTagID
-import nichrosia.arcanology.integration.patchouli.GuideBookItem
+import nichrosia.arcanology.ctype.item.guide.book.GuideBookItem
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AItems : RegisterableContent<Item>(Registry.ITEM) {

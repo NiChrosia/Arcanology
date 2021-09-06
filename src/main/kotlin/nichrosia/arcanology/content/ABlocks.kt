@@ -8,11 +8,11 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.data.DataGenerator
-import nichrosia.arcanology.energy.EnergyTier
-import nichrosia.arcanology.type.block.AltarBlock
-import nichrosia.arcanology.type.block.PulverizerBlock
-import nichrosia.arcanology.type.block.ReactiveBlock
-import nichrosia.arcanology.type.block.RuneInfuserBlock
+import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.ctype.block.AltarBlock
+import nichrosia.arcanology.ctype.block.PulverizerBlock
+import nichrosia.arcanology.ctype.block.ReactiveBlock
+import nichrosia.arcanology.ctype.block.RuneInfuserBlock
 
 @Suppress("MemberVisibilityCanBePrivate")
 object ABlocks : RegisterableContent<Block>(Registry.BLOCK) {

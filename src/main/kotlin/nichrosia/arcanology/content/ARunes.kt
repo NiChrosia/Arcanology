@@ -3,13 +3,12 @@ package nichrosia.arcanology.content
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.DefaultedRegistry
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AItems.magicSettings
 import nichrosia.arcanology.content.type.RegisterableContent
 import nichrosia.arcanology.data.DataGenerator
-import nichrosia.arcanology.type.rune.base.RuneType
+import nichrosia.arcanology.type.rune.RuneType
 
 object ARunes : RegisterableContent<Item>(Registry.ITEM) {
     val runes = mutableMapOf<String, ItemStack>()

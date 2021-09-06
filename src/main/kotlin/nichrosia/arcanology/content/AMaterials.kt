@@ -2,11 +2,11 @@ package nichrosia.arcanology.content
 
 import net.minecraft.util.Rarity
 import nichrosia.arcanology.content.type.Content
+import nichrosia.arcanology.ctype.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.data.MaterialHelper
-import nichrosia.arcanology.energy.EnergyTier
+import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
-import nichrosia.arcanology.type.item.magic.RunicPickaxeItem
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AMaterials : Content {

@@ -1,9 +1,5 @@
 package nichrosia.arcanology.func
 
-import net.minecraft.item.ItemStack
-import kotlin.reflect.KMutableProperty0
-import kotlin.reflect.KProperty0
-
 private fun clamp(value: Double, min: Double = 0.0, max: Double = value): Double {
     return when {
         value < min -> min
@@ -55,4 +51,33 @@ fun Int.clamp(min: Int = 0, max: Int = this): Int {
 @JvmName("clampExtension")
 fun Float.clamp(min: Float = 0f, max: Float = this): Float {
     return clamp(this, min, max)
+}
+
+private val Boolean.asBinaryInt: Int
+    get() {
+        return when(this) {
+            true -> 1
+            false -> 0
+        }
+    }
+
+private val Int.asBoolean: Boolean
+    get() {
+        if (equals(0)) return false
+        if (equals(1)) return true
+
+        throw IllegalStateException("Cannot convert a non-binary integer to a boolean.")
+    }
+
+open class BinaryInt(binaryValue: Int) {
+    var asBoolean: Boolean
+        get() = asInt.asBoolean
+        set(value) {
+            asInt = value.asBinaryInt
+        }
+
+    var asInt: Int = binaryValue
+        set(value) {
+            if (value == 0 || value == 1) field = value
+        }
 }

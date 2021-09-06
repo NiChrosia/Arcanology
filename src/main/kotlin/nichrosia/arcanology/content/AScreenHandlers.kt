@@ -5,8 +5,8 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.content.type.Content
-import nichrosia.arcanology.type.screen.description.PulverizerGUIDescription
-import nichrosia.arcanology.type.screen.description.RuneInfuserGUIDescription
+import nichrosia.arcanology.ctype.gui.description.PulverizerGUIDescription
+import nichrosia.arcanology.ctype.gui.description.RuneInfuserGUIDescription
 
 object AScreenHandlers : Content {
     lateinit var pulverizer: ScreenHandlerType<PulverizerGUIDescription>

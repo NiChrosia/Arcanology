@@ -4,10 +4,10 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntit
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.content.type.RegisterableContent
-import nichrosia.arcanology.type.block.entity.AltarBlockEntity
-import nichrosia.arcanology.type.block.entity.PulverizerBlockEntity
-import nichrosia.arcanology.type.block.entity.ReactiveBlockEntity
-import nichrosia.arcanology.type.block.entity.RuneInfuserBlockEntity
+import nichrosia.arcanology.ctype.block.entity.AltarBlockEntity
+import nichrosia.arcanology.ctype.block.entity.PulverizerBlockEntity
+import nichrosia.arcanology.ctype.block.entity.ReactiveBlockEntity
+import nichrosia.arcanology.ctype.block.entity.RuneInfuserBlockEntity
 
 object ABlockEntityTypes : RegisterableContent<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE) {
     lateinit var reactiveBlock: BlockEntityType<ReactiveBlockEntity>

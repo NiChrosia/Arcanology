@@ -25,10 +25,10 @@ import nichrosia.arcanology.Arcanology.commonResourcePack
 import nichrosia.arcanology.Arcanology.modID
 import nichrosia.arcanology.Arcanology.resourcePack
 import nichrosia.arcanology.content.type.Content
-import nichrosia.arcanology.type.block.AltarBlock
-import nichrosia.arcanology.type.item.energy.CircuitItem
-import nichrosia.arcanology.type.item.energy.WireItem
-import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem
+import nichrosia.arcanology.ctype.block.AltarBlock
+import nichrosia.arcanology.ctype.item.energy.CircuitItem
+import nichrosia.arcanology.ctype.item.energy.WireItem
+import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem
 import net.devtech.arrp.json.blockstate.JState.model as blockModel
 
 object DataGenerator : Content {

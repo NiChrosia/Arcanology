@@ -16,18 +16,18 @@ import nichrosia.arcanology.content.AItems.generateLang
 import nichrosia.arcanology.content.AItems.magicSettings
 import nichrosia.arcanology.content.AItems.techSettings
 import nichrosia.arcanology.data.DataGenerator.itemTagID
-import nichrosia.arcanology.energy.EnergyTier
+import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.func.clamp
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
-import nichrosia.arcanology.type.item.HeartItem
-import nichrosia.arcanology.type.item.energy.BatteryItem
-import nichrosia.arcanology.type.item.energy.CircuitItem
-import nichrosia.arcanology.type.item.energy.WireItem
-import nichrosia.arcanology.type.item.magic.MagicCrystalItem
-import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem
-import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem.Companion.charged
-import nichrosia.arcanology.type.item.weapon.crossbow.OpenCrossbowItem.Companion.hasProjectile
+import nichrosia.arcanology.ctype.item.magic.HeartItem
+import nichrosia.arcanology.ctype.item.energy.BatteryItem
+import nichrosia.arcanology.ctype.item.energy.CircuitItem
+import nichrosia.arcanology.ctype.item.energy.WireItem
+import nichrosia.arcanology.ctype.item.magic.MagicCrystalItem
+import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem
+import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem.Companion.charged
+import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem.Companion.hasProjectile
 
 @Suppress("MemberVisibilityCanBePrivate")
 data class MaterialHelper(val name: String,
