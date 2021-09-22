@@ -20,5 +20,6 @@
     },
     "result": {
         "item": "arcanology:rune_manabound"
-    }
+    },
+    "rune_type": "arcanology:manabound"
 }

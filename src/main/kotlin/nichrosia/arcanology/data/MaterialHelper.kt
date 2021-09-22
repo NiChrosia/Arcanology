@@ -12,22 +12,21 @@ import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.content.AConfiguredFeatures
-import nichrosia.arcanology.content.AItems.generateLang
-import nichrosia.arcanology.content.AItems.magicSettings
-import nichrosia.arcanology.content.AItems.techSettings
-import nichrosia.arcanology.data.DataGenerator.itemTagID
-import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.func.clamp
-import nichrosia.arcanology.type.element.Element
-import nichrosia.arcanology.type.element.ElementalHeart
-import nichrosia.arcanology.ctype.item.magic.HeartItem
 import nichrosia.arcanology.ctype.item.energy.BatteryItem
 import nichrosia.arcanology.ctype.item.energy.CircuitItem
 import nichrosia.arcanology.ctype.item.energy.WireItem
+import nichrosia.arcanology.ctype.item.magic.HeartItem
 import nichrosia.arcanology.ctype.item.magic.MagicCrystalItem
 import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem
 import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem.Companion.charged
 import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem.Companion.hasProjectile
+import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.lang.LanguageGenerator
+import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
+import nichrosia.arcanology.type.element.Element
+import nichrosia.arcanology.type.element.ElementalHeart
+import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 data class MaterialHelper(val name: String,
@@ -37,7 +36,9 @@ data class MaterialHelper(val name: String,
                           private val dropDust: Boolean = false,
                           private val autogenerateLang: Boolean = true) {
     val settings: Item.Settings
-      get() = (if (isTech) techSettings else magicSettings).rarity(rarity)
+      get() = (if (isTech) Registrar.item.techSettings else Registrar.item.magicSettings).rarity(rarity)
+
+    val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
     lateinit var ore: OreBlock
     lateinit var oreItem: BlockItem
@@ -126,8 +127,8 @@ data class MaterialHelper(val name: String,
     fun addRawOre(name: String = "raw_${this.name}", addRawOreBlock: Boolean = true, rawOreBlockResistance: Float = 100f): MaterialHelper {
         rawOre = registerItem(name, Item(settings))
 
-        if (this::ore.isInitialized) DataGenerator.rawOreLootTable(ore, rawOre)
-        if (this::deepslateOre.isInitialized) DataGenerator.rawOreLootTable(deepslateOre, rawOre)
+        if (this::ore.isInitialized) rawOreLootTable(ore, rawOre)
+        if (this::deepslateOre.isInitialized) rawOreLootTable(deepslateOre, rawOre)
         
         if (addRawOreBlock) {
             rawOreBlock = registerBlock("${name}_block", Block(FabricBlockSettings.of(Material.METAL)
@@ -137,7 +138,7 @@ data class MaterialHelper(val name: String,
 
             rawOreBlockItem = registerItem("${name}_block", BlockItem(rawOreBlock, settings))
 
-            DataGenerator.normalBlockLootTable(rawOreBlock, rawOreBlockItem)
+            normalBlockLootTable(rawOreBlock, rawOreBlockItem)
         }
 
         return this
@@ -146,7 +147,7 @@ data class MaterialHelper(val name: String,
     fun addIngot(name: String = "${this.name}_ingot", ingotItem: Item = Item(settings)): MaterialHelper {
         ingot = registerItem(name, ingotItem)
 
-        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(ingot))
+        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), ingot)
 
         return this
     }
@@ -154,8 +155,8 @@ data class MaterialHelper(val name: String,
     fun addWire(name: String = "${this.name}_wire", wireItem: WireItem = WireItem(settings)): MaterialHelper {
         wire = registerItem(name, wireItem)
 
-        if (this::ingot.isInitialized) DataGenerator.wireRecipe(ingot, wire)
-        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(wire))
+        if (this::ingot.isInitialized) wireRecipe(ingot, wire)
+        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), wire)
 
         return this
     }
@@ -163,7 +164,7 @@ data class MaterialHelper(val name: String,
     fun addDust(name: String = "${this.name}_dust", dustItem: Item = Item(settings)): MaterialHelper {
         dust = registerItem(name, dustItem)
 
-        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(dust))
+        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), dust)
 
         return this
     }
@@ -171,7 +172,7 @@ data class MaterialHelper(val name: String,
     fun addCrystal(name: String = "${this.name}_crystal", crystalItem: Item = Item(settings)): MaterialHelper {
         crystal = registerItem(name, crystalItem)
 
-        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(crystal))
+        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), crystal)
 
         return this
     }
@@ -179,7 +180,7 @@ data class MaterialHelper(val name: String,
     fun addBattery(name: String = "${this.name}_battery", tier: EnergyTier, batteryItem: BatteryItem = BatteryItem(settings, tier)): MaterialHelper {
         battery = registerItem(name, batteryItem)
 
-        DataGenerator.addTags(itemTagID(name.replace("battery", "batteries")), Registry.ITEM.getId(battery))
+        DataGenerator.addTags(DataGenerator.itemTagID(name.replace("battery", "batteries")), battery)
 
         return this
     }
@@ -191,9 +192,9 @@ data class MaterialHelper(val name: String,
     ): MaterialHelper {
         circuit = registerItem(name, CircuitItem(settings))
 
-        DataGenerator.circuitRecipe(insulator, wire, circuit)
-        DataGenerator.addTags(itemTagID("${name}s"), Registry.ITEM.getId(circuit))
-        DataGenerator.addTags(itemTagID("insulators"), Registry.ITEM.getId(insulator))
+        circuitRecipe(insulator, wire, circuit)
+        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), circuit)
+        DataGenerator.addTags(DataGenerator.itemTagID("insulators"), insulator)
 
         return this
     }
@@ -226,7 +227,7 @@ data class MaterialHelper(val name: String,
     fun addPickaxe(name: String = "${this.name}_pickaxe", pickaxeItem: PickaxeItem): MaterialHelper {
         pickaxe = registerItem(name, pickaxeItem)
 
-        if (this::ingot.isInitialized) DataGenerator.pickaxeRecipe(pickaxe, ingot, Items.STICK)
+        if (this::ingot.isInitialized) pickaxeRecipe(pickaxe, ingot, Items.STICK)
 
         return this
     }
@@ -235,10 +236,10 @@ data class MaterialHelper(val name: String,
         val registeredContent = Registry.register(Registry.ITEM, Arcanology.idOf(name), content)
 
         when(registeredContent) {
-            is BlockItem -> DataGenerator.blockItemModel(registeredContent)
-            is MiningToolItem -> DataGenerator.handheldItemModel(registeredContent)
+            is BlockItem -> blockItemModel(registeredContent)
+            is MiningToolItem -> handheldItemModel(registeredContent)
             is OpenCrossbowItem -> {
-                DataGenerator.crossbowItemModel(registeredContent)
+                crossbowItemModel(registeredContent)
 
                 FabricModelPredicateProviderRegistry.register(registeredContent, Identifier("pull")) { stack, _, entity, _ ->
                     entity ?: return@register 0.0f
@@ -265,31 +266,31 @@ data class MaterialHelper(val name: String,
                 }
             }
 
-            else -> DataGenerator.normalItemModel(registeredContent)
+            else -> normalItemModel(registeredContent)
         }
 
         val id = Registry.ITEM.getId(registeredContent)
 
-        DataGenerator.lang.item(id, when(registeredContent) {
+        DataGenerator.englishLang.item(id, when(registeredContent) {
             is MagicCrystalItem -> generateCrystalLang(id.path)
-            else -> generateLang(id.path)
+            else -> languageGenerator.generateLang(id.path)
         })
 
         return registeredContent
     }
 
     fun generateCrystalLang(name: String): String {
-        return generateLang(name.replace("_magic_", "_"))
+        return languageGenerator.generateLang(name.replace("_magic_", "_"))
     }
 
     private fun <T : Block> registerBlock(name: String, content: T): T {
         val registeredContent = Registry.register(Registry.BLOCK, Arcanology.idOf(name), content)
 
-        DataGenerator.normalBlockstate(registeredContent)
-        DataGenerator.normalBlockModel(registeredContent)
+        normalBlockstate(registeredContent)
+        normalBlockModel(registeredContent)
 
         val id = Registry.BLOCK.getId(registeredContent)
-        DataGenerator.lang.block(id, generateLang(id.path))
+        DataGenerator.englishLang.block(id, languageGenerator.generateLang(id.path))
 
         return registeredContent
     }

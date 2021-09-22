@@ -15,20 +15,22 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.content.ABlockEntityTypes
-import nichrosia.arcanology.func.clamp
+import nichrosia.arcanology.util.clamp
 import nichrosia.arcanology.ctype.block.PulverizerBlock
 import nichrosia.arcanology.ctype.gui.description.PulverizerGUIDescription
+import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.block.entity.inventory.AInventory
 
 open class PulverizerBlockEntity(
     pos: BlockPos,
-    state: BlockState
+    state: BlockState,
+    override val block: PulverizerBlock
 ) : BlockEntity(
-    ABlockEntityTypes.pulverizer,
+    Registrar.blockEntity.pulverizer,
     pos,
     state
-), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, EnergyIo {
+), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, EnergyIo, BlockEntityWithBlock<PulverizerBlock> {
     init {
         EnergyApi.SIDED.registerForBlockEntities({ blockEntity, _ ->
             blockEntity as? PulverizerBlockEntity

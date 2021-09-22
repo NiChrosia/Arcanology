@@ -1,16 +1,11 @@
 package nichrosia.arcanology
 
 import net.fabricmc.api.ClientModInitializer
-import nichrosia.arcanology.content.type.Content
-import nichrosia.arcanology.content.client.*
+import nichrosia.arcanology.registry.ClientRegistrar
+import nichrosia.arcanology.registry.Registrar
 
 object ArcanologyClient : ClientModInitializer {
-    internal val content = arrayOf(
-        AScreens,
-        ABlockEntityRenderers
-    )
-
     override fun onInitializeClient() {
-        content.forEach(Content::load)
+        ClientRegistrar.all.forEach(Registrar<*>::registerAll)
     }
 }

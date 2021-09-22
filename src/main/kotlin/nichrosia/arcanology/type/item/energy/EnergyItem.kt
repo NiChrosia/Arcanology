@@ -2,7 +2,7 @@ package nichrosia.arcanology.type.item.energy
 
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.type.tooltip.energy.EnergyTooltipDataProvider
-import nichrosia.arcanology.func.energyIO
+import nichrosia.arcanology.util.energyIO
 import kotlin.math.roundToInt
 
 /** @author GabrielOlvH, with minor modifications by NiChrosia */

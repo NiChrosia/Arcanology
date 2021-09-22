@@ -8,7 +8,7 @@ import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Vec3f
-import nichrosia.arcanology.func.minecraftClient
+import nichrosia.arcanology.util.minecraftClient
 import nichrosia.arcanology.ctype.block.entity.AltarBlockEntity
 
 @Suppress("MemberVisibilityCanBePrivate", "unused", "unused_parameter")

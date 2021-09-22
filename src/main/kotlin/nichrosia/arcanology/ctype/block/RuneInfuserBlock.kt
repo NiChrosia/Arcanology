@@ -15,12 +15,12 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.ctype.block.entity.RuneInfuserBlockEntity
+import nichrosia.arcanology.registry.Registrar
 
 open class RuneInfuserBlock(settings: Settings) : BlockWithEntity(settings), InventoryProvider {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
-        return RuneInfuserBlockEntity(pos, state)
+        return RuneInfuserBlockEntity(pos, state, this)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {
@@ -36,7 +36,7 @@ open class RuneInfuserBlock(settings: Settings) : BlockWithEntity(settings), Inv
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, ABlockEntityTypes.runeInfuser) { world1, pos, state1, be ->
+        return checkType(type, Registrar.blockEntity.runeInfuser) { world1, pos, state1, be ->
             RuneInfuserBlockEntity.tick(world1, pos, state1, be as RuneInfuserBlockEntity)
         }
     }

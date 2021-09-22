@@ -11,12 +11,12 @@ import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.ctype.block.entity.AltarBlockEntity
+import nichrosia.arcanology.registry.Registrar
 
 open class AltarBlock(settings: Settings) : BlockWithEntity(settings) {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return AltarBlockEntity(pos, state)
+        return AltarBlockEntity(pos, state, this)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {
@@ -28,7 +28,7 @@ open class AltarBlock(settings: Settings) : BlockWithEntity(settings) {
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, ABlockEntityTypes.altar) { world1: World, pos: BlockPos, state1: BlockState, be: BlockEntity ->
+        return checkType(type, Registrar.blockEntity.altar) { world1: World, pos: BlockPos, state1: BlockState, be: BlockEntity ->
             AltarBlockEntity.tick(world1, pos, state1, be as AltarBlockEntity)
         }
     }

@@ -21,22 +21,23 @@ import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
-import nichrosia.arcanology.content.type.RegisterableContent
-import nichrosia.arcanology.func.clamp
+import nichrosia.arcanology.type.content.LoadableContent
+import nichrosia.arcanology.type.content.RegistryContent
+import nichrosia.arcanology.util.clamp
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import kotlin.math.roundToInt
 
 @Suppress("MemberVisibilityCanBePrivate")
-object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(BuiltinRegistries.CONFIGURED_FEATURE) {
+object AConfiguredFeatures : RegistryContent<ConfiguredFeature<*, *>> {
+    override val registry: Registry<ConfiguredFeature<*, *>> = BuiltinRegistries.CONFIGURED_FEATURE
+
     @Suppress("unused")
     enum class BiomeSelector(val environment: (BiomeSelectionContext) -> Boolean) {
         Overworld({ BiomeSelectors.foundInOverworld().test(it)  }),
         TheNether({ it.biome.category == Biome.Category.NETHER }),
         TheEnd({ it.biome.category == Biome.Category.THEEND })
     }
-
-    override fun load() {}
 
     fun <R> Decoratable<R>.uniformRange(min: Int, max: Int, generateToBottom: Boolean): R {
         return uniformRange(if (!generateToBottom) YOffset.aboveBottom(min) else YOffset.getBottom(), YOffset.fixed(max))
@@ -52,11 +53,13 @@ object AConfiguredFeatures : RegisterableContent<ConfiguredFeature<*, *>>(Builti
 
     fun distanceToOreSize(distancePerUnit: Int, min: Int, max: Int, useManhattan: Boolean = false): (FeatureContext<OreFeatureConfig>) -> Int {
         return { context ->
-            (if (useManhattan) {
-                context.origin.getManhattanDistance(Vec3i.ZERO)
-            } else {
-                context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt()
-            } / distancePerUnit).clamp(min, max)
+            (
+                if (useManhattan) {
+                    context.origin.getManhattanDistance(Vec3i.ZERO)
+                } else {
+                    context.origin.getSquaredDistance(Vec3i.ZERO).roundToInt()
+                } / distancePerUnit
+            ).clamp(min, max)
         }
     }
 

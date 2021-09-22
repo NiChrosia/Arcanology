@@ -11,7 +11,7 @@ import nichrosia.arcanology.ctype.block.entity.ReactiveBlockEntity
 
 open class ReactiveBlock(settings: Settings) : BlockWithEntity(settings) {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return ReactiveBlockEntity(pos, state)
+        return ReactiveBlockEntity(pos, state, this)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {

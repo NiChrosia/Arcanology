@@ -4,8 +4,8 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import nichrosia.arcanology.func.clamp
-import nichrosia.arcanology.itype.rune.Rune
+import nichrosia.arcanology.util.clamp
+import nichrosia.arcanology.type.instance.rune.Rune
 
 interface RuneItem {
     fun appendTooltip(runes: Array<Rune>, text: MutableList<Text>, context: TooltipContext) {

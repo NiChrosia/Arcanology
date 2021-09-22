@@ -8,21 +8,17 @@ import kotlin.properties.Delegates
 @Suppress("LeakingThis")
 open class RuneType(open val name: String) {
     open val maxMana = 0
-    open val minLevel = 1
-    open val maxLevel = 1
     open val overrideItemBar = false
     open val miningSpeedMultiplier = 1f
-    open val element = Element.Mana
 
-    open val item: ItemStack = ItemStack.EMPTY
+    open var item = ItemStack.EMPTY
     open var translationKey = "rune.arcanology.$name"
 
-    open var id by Delegates.notNull<Int>()
+    open val id: Int?
+        get() = types.indexOf(this).let { if (it == -1) null else it }
 
     init {
         types += this
-
-        id = types.size - 1
     }
 
     open fun isItemBarVisible(stack: ItemStack) = false

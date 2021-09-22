@@ -8,28 +8,32 @@ import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.data.Insets
+import io.github.cottonmc.cotton.gui.widget.data.Texture
 import net.fabricmc.fabric.api.util.TriState
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.content.AScreenHandlers
-import nichrosia.arcanology.func.*
 import nichrosia.arcanology.ctype.item.magic.MagicCrystalItem
-import nichrosia.arcanology.math.Vec2
+import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.util.BinaryInt
+import nichrosia.arcanology.util.add
+import nichrosia.arcanology.util.hexagon
+import nichrosia.arcanology.util.minecraftClient
+import nichrosia.arcanology.type.math.Vec2
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.rune.RuneType
-import kotlin.properties.Delegates
 
 @Suppress("LeakingThis", "MemberVisibilityCanBePrivate")
 open class RuneInfuserGUIDescription(
     syncId: Int,
     playerInventory: PlayerInventory,
-    context: ScreenHandlerContext,
+    val context: ScreenHandlerContext,
     inventorySize: Int = 7
 ) : SyncedGuiDescription(
-    AScreenHandlers.runeInfuser,
+    Registrar.guiDescription.runeInfuser,
     syncId,
     playerInventory,
     getBlockInventory(context, inventorySize),
@@ -49,24 +53,6 @@ open class RuneInfuserGUIDescription(
     protected open val runeBackground: WSprite
     protected open val runeSlot: WItemSlot
 
-    open var lightBackground by Delegates.notNull<WSprite>()
-    open var lightSlot by Delegates.notNull<WItemSlot>()
-
-    open var voidBackground by Delegates.notNull<WSprite>()
-    open var voidSlot by Delegates.notNull<WItemSlot>()
-
-    open var fireBackground by Delegates.notNull<WSprite>()
-    open var fireSlot by Delegates.notNull<WItemSlot>()
-
-    open var waterBackground by Delegates.notNull<WSprite>()
-    open var waterSlot by Delegates.notNull<WItemSlot>()
-
-    open var earthBackground by Delegates.notNull<WSprite>()
-    open var earthSlot by Delegates.notNull<WItemSlot>()
-
-    open var airBackground by Delegates.notNull<WSprite>()
-    open var airSlot by Delegates.notNull<WItemSlot>()
-
     protected open val runePanel: WGridPanel
     protected open val runeScrollPanel: WScrollPanel
 
@@ -82,27 +68,16 @@ open class RuneInfuserGUIDescription(
         runeSlot = WItemSlot.of(blockInventory, 0).setInsertingAllowed(false)
         root.add(runeSlot, runeX + 36, runeY + 36)
 
-        arrayOf(
-            ::lightBackground to "light" toTriple ::lightSlot toQuadruple Element.Light,
-            ::voidBackground to "void" toTriple ::voidSlot toQuadruple Element.Void,
-            ::fireBackground to "fire" toTriple ::fireSlot toQuadruple Element.Fire,
-            ::waterBackground to "water" toTriple ::waterSlot toQuadruple Element.Water,
-            ::earthBackground to "earth" toTriple ::earthSlot toQuadruple Element.Earth,
-            ::airBackground to "air" toTriple ::airSlot toQuadruple Element.Air
-        ).forEachIndexed { i, it ->
-            val (backgroundRef, backgroundPathName, slotRef, element) = it
-            val hexagonPos = hexagon(Vec2(runeX + 36, runeY + 36), 27f)[i]
+        val hexagon = hexagon(Vec2(runeX + 36, runeY + 36), 27f)
+        Element.elementalValues.forEachIndexed { i, element ->
+            val hexagonPos = hexagon[i]
 
-            backgroundRef.set(WSprite(Arcanology.idOf("textures/gui/widget/rune_infuser/${backgroundPathName}_background.png")))
-            root.add(backgroundRef.get(), hexagonPos, 18, 18)
-
-            slotRef.set(WItemSlot.of(blockInventory, i + 1).setFilter {
-                val item = it.item
-
-                item is MagicCrystalItem && item.element == element
-            })
-
-            root.add(slotRef.get(), hexagonPos, 18, 18)
+            root.add(WSprite(Arcanology.idOf("textures/gui/widget/rune_infuser/${element.name.lowercase()}_background.png")), hexagonPos, 18, 18)
+            root.add(WItemSlot.of(blockInventory, i + 1).setFilter { it.item is MagicCrystalItem && (it.item as MagicCrystalItem).element == element }, hexagonPos, 18, 18)
+            root.add(WRuneIngredientRing(
+                Arcanology.idOf("textures/gui/widget/rune_infuser/${element.name.lowercase()}_ring_inactive.png"),
+                Arcanology.idOf("textures/gui/widget/rune_infuser/${element.name.lowercase()}_ring_active.png")
+            ) { true }, hexagonPos, 34, 34)
         }
 
         runePanel = WGridPanel()
@@ -113,8 +88,8 @@ open class RuneInfuserGUIDescription(
 
         RuneType.types.forEachIndexed { i, r ->
             val runeWidget = WRune(r.item, r) { runeType ->
-                if (propertyDelegate[3] == 1) clientNetworking.send(Arcanology.idOf("change_rune_id")) {
-                    it.writeInt(runeType.id)
+                if (BinaryInt(propertyDelegate[3]).asBoolean) clientNetworking.send(Arcanology.idOf("change_rune_id")) {
+                    it.writeInt(runeType.id ?: -1)
                 }
 
                 InputResult.PROCESSED
@@ -160,6 +135,9 @@ open class RuneInfuserGUIDescription(
     }
 
     inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> InputResult) : WWidget() {
+        val runeColor: Int
+            get() = if (BinaryInt(propertyDelegate[3]).asBoolean) correctColor else incorrectColor
+
         init {
             setSize(36, 36)
         }
@@ -169,7 +147,9 @@ open class RuneInfuserGUIDescription(
         override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
 
-            if (isHovering(mouseX, mouseY) || propertyDelegate.get(2) != -1) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x8c8c8cFF.toInt())
+            if (isHovering(mouseX, mouseY) || propertyDelegate.get(2) != -1) {
+                ScreenDrawing.coloredRect(matrices, x, y, width, height, runeColor)
+            }
 
             minecraftClient.itemRenderer.renderInGui(item, x + 1, y + 1)
         }
@@ -177,5 +157,24 @@ open class RuneInfuserGUIDescription(
         override fun onClick(x: Int, y: Int, button: Int): InputResult {
             return clickListener(runeType)
         }
+    }
+
+    inner class WRuneIngredientRing(inactive: Identifier, active: Identifier, val isActive: () -> Boolean) : WWidget() {
+        val inactiveTexture = Texture(inactive)
+        val activeTexture = Texture(active)
+
+        val texture: Texture
+            get() = if (isActive()) activeTexture else inactiveTexture
+
+        override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            super.paint(matrices, x, y, mouseX, mouseY)
+
+            ScreenDrawing.texturedRect(matrices, x, y, width, height, texture, 0xFFFFFFFF.toInt())
+        }
+    }
+
+    companion object {
+        const val incorrectColor = 0x8cff7259.toInt()
+        const val correctColor = 0x8c66ff6b.toInt()
     }
 }

@@ -50,4 +50,9 @@ enum class Element {
      *
      * Capable of enchanting tools to become far more powerful. */
     Mana;
+
+    companion object {
+        val elementalValues: Array<Element>
+            get() = values().sliceArray(0..5)
+    }
 }

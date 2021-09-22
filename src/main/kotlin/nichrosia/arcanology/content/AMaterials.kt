@@ -1,15 +1,16 @@
 package nichrosia.arcanology.content
 
 import net.minecraft.util.Rarity
-import nichrosia.arcanology.content.type.Content
+import nichrosia.arcanology.type.content.LoadableContent
 import nichrosia.arcanology.ctype.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.data.MaterialHelper
+import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
 
 @Suppress("MemberVisibilityCanBePrivate")
-object AMaterials : Content {
+object AMaterials : LoadableContent {
     lateinit var prismatic: MaterialHelper
     lateinit var terrene: MaterialHelper
     lateinit var arcane: MaterialHelper
@@ -51,7 +52,7 @@ object AMaterials : Content {
             .addOre("velosium_ore",
                 MaterialHelper.DimensionSelector(end = true),
                 false,
-                ABlockMaterials.velosium,
+                Registrar.blockMaterial.velosium,
                 2,
                 AConfiguredFeatures.distanceToOreSize(2000, 2, 15),
                 12 to 65,
@@ -67,7 +68,7 @@ object AMaterials : Content {
             .addOre("aegirite_ore",
                 MaterialHelper.DimensionSelector(end = true),
                 false,
-                ABlockMaterials.elementalCrystal,
+                Registrar.blockMaterial.elementalCrystal,
                 2,
                 AConfiguredFeatures.distanceToOreSize(4000, 2, 8),
                 34 to 56,
@@ -81,7 +82,7 @@ object AMaterials : Content {
             .addOre("xenothite_ore",
                 MaterialHelper.DimensionSelector(end = true),
                 false,
-                ABlockMaterials.xenothite,
+                Registrar.blockMaterial.xenothite,
                 2,
                 AConfiguredFeatures.distanceToOreSize(10000, 1, 3),
                 12 to 56,
@@ -95,7 +96,7 @@ object AMaterials : Content {
             .addOre("aluminum_ore",
                 MaterialHelper.DimensionSelector(overworld = true),
                 true,
-                ABlockMaterials.aluminum,
+                Registrar.blockMaterial.aluminum,
                 range = 0 to 64,
                 generateToBottom = true)
             .addRawOre()
@@ -107,11 +108,11 @@ object AMaterials : Content {
             .addOre("silver_ore",
                 MaterialHelper.DimensionSelector(overworld = true),
                 true,
-                ABlockMaterials.silver,
+                Registrar.blockMaterial.silver,
                 range = 12 to 72)
             .addRawOre()
             .addIngot()
-            .addPickaxe("silver_pickaxe", RunicPickaxeItem(AToolMaterials.silver, 1, -2.9f, AItems.magicSettings))
+            .addPickaxe("silver_pickaxe", RunicPickaxeItem(Registrar.toolMaterial.silver, 1, -2.9f, Registrar.item.magicSettings))
 
         nickelZinc = MaterialHelper("nickel_zinc", true, Rarity.COMMON, 4)
             .addBattery("nickel_zinc_battery", EnergyTier.T1)

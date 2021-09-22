@@ -1,12 +1,10 @@
 package nichrosia.arcanology.content
 
-import nichrosia.arcanology.content.type.Content
+import nichrosia.arcanology.type.content.LoadableContent
 import nichrosia.arcanology.type.recipe.RuneRecipe
 
-object ARecipes : Content {
+object ARecipes : LoadableContent {
     override fun load() {
-        // initialize singletons
-        RuneRecipe.type
-        RuneRecipe.serializer
+        RuneRecipe.type; RuneRecipe.serializer
     }
 }

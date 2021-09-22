@@ -18,9 +18,9 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import nichrosia.arcanology.content.ABlockEntityTypes
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.ctype.block.entity.PulverizerBlockEntity
+import nichrosia.arcanology.registry.Registrar
 
 @Suppress("deprecation", "LeakingThis")
 open class PulverizerBlock(settings: Settings, val tier: EnergyTier) : BlockWithEntity(settings), InventoryProvider {
@@ -31,7 +31,7 @@ open class PulverizerBlock(settings: Settings, val tier: EnergyTier) : BlockWith
     }
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return PulverizerBlockEntity(pos, state)
+        return PulverizerBlockEntity(pos, state, this)
     }
 
     override fun getRenderType(state: BlockState): BlockRenderType {
@@ -43,7 +43,7 @@ open class PulverizerBlock(settings: Settings, val tier: EnergyTier) : BlockWith
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, ABlockEntityTypes.pulverizer) { world1, pos, state1, be ->
+        return checkType(type, Registrar.blockEntity.pulverizer) { world1, pos, state1, be ->
             PulverizerBlockEntity.tick(world1, pos, state1, be as PulverizerBlockEntity)
         }
     }

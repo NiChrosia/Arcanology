@@ -5,14 +5,16 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
-import nichrosia.arcanology.content.ABlockEntityTypes
-import nichrosia.arcanology.content.AStatusEffects
+import nichrosia.arcanology.ctype.block.ReactiveBlock
 import nichrosia.arcanology.ctype.status.effect.instance.ElementalWrathStatusEffectInstance
+import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 
-open class ReactiveBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ABlockEntityTypes.reactiveBlock, pos, state) {
+open class ReactiveBlockEntity(pos: BlockPos, state: BlockState, override val block: ReactiveBlock) : BlockEntity(
+    Registrar.blockEntity.reactiveBlock, pos, state), BlockEntityWithBlock<ReactiveBlock> {
     companion object {
         fun onBreak(pos: BlockPos, playerEntity: PlayerEntity) {
-            playerEntity.removeStatusEffect(AStatusEffects.elementalWrath)
+            playerEntity.removeStatusEffect(Registrar.statusEffect.elementalWrath)
             playerEntity.addStatusEffect(ElementalWrathStatusEffectInstance(SharedConstants.TICKS_PER_SECOND * 30, pos))
         }
     }

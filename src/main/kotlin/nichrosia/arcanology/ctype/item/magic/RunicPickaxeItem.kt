@@ -10,9 +10,9 @@ import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.func.*
-import nichrosia.arcanology.itype.rune.Rune.Companion.mana
-import nichrosia.arcanology.itype.rune.Rune.Companion.runes
+import nichrosia.arcanology.util.*
+import nichrosia.arcanology.type.instance.rune.Rune.Companion.mana
+import nichrosia.arcanology.type.instance.rune.Rune.Companion.runes
 import nichrosia.arcanology.type.item.magic.RuneItem
 
 @Suppress("MemberVisibilityCanBePrivate")

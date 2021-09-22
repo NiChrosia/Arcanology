@@ -12,7 +12,7 @@ import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Matrix4f
-import nichrosia.arcanology.func.formatted
+import nichrosia.arcanology.util.formatted
 
 /** @author GabrielOlvH */
 @Suppress("MemberVisibilityCanBePrivate")

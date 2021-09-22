@@ -9,7 +9,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Insets
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
-import nichrosia.arcanology.content.AScreenHandlers
+import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.gui.widget.WEnergyBar
 import nichrosia.arcanology.type.gui.widget.WProcessBar
 
@@ -20,7 +20,7 @@ open class PulverizerGUIDescription(
     context: ScreenHandlerContext,
     inventorySize: Int = 2
 ) : SyncedGuiDescription(
-    AScreenHandlers.pulverizer,
+    Registrar.guiDescription.pulverizer,
     syncId,
     playerInventory,
     getBlockInventory(context, inventorySize),
