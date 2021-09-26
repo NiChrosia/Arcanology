@@ -1,13 +1,15 @@
 package nichrosia.arcanology.content
 
 import net.minecraft.util.Rarity
-import nichrosia.arcanology.type.content.LoadableContent
 import nichrosia.arcanology.ctype.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.data.MaterialHelper
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.type.content.LoadableContent
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
+import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.type.world.util.BiomeSelector
+import nichrosia.arcanology.util.distanceToOreSize
 
 @Suppress("MemberVisibilityCanBePrivate")
 object AMaterials : LoadableContent {
@@ -48,66 +50,54 @@ object AMaterials : LoadableContent {
             .addHeart("arcane_heart", ElementalHeart.Prismatic)
             .addMagicCrystal(element = Element.Mana)
 
+        // Generation: Slightly rarer than gold.
         MaterialHelper("velosium", false, Rarity.COMMON, 3)
-            .addOre("velosium_ore",
-                MaterialHelper.DimensionSelector(end = true),
-                false,
+            .addVariableOre("velosium_ore",
                 Registrar.blockMaterial.velosium,
-                2,
-                AConfiguredFeatures.distanceToOreSize(2000, 2, 15),
-                12 to 65,
-                false,
+                150f,
+                8,
                 3,
-                true,
-                150f)
+                0 to 45,
+                BiomeSelector.TheEnd,
+                distanceToOreSize(2000, 6, 9))
             .addRawOre()
             .addIngot()
 
-
         MaterialHelper("aegirite", false, Rarity.COMMON, 3)
-            .addOre("aegirite_ore",
-                MaterialHelper.DimensionSelector(end = true),
-                false,
+            .addVariableOre("aegirite_ore",
                 Registrar.blockMaterial.elementalCrystal,
-                2,
-                AConfiguredFeatures.distanceToOreSize(4000, 2, 8),
-                34 to 56,
-                false,
+                100f,
+                3,
                 4,
-                true,
-                100f)
+                34 to 56,
+                BiomeSelector.TheEnd,
+                distanceToOreSize(4000, 1, 4))
             .addCrystal()
 
+        // Generation: Slightly rarer than diamond, more common than ancient debris. Purity (0-1) varies depending on how close the ore generated to a magical hotspot.
         MaterialHelper("xenothite", false, Rarity.UNCOMMON, 4)
-            .addOre("xenothite_ore",
-                MaterialHelper.DimensionSelector(end = true),
-                false,
+            .addVariableOre("xenothite_ore",
                 Registrar.blockMaterial.xenothite,
-                2,
-                AConfiguredFeatures.distanceToOreSize(10000, 1, 3),
-                12 to 56,
-                false,
-                2,
-                false)
+                100f,
+                4,
+                1,
+                12 to 27,
+                BiomeSelector.TheEnd,
+                distanceToOreSize(10000, 2, 5))
             .addRawOre()
             .addIngot()
 
         MaterialHelper("aluminum", true, Rarity.COMMON, 2)
-            .addOre("aluminum_ore",
-                MaterialHelper.DimensionSelector(overworld = true),
-                true,
+            .addOverworldDeepslateOre("aluminum_ore",
                 Registrar.blockMaterial.aluminum,
-                range = 0 to 64,
-                generateToBottom = true)
+                range = 0 to 64)
             .addRawOre()
             .addIngot()
             .addWire()
             .addCircuit()
 
         silver = MaterialHelper("silver", true, Rarity.COMMON, 2)
-            .addOre("silver_ore",
-                MaterialHelper.DimensionSelector(overworld = true),
-                true,
+            .addOverworldDeepslateOre("silver_ore",
                 Registrar.blockMaterial.silver,
                 range = 12 to 72)
             .addRawOre()

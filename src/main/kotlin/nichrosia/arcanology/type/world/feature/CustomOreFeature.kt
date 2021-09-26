@@ -1,5 +1,7 @@
 package nichrosia.arcanology.type.world.feature
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkSectionPos
 import net.minecraft.util.math.MathHelper
@@ -11,52 +13,48 @@ import net.minecraft.world.chunk.WorldChunk
 import net.minecraft.world.gen.feature.*
 import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
 
-open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
-    private lateinit var config: CustomOreFeatureConfig
-    private lateinit var context: FeatureContext<OreFeatureConfig>
-
-    override fun generate(context: FeatureContext<OreFeatureConfig>): Boolean {
-        this.context = context
-
+open class CustomOreFeature(codec: Codec<CustomOreFeatureConfig>) : Feature<CustomOreFeatureConfig>(codec) {
+    override fun generate(context: FeatureContext<CustomOreFeatureConfig>): Boolean {
         val random = context.random
         val blockPos = context.origin
         val structureWorldAccess = context.world
-        val veinSize = config.getSize(context)
+        val config = context.config
+        val veinSize = config.sizeFactory(context).toFloat()
 
-        val f = random.nextFloat() * 3.1415927f
-        val g = veinSize.toFloat() / 8.0f
-        val i = MathHelper.ceil((veinSize.toFloat() / 16.0f * 2.0f + 1.0f) / 2.0f)
-        val d = blockPos.x.toDouble() + sin(f.toDouble()) * g.toDouble()
-        val e = blockPos.x.toDouble() - sin(f.toDouble()) * g.toDouble()
-        val h = blockPos.z.toDouble() + cos(f.toDouble()) * g.toDouble()
-        val j = blockPos.z.toDouble() - cos(f.toDouble()) * g.toDouble()
-        val l = (blockPos.y + random.nextInt(3) - 2).toDouble()
-        val m = (blockPos.y + random.nextInt(3) - 2).toDouble()
-        val n = blockPos.x - MathHelper.ceil(g) - i
-        val o = blockPos.y - 2 - i
-        val p = blockPos.z - MathHelper.ceil(g) - i
-        val q = 2 * (MathHelper.ceil(g) + i)
-        val r = 2 * (2 + i)
-        for (s in n..n + q) {
-            for (t in p..p + q) {
-                if (o <= structureWorldAccess.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, s, t)) {
-                    return generateVeinPart(
-                        structureWorldAccess, random, config, d, e, h, j, l, m, n, o, p, q, r
-                    )
+        val f = random.nextFloat() * PI
+        val g = veinSize / 8.0
+        val i = MathHelper.ceil((veinSize / 16.0f * 2.0f + 1.0f) / 2.0f)
+        val startX = blockPos.x + sin(f) * g
+        val endX = blockPos.x - sin(f) * g
+        val startZ = blockPos.z + cos(f) * g
+        val endZ = blockPos.z - cos(f) * g
+        val startY = (blockPos.y + random.nextInt(3) - 2.0)
+        val endY = (blockPos.y + random.nextInt(3) - 2.0)
+        val veinX = blockPos.x - MathHelper.ceil(g) - i
+        val veinY = blockPos.y - 2 - i
+        val veinZ = blockPos.z - MathHelper.ceil(g) - i
+        val horizontalSize = 2 * (MathHelper.ceil(g) + i)
+        val verticalSize = 2 * (2 + i)
+        for (chunkX in (veinX)..(veinX + horizontalSize)) {
+            for (chunkZ in (veinZ)..(veinZ + horizontalSize)) {
+                if (veinY <= structureWorldAccess.getTopY(Heightmap.Type.WORLD_SURFACE_WG, chunkX, chunkZ)) {
+                    return generateVeinPart(structureWorldAccess, random, context, startX, endX, startZ, endZ, startY, endY, veinX, veinY, veinZ, horizontalSize, verticalSize)
                 }
             }
         }
+
         return false
     }
 
-    override fun generateVeinPart(
+    open fun generateVeinPart(
         structureWorldAccess: StructureWorldAccess,
         random: Random,
-        config: OreFeatureConfig,
+        context: FeatureContext<CustomOreFeatureConfig>,
         startX: Double,
         endX: Double,
         startZ: Double,
@@ -72,7 +70,7 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
         var i = 0
         val bitSet = BitSet(horizontalSize * verticalSize * horizontalSize)
         val mutable = BlockPos.Mutable()
-        val j = this.config.getSize(context)
+        val j = context.config.sizeFactory(context)
         val ds = DoubleArray(j * 4)
 
         var t: Double
@@ -116,7 +114,8 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
         val chunkSectionCache = ChunkSectionCache(structureWorldAccess)
 
         try {
-            for (n in 0 until j) {
+            var n = 0
+            while (n < j) {
                 t = ds[n * 4 + 3]
                 if (t >= 0.0) {
                     u = ds[n * 4 + 0]
@@ -133,27 +132,25 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
                         if (ah * ah < 1.0) {
                             for (ai in ab..ae) {
                                 val aj = (ai.toDouble() + 0.5 - v) / t
-                                if (ah * ah + aj * aj < 1.0) {
+                                if ((ah * ah) + (aj * aj) < 2.0) {
                                     for (ak in ac..af) {
                                         val al = (ak.toDouble() + 0.5 - w) / t
-                                        if (ah * ah + aj * aj + al * al < 1.0 && !structureWorldAccess.isOutOfHeightLimit(ai)) {
+                                        if (ah * ah + aj * aj + al * al < 3.0 && !structureWorldAccess.isOutOfHeightLimit(ai)) {
                                             val am = ag - x + (ai - y) * horizontalSize + (ak - z) * horizontalSize * verticalSize
                                             if (!bitSet[am]) {
                                                 bitSet.set(am)
                                                 mutable[ag, ai] = ak
-
                                                 if (structureWorldAccess.method_37368(mutable)) {
                                                     val chunkSection = chunkSectionCache.getSection(mutable)
-                                                    if (chunkSection !== WorldChunk.EMPTY_SECTION && chunkSection != null) {
+                                                    if (chunkSection !== WorldChunk.EMPTY_SECTION) {
                                                         val an = ChunkSectionPos.getLocalCoord(ag)
                                                         val ao = ChunkSectionPos.getLocalCoord(ai)
                                                         val ap = ChunkSectionPos.getLocalCoord(ak)
-                                                        val blockState = chunkSection.getBlockState(an, ao, ap)
-                                                        val var57: Iterator<OreFeatureConfig.Target> = this.config.targets.iterator()
-
+                                                        val blockState = chunkSection!!.getBlockState(an, ao, ap)
+                                                        val var57 = context.config.targets.iterator()
                                                         while (var57.hasNext()) {
                                                             val target = var57.next()
-                                                            if (shouldPlace(blockState, chunkSectionCache::getBlockState, random, this.config, target, mutable)) {
+                                                            if (!blockState.isAir && OreFeature.shouldPlace(blockState, { pos -> chunkSectionCache.getBlockState(pos) }, random, context.config, target, mutable)) {
                                                                 chunkSection.setBlockState(an, ao, ap, target.state, false)
                                                                 ++i
                                                                 break
@@ -169,6 +166,7 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
                         }
                     }
                 }
+                ++n
             }
         } catch (var60: Throwable) {
             try {
@@ -183,20 +181,20 @@ open class CustomOreFeature : OreFeature(OreFeatureConfig.CODEC) {
         return i > 0
     }
 
-    open fun configure(config: CustomOreFeatureConfig): ConfiguredFeature<*, *> {
-        this.config = config
-
-        return ConfiguredFeature(this, config)
-    }
-
     companion object {
-        private var instances = 0
-
-        val instance: CustomOreFeature
-            get() {
-                instances++
-                return register("custom-ore-$instances", object : CustomOreFeature() {})
-            }
+        val instance = register("custom_ore_feature", CustomOreFeature(
+            RecordCodecBuilder.create {
+                it.group(
+                    Codec.list(OreFeatureConfig.Target.CODEC).fieldOf("targets")
+                        .forGetter(CustomOreFeatureConfig::targets),
+                    Codec.intRange(0, 64).fieldOf("size")
+                        .forGetter(CustomOreFeatureConfig::size),
+                    Codec.floatRange(0.0f, 1.0f).fieldOf("discard_chance_on_air_exposure")
+                        .forGetter(CustomOreFeatureConfig::discardOnAirChance)
+                ).apply(it) { targets, size, discardOnAirChance ->
+                    CustomOreFeatureConfig(targets, size, discardOnAirChance)
+                }
+            }))
 
         private fun <C : FeatureConfig, F : Feature<C>> register(name: String, feature: F): F {
             return Registry.register(Registry.FEATURE, name, feature) as F

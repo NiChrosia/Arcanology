@@ -2,13 +2,26 @@ package nichrosia.arcanology.registry
 
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
+import nichrosia.arcanology.content.ConfiguredFeatureRegistrar
 import nichrosia.arcanology.registry.impl.*
 import nichrosia.arcanology.registry.properties.RegistryProperty
 
 /** A base registrar class for registering content. The base implementations of register functions should be done in
- * the implementation class. */
+ * the implementation class. Additionally, it also implements [MutableMap], so it has all the properties of a map. */
 @Suppress("UNCHECKED_CAST")
-interface Registrar<T> {
+interface Registrar<T> : MutableMap<Identifier, T> {
+    override val entries: MutableSet<MutableMap.MutableEntry<Identifier, T>>
+        get() = registry.entries
+
+    override val keys: MutableSet<Identifier>
+        get() = registry.keys
+
+    override val values: MutableCollection<T>
+        get() = registry.values
+
+    override val size: Int
+        get() = registry.size
+
     /** The core registry which contains all of the items. It should be overridden for a custom type that registers
      * the item externally. */
     val registry: MutableMap<Identifier, T>
@@ -32,6 +45,12 @@ interface Registrar<T> {
         registry.forEach(this::register)
     }
 
+    /** Forcibly create & register all of the content declared. */
+    fun fullyRegisterAll() {
+        createAll()
+        registerAll()
+    }
+
     /** Create the specified item. */
     fun <E : T> create(key: Identifier, value: E): E {
         this[key] = value
@@ -52,24 +71,50 @@ interface Registrar<T> {
     /** Register the specified item to external sources. */
     fun <E : T> register(key: String, value: E) = register(Arcanology.idOf(key), value)
 
-    operator fun get(path: String): T {
-        return this[Arcanology.idOf(path)]
+    operator fun get(key: String): T {
+        return registry[Arcanology.idOf(key)] ?: default ?: throw IllegalStateException("Cannot use default, as it does not exist.")
     }
 
-    operator fun set(path: String, value: T) {
-        this[Arcanology.idOf(path)] = value
+    override operator fun get(key: Identifier): T {
+        return registry[key] ?: default ?: throw IllegalStateException("Cannot use default, as it does not exist.")
     }
 
-    operator fun get(id: Identifier): T {
-        return registry[id] ?: default ?: throw IllegalStateException("Cannot use default, as it does not exist.")
+    operator fun set(path: String, value: T): T? {
+        return registry.put(Arcanology.idOf(path), value)
     }
 
-    operator fun set(id: Identifier, value: T) {
-        registry[id] = value
+    override fun put(key: Identifier, value: T): T? {
+        return registry.put(key, value)
     }
 
-    fun containsKey(key: Identifier) = registry.containsKey(key)
-    fun containsKey(key: String) = containsKey(Arcanology.idOf(key))
+    override fun putAll(from: Map<out Identifier, T>) {
+        registry.putAll(from)
+    }
+
+    /** Do nothing, as registry removal is not supported */
+    override fun remove(key: Identifier): T? {
+        return null
+    }
+
+    override fun containsKey(key: Identifier): Boolean {
+        return registry.containsKey(key)
+    }
+
+    fun containsKey(key: String): Boolean {
+        return containsKey(Arcanology.idOf(key))
+    }
+
+    override fun containsValue(value: T): Boolean {
+        return registry.containsValue(value)
+    }
+
+    override fun isEmpty(): Boolean {
+        return registry.isEmpty()
+    }
+
+    override fun clear() {
+        registry.clear()
+    }
 
     companion object {
         val blockMaterial = BlockMaterialRegistrar()
@@ -81,7 +126,5 @@ interface Registrar<T> {
         val statusEffect = StatusEffectRegistrar()
         val rune = RuneRegistrar()
         val guiDescription = GUIDescriptionRegistrar()
-
-        // val all = arrayOf(blockMaterial, block, blockEntity, itemGroup, toolMaterial, item, statusEffect, rune, guiDescription)
     }
 }

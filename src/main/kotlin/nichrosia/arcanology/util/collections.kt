@@ -47,3 +47,5 @@ inline fun <reified T> Array<T>.sort(crossinline predicate: (T) -> Int): Array<T
 fun arraysSameSize(a: Array<*>, b: Array<*>) {
     if (a.size != b.size) throw IllegalStateException("Both arrays must be the same size.")
 }
+
+fun <T> MutableList<T>.addAll(vararg elements: T) = addAll(elements)

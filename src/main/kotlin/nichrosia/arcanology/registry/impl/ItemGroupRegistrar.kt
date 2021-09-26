@@ -5,7 +5,6 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.data.DataGenerator
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.ItemGroupLanguageGenerator
@@ -15,10 +14,13 @@ open class ItemGroupRegistrar : BasicRegistrar<ItemGroup>() {
     /** The language generator for translating the ID to formatted English. This should be used in the [registry]. */
     val languageGenerator: LanguageGenerator = ItemGroupLanguageGenerator()
 
+    val magic by RegistryProperty("magic") { create(it) { ItemStack.EMPTY } }
+    val tech by RegistryProperty("tech") { create(it) { ItemStack.EMPTY } }
+
     override fun <E : ItemGroup> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)
 
-        DataGenerator.englishLang.lang["itemGroup.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
+        Arcanology.resourceManager.englishLang.lang["itemGroup.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
 
         return registered
     }
@@ -28,7 +30,4 @@ open class ItemGroupRegistrar : BasicRegistrar<ItemGroup>() {
             .icon(icon)
             .build())
     }
-
-    val magic by RegistryProperty("magic") { create(it) { ItemStack.EMPTY } }
-    val tech by RegistryProperty("tech") { create(it) { ItemStack.EMPTY } }
 }

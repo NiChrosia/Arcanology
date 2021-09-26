@@ -8,7 +8,5 @@ interface ClientRegistrar {
     companion object {
         val blockEntityRenderer = BlockEntityRendererRegistrar()
         val screen = ScreenRegistrar()
-
-        val all = arrayOf(blockEntityRenderer, screen)
     }
 }

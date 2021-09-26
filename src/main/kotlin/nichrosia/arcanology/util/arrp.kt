@@ -24,9 +24,6 @@ import nichrosia.arcanology.ctype.block.AltarBlock
 import nichrosia.arcanology.ctype.item.energy.CircuitItem
 import nichrosia.arcanology.ctype.item.energy.WireItem
 import nichrosia.arcanology.ctype.item.weapon.OpenCrossbowItem
-import nichrosia.arcanology.data.DataGenerator.blockID
-import nichrosia.arcanology.data.DataGenerator.blockModelID
-import nichrosia.arcanology.data.DataGenerator.itemModelID
 import net.devtech.arrp.json.blockstate.JState.model as blockModel
 
 fun predicate() = JCondition()
@@ -44,8 +41,8 @@ fun normalBlockLootTable(block: Block, item: BlockItem) {
     val blockName = Registry.BLOCK.getId(block).path
     val itemName = Registry.ITEM.getId(item).path
 
-    Arcanology.resourcePack.addLootTable(
-        blockID(blockName),
+    Arcanology.resourceManager.main.addLootTable(
+        Arcanology.resourceManager.blockID(blockName),
         loot("minecraft:block")
             .pool(pool()
                 .rolls(1)
@@ -62,8 +59,8 @@ fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
     val blockName = Registry.BLOCK.getId(ore).path
     val itemName = Registry.ITEM.getId(rawOre).path
 
-    Arcanology.resourcePack.addLootTable(
-        blockID(blockName),
+    Arcanology.resourceManager.main.addLootTable(
+        Arcanology.resourceManager.blockID(blockName),
         loot("minecraft:block")
             .pool(pool()
                 .rolls(1)
@@ -92,7 +89,7 @@ fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
 fun normalBlockstate(block: Block) {
     val blockName = Registry.BLOCK.getId(block).path
 
-    Arcanology.resourcePack.addBlockState(
+    Arcanology.resourceManager.main.addBlockState(
         state(variant(blockModel("${Arcanology.modID}:block/$blockName"))),
         id("${Arcanology.modID}:$blockName")
     )
@@ -101,10 +98,10 @@ fun normalBlockstate(block: Block) {
 fun normalBlockModel(block: Block) {
     val name = Registry.BLOCK.getId(block).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("block/cube_all")
             .textures(textures().`var`("all", "${Arcanology.modID}:block/$name")),
-        blockModelID(name)
+        Arcanology.resourceManager.blockModelID(name)
     )
 }
 
@@ -112,26 +109,26 @@ fun blockItemModel(item: BlockItem) {
     val itemName = Registry.ITEM.getId(item).path
     val blockName = Registry.BLOCK.getId(item.block).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("${Arcanology.modID}:block/$blockName"),
-        itemModelID(itemName)
+        Arcanology.resourceManager.itemModelID(itemName)
     )
 }
 
 fun normalItemModel(item: Item) {
     val name = Registry.ITEM.getId(item).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("item/generated")
             .textures(textures().layer0("${Arcanology.modID}:item/$name")),
-        itemModelID(name)
+        Arcanology.resourceManager.itemModelID(name)
     )
 }
 
 fun crossbowItemModel(item: OpenCrossbowItem) {
     val name = Registry.ITEM.getId(item).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("item/generated")
             .textures(
                 textures().layer0("${Arcanology.modID}:item/${name}_standby")
@@ -155,58 +152,58 @@ fun crossbowItemModel(item: OpenCrossbowItem) {
                         .scale(0.68f, 0.68f, 0.68f))
             ).addOverride(override(
                 predicate().parameter("pulling", 1),
-                itemModelID("${name}_pulling_0")
+                Arcanology.resourceManager.itemModelID("${name}_pulling_0")
             )).addOverride(override(
                 predicate().parameter("pulling", 1).parameter("pull", 0.58),
-                itemModelID("${name}_pulling_1")
+                Arcanology.resourceManager.itemModelID("${name}_pulling_1")
             )).addOverride(override(
                 predicate().parameter("pulling", 1).parameter("pull", 0.99),
-                itemModelID("${name}_pulling_2")
+                Arcanology.resourceManager.itemModelID("${name}_pulling_2")
             )).addOverride(override(
                 predicate().parameter("charged", 1),
-                itemModelID("${name}_arrow")
+                Arcanology.resourceManager.itemModelID("${name}_arrow")
             )).addOverride(override(
                 predicate().parameter("charged", 1).parameter("firework", 1),
-                itemModelID("${name}_firework")
+                Arcanology.resourceManager.itemModelID("${name}_firework")
             )),
-        itemModelID(name)
+        Arcanology.resourceManager.itemModelID(name)
     )
 
     for (i in 0..2) {
-        Arcanology.resourcePack.addModel(
+        Arcanology.resourceManager.main.addModel(
             model("${Arcanology.modID}:item/${name}")
                 .textures(textures().layer0("${Arcanology.modID}:item/${name}_pulling_$i")),
-            itemModelID("${name}_pulling_$i")
+            Arcanology.resourceManager.itemModelID("${name}_pulling_$i")
         )
     }
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("${Arcanology.modID}:item/${name}")
             .textures(textures().layer0("${Arcanology.modID}:item/${name}_arrow")),
-        itemModelID("${name}_arrow")
+        Arcanology.resourceManager.itemModelID("${name}_arrow")
     )
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("${Arcanology.modID}:item/${name}")
             .textures(textures().layer0("${Arcanology.modID}:item/${name}_firework")),
-        itemModelID("${name}_firework")
+        Arcanology.resourceManager.itemModelID("${name}_firework")
     )
 }
 
 fun handheldItemModel(item: MiningToolItem) {
     val name = Registry.ITEM.getId(item).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("item/handheld")
             .textures(textures().layer0("${Arcanology.modID}:item/${name}")),
-        itemModelID(name)
+        Arcanology.resourceManager.itemModelID(name)
     )
 }
 
 fun altarBlockModel(block: AltarBlock) {
     val name = Registry.BLOCK.getId(block).path
 
-    Arcanology.resourcePack.addModel(
+    Arcanology.resourceManager.main.addModel(
         model("minecraft:block/cube")
             .textures(
                 textures()
@@ -218,7 +215,7 @@ fun altarBlockModel(block: AltarBlock) {
                     .`var`("down", "${Arcanology.modID}:block/altar_bottom")
                     .`var`("up", "${Arcanology.modID}:block/altar_top")
             ),
-        blockModelID(name)
+        Arcanology.resourceManager.blockModelID(name)
     )
 }
 
@@ -229,7 +226,7 @@ fun wireRecipe(ingot: Item, wire: WireItem) {
     val ingotID = Registry.ITEM.getId(ingot)
     val ingotName = ingotID.path
 
-    Arcanology.resourcePack.addRecipe(
+    Arcanology.resourceManager.main.addRecipe(
         id("${Arcanology.modID}:$wireName"),
         shapeless(
             ingredients()
@@ -246,7 +243,7 @@ fun circuitRecipe(insulator: Item, wire: WireItem, circuitItem: CircuitItem) {
     val wireID = Registry.ITEM.getId(wire)
     val wireName = wireID.path
 
-    Arcanology.resourcePack.addRecipe(
+    Arcanology.resourceManager.main.addRecipe(
         id("$circuitID"),
         shaped(
             pattern()
@@ -265,7 +262,7 @@ fun pickaxeRecipe(pickaxeItem: PickaxeItem, ingot: Item, stick: Item) {
     val pickaxeID = Registry.ITEM.getId(pickaxeItem)
     val ingotID = Registry.ITEM.getId(ingot)
 
-    Arcanology.resourcePack.addRecipe(
+    Arcanology.resourceManager.main.addRecipe(
         id("$pickaxeID"),
         shaped(
             pattern()

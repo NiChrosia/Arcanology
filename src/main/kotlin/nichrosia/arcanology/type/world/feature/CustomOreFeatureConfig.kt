@@ -8,7 +8,8 @@ import net.minecraft.world.gen.feature.util.FeatureContext
 open class CustomOreFeatureConfig(
     targets: List<Target>,
     size: Int,
-    val getSize: (FeatureContext<OreFeatureConfig>) -> Int = { size }
-) : OreFeatureConfig(targets, size, 0.0f) {
-    constructor(test: RuleTest, state: BlockState, size: Int, getSize: (FeatureContext<OreFeatureConfig>) -> Int = { size }) : this(listOf(createTarget(test, state)), size, getSize)
+    discardOnAirChance: Float = 0.0f,
+    val sizeFactory: (FeatureContext<CustomOreFeatureConfig>) -> Int = { size }
+) : OreFeatureConfig(targets, size, discardOnAirChance) {
+    constructor(test: RuleTest, state: BlockState, size: Int, discardOnAirChance: Float = 0.0f, getSize: (FeatureContext<CustomOreFeatureConfig>) -> Int = { size }) : this(listOf(createTarget(test, state)), size, discardOnAirChance, getSize)
 }

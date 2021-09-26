@@ -22,14 +22,6 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     val magicSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.magic)
     val techSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.tech)
 
-    override fun <E : Item> register(key: Identifier, value: E): E {
-        val registered = super.register(key, value)
-
-        if (registered is BlockItem) blockItemModel(registered) else normalItemModel(registered)
-
-        return registered
-    }
-
     val altar by RegistryProperty("altar") { BlockItem(Registrar.block.altar, magicSettings.rarity(Rarity.EPIC)) }
     val pulverizer by RegistryProperty("pulverizer") { BlockItem(Registrar.block.pulverizer, techSettings) }
     val runeInfuser by RegistryProperty("rune_infuser") { BlockItem(Registrar.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)) }
@@ -38,4 +30,12 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
 
     val arcaneAlmanac by RegistryProperty("arcane_almanac") { GuideBookItem(magicSettings, "arcane_almanac") }
     val componentCompendium by RegistryProperty("component_compendium") { GuideBookItem(techSettings, "component_compendium") }
+
+    override fun <E : Item> register(key: Identifier, value: E): E {
+        val registered = super.register(key, value)
+
+        if (registered is BlockItem) blockItemModel(registered) else normalItemModel(registered)
+
+        return registered
+    }
 }

@@ -24,16 +24,6 @@ import nichrosia.arcanology.util.normalBlockstate
 open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    override fun <E : Block> register(key: Identifier, value: E): E {
-        val registered = super.register(key, value)
-
-        normalBlockstate(registered)
-
-        if (registered is AltarBlock) altarBlockModel(registered) else normalBlockModel(registered)
-
-        return registered
-    }
-
     val reactiveBlock by RegistryProperty("reactive_block") {
         ReactiveBlock(FabricBlockSettings.of(Registrar.blockMaterial.elementalCrystal)
             .requiresTool()
@@ -61,5 +51,15 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
             .requiresTool()
             .strength(5f, 150f)
             .breakByTool(FabricToolTags.PICKAXES, 3))
+    }
+
+    override fun <E : Block> register(key: Identifier, value: E): E {
+        val registered = super.register(key, value)
+
+        normalBlockstate(registered)
+
+        if (registered is AltarBlock) altarBlockModel(registered) else normalBlockModel(registered)
+
+        return registered
     }
 }

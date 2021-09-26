@@ -12,12 +12,12 @@ import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.properties.RegistryProperty
 
 open class GUIDescriptionRegistrar : BasicRegistrar<ScreenHandlerType<*>>() {
+    val pulverizer by RegistryProperty("pulverizer") { create("pulverizer", ::PulverizerGUIDescription) }
+    val runeInfuser by RegistryProperty("rune_infuser") { create("rune_infuser", ::RuneInfuserGUIDescription) }
+
     fun <T : ScreenHandler> create(key: String, screenHandler: (Int, PlayerInventory, ScreenHandlerContext) -> T): ScreenHandlerType<T> {
         return super.create(key, ScreenHandlerRegistry.registerSimple(Arcanology.idOf(key)) { syncId, inventory ->
             screenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)
         })
     }
-
-    val pulverizer by RegistryProperty("pulverizer") { create("pulverizer", ::PulverizerGUIDescription) }
-    val runeInfuser by RegistryProperty("rune_infuser") { create("rune_infuser", ::RuneInfuserGUIDescription) }
 }

@@ -3,7 +3,7 @@ package nichrosia.arcanology.registry
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.DefaultedRegistry
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.data.DataGenerator
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 
 /** An abstract implementation of [Registrar] that uses a [DefaultedRegistry] from vanilla. */
@@ -19,7 +19,7 @@ abstract class RegistryRegistrar<T>(val minecraftRegistry: Registry<T>, val seri
         val registered = super.register(key, value)
 
         Registry.register(minecraftRegistry, key, registered)
-        DataGenerator.englishLang.lang["$serializationType.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
+        Arcanology.resourceManager.englishLang.lang["$serializationType.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
 
         return registered
     }

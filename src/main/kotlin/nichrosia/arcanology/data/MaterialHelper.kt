@@ -3,15 +3,19 @@ package nichrosia.arcanology.data
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.*
+import net.minecraft.block.Block
+import net.minecraft.block.Material
+import net.minecraft.block.OreBlock
 import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.gen.feature.ConfiguredFeature
+import net.minecraft.world.gen.feature.OreFeature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.content.AConfiguredFeatures
+import nichrosia.arcanology.content.ConfiguredFeatureRegistrar
 import nichrosia.arcanology.ctype.item.energy.BatteryItem
 import nichrosia.arcanology.ctype.item.energy.CircuitItem
 import nichrosia.arcanology.ctype.item.energy.WireItem
@@ -26,6 +30,9 @@ import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.element.ElementalHeart
 import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.type.world.feature.CustomOreFeature
+import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
+import nichrosia.arcanology.type.world.util.BiomeSelector
 import nichrosia.arcanology.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -62,64 +69,78 @@ data class MaterialHelper(val name: String,
     lateinit var crossbow: OpenCrossbowItem
     lateinit var pickaxe: PickaxeItem
 
-    fun addOre(
+    lateinit var oreFeature: ConfiguredFeature<OreFeatureConfig, OreFeature>
+    lateinit var variableOreFeature: ConfiguredFeature<CustomOreFeatureConfig, CustomOreFeature>
+
+    fun addOverworldDeepslateOre(
         name: String = "${this.name}_ore",
-        dimensions: DimensionSelector,
-        deepslateVariant: Boolean,
-        material: Material = Material.STONE,
-        size: Int = 8,
-        sizeProvider: (FeatureContext<OreFeatureConfig>) -> Int = { size },
+        blockMaterial: Material = Material.STONE,
+        oreResistance: Float = 100f,
+        oreBlobSize: Int = 8,
+        blobsPerChunk: Int = 8,
         range: Pair<Int, Int> = 0 to 200,
-        generateToBottom: Boolean = false,
-        veinsPerChunk: Int = 8,
-        randomizeVeinsPerChunk: Boolean = false,
-        oreResistance: Float = 100f
     ): MaterialHelper {
         val oreID = Arcanology.idOf(name)
-        ore = registerBlock(oreID.path, OreBlock(FabricBlockSettings.of(material)
+        ore = registerBlock(oreID.path, OreBlock(FabricBlockSettings.of(blockMaterial)
             .requiresTool()
             .strength(5f, oreResistance)
             .breakByTool(FabricToolTags.PICKAXES, miningLevel)))
 
         oreItem = registerItem(oreID.path, BlockItem(ore, settings))
-
-        fun registerOre(
-            ore: OreBlock,
-            biomeSelector: AConfiguredFeatures.BiomeSelector,
-            deepslateVariant: Boolean = false,
-            deepslateOre: OreBlock? = null
-        ) {
-            AConfiguredFeatures.registerOre(
-                Arcanology.idOf("${oreID.path}_feature"), when(biomeSelector) {
-                   AConfiguredFeatures.BiomeSelector.Overworld -> Blocks.STONE
-                   AConfiguredFeatures.BiomeSelector.TheNether -> Blocks.NETHERRACK
-                   AConfiguredFeatures.BiomeSelector.TheEnd -> Blocks.END_STONE
-                }, ore, size, sizeProvider, range, generateToBottom, veinsPerChunk,
-                randomizeVeinsPerChunk, biomeSelector, deepslateVariant, deepslateOre
+        deepslateOre = registerBlock(
+            "deepslate_${oreID.path}", OreBlock(
+                FabricBlockSettings.of(blockMaterial)
+                    .requiresTool()
+                    .strength(5f, oreResistance * 2f)
+                    .breakByTool(FabricToolTags.PICKAXES, miningLevel)
             )
-        }
+        )
 
-        if (dimensions.overworld) {
-            if (deepslateVariant) {
-                deepslateOre = registerBlock(
-                    "deepslate_${oreID.path}", OreBlock(
-                        FabricBlockSettings.of(material)
-                            .requiresTool()
-                            .strength(5f, oreResistance * 2f)
-                            .breakByTool(FabricToolTags.PICKAXES, miningLevel)
-                    )
-                )
+        deepslateOreItem = registerItem("deepslate_${oreID.path}", BlockItem(deepslateOre, settings))
+        oreFeature = ConfiguredFeatureRegistrar.registerNormalAndDeepslateOre(oreID, ore, deepslateOre, oreBlobSize, blobsPerChunk, range)
 
-                deepslateOreItem = registerItem("deepslate_${oreID.path}", BlockItem(deepslateOre, settings))
+        return this
+    }
 
-                registerOre(ore, AConfiguredFeatures.BiomeSelector.Overworld, true, deepslateOre)
-            } else {
-                registerOre(ore, AConfiguredFeatures.BiomeSelector.Overworld)
-            }
-        }
+    fun addOre(
+        name: String = "${this.name}_ore",
+        blockMaterial: Material = Material.STONE,
+        oreResistance: Float = 100f,
+        oreBlobSize: Int = 8,
+        blobsPerChunk: Int = 8,
+        range: Pair<Int, Int> = 0 to 200,
+        biomeSelector: BiomeSelector
+    ): MaterialHelper {
+        val oreID = Arcanology.idOf(name)
+        ore = registerBlock(oreID.path, OreBlock(FabricBlockSettings.of(blockMaterial)
+            .requiresTool()
+            .strength(5f, oreResistance)
+            .breakByTool(FabricToolTags.PICKAXES, miningLevel)))
 
-        if (dimensions.nether) registerOre(ore, AConfiguredFeatures.BiomeSelector.TheNether)
-        if (dimensions.end) registerOre(ore, AConfiguredFeatures.BiomeSelector.TheEnd)
+        oreItem = registerItem(oreID.path, BlockItem(ore, settings))
+        oreFeature = ConfiguredFeatureRegistrar.registerOre(oreID, ore, oreBlobSize, blobsPerChunk, range, biomeSelector)
+
+        return this
+    }
+
+    fun addVariableOre(
+        name: String = "${this.name}_ore",
+        blockMaterial: Material = Material.STONE,
+        oreResistance: Float = 100f,
+        fallbackOreBlobSize: Int = 8,
+        blobsPerChunk: Int = 8,
+        range: Pair<Int, Int> = 0 to 200,
+        biomeSelector: BiomeSelector,
+        sizeFactory: (FeatureContext<CustomOreFeatureConfig>) -> Int = { fallbackOreBlobSize }
+    ): MaterialHelper {
+        val oreID = Arcanology.idOf(name)
+        ore = registerBlock(oreID.path, OreBlock(FabricBlockSettings.of(blockMaterial)
+            .requiresTool()
+            .strength(5f, oreResistance)
+            .breakByTool(FabricToolTags.PICKAXES, miningLevel)))
+
+        oreItem = registerItem(oreID.path, BlockItem(ore, settings))
+        variableOreFeature = ConfiguredFeatureRegistrar.registerVariableOre(oreID, ore, range, blobsPerChunk, biomeSelector, sizeFactory)
 
         return this
     }
@@ -147,7 +168,7 @@ data class MaterialHelper(val name: String,
     fun addIngot(name: String = "${this.name}_ingot", ingotItem: Item = Item(settings)): MaterialHelper {
         ingot = registerItem(name, ingotItem)
 
-        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), ingot)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("${name}s"), ingot)
 
         return this
     }
@@ -156,7 +177,7 @@ data class MaterialHelper(val name: String,
         wire = registerItem(name, wireItem)
 
         if (this::ingot.isInitialized) wireRecipe(ingot, wire)
-        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), wire)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("${name}s"), wire)
 
         return this
     }
@@ -164,7 +185,7 @@ data class MaterialHelper(val name: String,
     fun addDust(name: String = "${this.name}_dust", dustItem: Item = Item(settings)): MaterialHelper {
         dust = registerItem(name, dustItem)
 
-        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), dust)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("${name}s"), dust)
 
         return this
     }
@@ -172,7 +193,7 @@ data class MaterialHelper(val name: String,
     fun addCrystal(name: String = "${this.name}_crystal", crystalItem: Item = Item(settings)): MaterialHelper {
         crystal = registerItem(name, crystalItem)
 
-        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), crystal)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("${name}s"), crystal)
 
         return this
     }
@@ -180,7 +201,7 @@ data class MaterialHelper(val name: String,
     fun addBattery(name: String = "${this.name}_battery", tier: EnergyTier, batteryItem: BatteryItem = BatteryItem(settings, tier)): MaterialHelper {
         battery = registerItem(name, batteryItem)
 
-        DataGenerator.addTags(DataGenerator.itemTagID(name.replace("battery", "batteries")), battery)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID(name.replace("battery", "batteries")), battery)
 
         return this
     }
@@ -193,8 +214,8 @@ data class MaterialHelper(val name: String,
         circuit = registerItem(name, CircuitItem(settings))
 
         circuitRecipe(insulator, wire, circuit)
-        DataGenerator.addTags(DataGenerator.itemTagID("${name}s"), circuit)
-        DataGenerator.addTags(DataGenerator.itemTagID("insulators"), insulator)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("${name}s"), circuit)
+        Arcanology.resourceManager.tags.add(Arcanology.resourceManager.itemTagID("insulators"), insulator)
 
         return this
     }
@@ -271,16 +292,12 @@ data class MaterialHelper(val name: String,
 
         val id = Registry.ITEM.getId(registeredContent)
 
-        DataGenerator.englishLang.item(id, when(registeredContent) {
-            is MagicCrystalItem -> generateCrystalLang(id.path)
+        Arcanology.resourceManager.englishLang.item(id, when(registeredContent) {
+            is MagicCrystalItem -> languageGenerator.generateLang(id.path.replace("_magic_", "_"))
             else -> languageGenerator.generateLang(id.path)
         })
 
         return registeredContent
-    }
-
-    fun generateCrystalLang(name: String): String {
-        return languageGenerator.generateLang(name.replace("_magic_", "_"))
     }
 
     private fun <T : Block> registerBlock(name: String, content: T): T {
@@ -290,10 +307,8 @@ data class MaterialHelper(val name: String,
         normalBlockModel(registeredContent)
 
         val id = Registry.BLOCK.getId(registeredContent)
-        DataGenerator.englishLang.block(id, languageGenerator.generateLang(id.path))
+        Arcanology.resourceManager.englishLang.block(id, languageGenerator.generateLang(id.path))
 
         return registeredContent
     }
-
-    class DimensionSelector(val overworld: Boolean = false, val nether: Boolean = false, val end: Boolean = false)
 }
