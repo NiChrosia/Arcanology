@@ -2,8 +2,8 @@ package nichrosia.arcanology.registry
 
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.content.ConfiguredFeatureRegistrar
 import nichrosia.arcanology.registry.impl.*
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.registry.properties.RegistryProperty
 
 /** A base registrar class for registering content. The base implementations of register functions should be done in
@@ -35,9 +35,13 @@ interface Registrar<T> : MutableMap<Identifier, T> {
     /** All RegistryProperties for this registrar. */
     val registryProperties: MutableList<RegistryProperty<T, *>>
 
+    /** All RegistrarProperties for this registrar. */
+    val registrarProperties: MutableList<RegistrarProperty<T, *>>
+
     /** Forcibly create all of the content declared within the fields of this class. */
     fun createAll() {
         registryProperties.forEach { it.create(this) }
+        registrarProperties.forEach { it.create(this) }
     }
 
     /** Forcibly register all of the content within the registries, rather than waiting until accessed. */

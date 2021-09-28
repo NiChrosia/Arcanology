@@ -15,10 +15,13 @@ object Arcanology : IdentifiedMod, ModInitializer {
 
     val registrars = Registrar.Companion::class.memberProperties.filterIsInstance<KProperty1<Registrar.Companion, Registrar<*>>>().map { it.get(Registrar) }
     val resourceManager = RuntimeResourcePackManager("arcanology:main", "c:arcanology")
-    val content = arrayOf(AMaterials, ARecipes, resourceManager)
+    val content = arrayOf(AMaterials, ARecipes)
 
     override fun onInitialize() {
-        registrars.forEach(Registrar<*>::fullyRegisterAll)
+        registrars.forEach(Registrar<*>::createAll)
         content.forEach(LoadableContent::load)
+        registrars.forEach(Registrar<*>::registerAll)
+
+        resourceManager.load()
     }
 }

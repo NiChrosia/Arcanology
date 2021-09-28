@@ -18,7 +18,7 @@ open class AltarBlockEntity(pos: BlockPos, state: BlockState, override val block
 
     @Suppress("unused_parameter")
     fun tick(world: World, pos: BlockPos, state: BlockState) {
-        heart = AMaterials.prismatic.heart
+        heart = AMaterials.prismatic.magicHeart
     }
 
     companion object {

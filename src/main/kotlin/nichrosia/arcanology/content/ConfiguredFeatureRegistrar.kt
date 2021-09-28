@@ -74,7 +74,7 @@ object ConfiguredFeatureRegistrar {
     ): ConfiguredFeature<OreFeatureConfig, OreFeature> {
         val key = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, ID)
 
-        val feature = register(ID, Feature.ORE.configure(OreFeatureConfig(
+        val feature = register(key.value, Feature.ORE.configure(OreFeatureConfig(
             listOf(
                 OreFeatureConfig.createTarget(OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES, ore.defaultState),
                 OreFeatureConfig.createTarget(OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES, deepslateOre.defaultState)

@@ -58,7 +58,10 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
 
         normalBlockstate(registered)
 
-        if (registered is AltarBlock) altarBlockModel(registered) else normalBlockModel(registered)
+        when(registered) {
+            is AltarBlock -> altarBlockModel(registered)
+            else -> normalBlockModel(registered)
+        }
 
         return registered
     }

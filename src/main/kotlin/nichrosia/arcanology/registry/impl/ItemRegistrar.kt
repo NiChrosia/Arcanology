@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.Items
+import net.minecraft.item.MiningToolItem
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
@@ -14,6 +15,7 @@ import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.registry.properties.RegistryProperty
 import nichrosia.arcanology.util.blockItemModel
+import nichrosia.arcanology.util.handheldItemModel
 import nichrosia.arcanology.util.normalItemModel
 
 open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
@@ -34,7 +36,11 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     override fun <E : Item> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)
 
-        if (registered is BlockItem) blockItemModel(registered) else normalItemModel(registered)
+        when(registered) {
+            is BlockItem -> blockItemModel(registered)
+            is MiningToolItem -> handheldItemModel(registered)
+            else -> normalItemModel(registered)
+        }
 
         return registered
     }

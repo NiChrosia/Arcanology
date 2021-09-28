@@ -7,17 +7,15 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-@Suppress("UNCHECKED_CAST", "LeakingThis")
-open class RegistryProperty<R, T : R>(
-    val ID: Identifier,
-    val initializer: (String) -> T
-) : ReadOnlyProperty<Registrar<R>, T>, PropertyDelegateProvider<Registrar<R>, RegistryProperty<R, T>> {
-    private var isCreated = false
-    private var isRegistered = false
-    constructor(ID: String, initializer: (String) -> T) : this(Arcanology.idOf(ID), initializer)
+open class RegistrarProperty<R, T : R>(val registrar: Registrar<R>, val ID: Identifier, val initializer: (String) -> T) : ReadOnlyProperty<Any?, T>, PropertyDelegateProvider<Any?, RegistrarProperty<R, T>> {
+    var isCreated = false
+    var isRegistered = false
 
-    override fun getValue(thisRef: Registrar<R>, property: KProperty<*>): T {
-        thisRef.apply {
+    constructor(registrar: Registrar<R>, ID: String, initializer: (String) -> T) : this(registrar, Arcanology.idOf(ID), initializer)
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        registrar.apply {
             if (!containsKey(ID) || !isCreated) {
                 create(ID, initializer(ID.path))
             }
@@ -25,12 +23,12 @@ open class RegistryProperty<R, T : R>(
             isCreated = containsKey(ID)
         }
 
-        return thisRef[ID] as T
+        return registrar[ID] as T
     }
 
-    override fun provideDelegate(thisRef: Registrar<R>, property: KProperty<*>): RegistryProperty<R, T> {
+    override fun provideDelegate(thisRef: Any?, property: KProperty<*>): RegistrarProperty<R, T> {
         return apply {
-            thisRef.registryProperties.add(this)
+            registrar.registrarProperties.add(this)
         }
     }
 
