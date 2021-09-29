@@ -5,6 +5,8 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.impl.*
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.registry.properties.RegistryProperty
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.memberProperties
 
 /** A base registrar class for registering content. The base implementations of register functions should be done in
  * the implementation class. Additionally, it also implements [MutableMap], so it has all the properties of a map. */
@@ -49,12 +51,6 @@ interface Registrar<T> : MutableMap<Identifier, T> {
         registry.forEach(this::register)
     }
 
-    /** Forcibly create & register all of the content declared. */
-    fun fullyRegisterAll() {
-        createAll()
-        registerAll()
-    }
-
     /** Create the specified item. */
     fun <E : T> create(key: Identifier, value: E): E {
         this[key] = value
@@ -76,11 +72,11 @@ interface Registrar<T> : MutableMap<Identifier, T> {
     fun <E : T> register(key: String, value: E) = register(Arcanology.idOf(key), value)
 
     operator fun get(key: String): T {
-        return registry[Arcanology.idOf(key)] ?: default ?: throw IllegalStateException("Cannot use default, as it does not exist.")
+        return get(Arcanology.idOf(key))
     }
 
     override operator fun get(key: Identifier): T {
-        return registry[key] ?: default ?: throw IllegalStateException("Cannot use default, as it does not exist.")
+        return registry[key] ?: default ?: throw IllegalStateException("Cannot use default, for missing registry entry, as it does not exist.")
     }
 
     operator fun set(path: String, value: T): T? {
@@ -120,6 +116,7 @@ interface Registrar<T> : MutableMap<Identifier, T> {
         registry.clear()
     }
 
+    /** The core loader for [Registrar]s, contains a list of all registrars, as well as loading methods. */
     companion object {
         val blockMaterial = BlockMaterialRegistrar()
         val block = BlockRegistrar()
@@ -130,5 +127,15 @@ interface Registrar<T> : MutableMap<Identifier, T> {
         val statusEffect = StatusEffectRegistrar()
         val rune = RuneRegistrar()
         val guiDescription = GUIDescriptionRegistrar()
+        val material = MaterialRegistrar()
+        val configuredFeature = ConfiguredFeatureRegistrar()
+
+        val all: List<Registrar<*>> = this::class.memberProperties.filterIsInstance<KProperty1<Companion, *>>().map { it.get(this) }.filterIsInstance<Registrar<*>>()
+
+        /** Forcibly create & register all of the content declared within all registries. */
+        fun fullyRegisterAll() {
+            all.forEach(Registrar<*>::createAll)
+            all.forEach(Registrar<*>::registerAll)
+        }
     }
 }

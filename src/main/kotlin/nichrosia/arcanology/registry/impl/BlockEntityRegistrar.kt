@@ -13,7 +13,7 @@ import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.registry.properties.RegistryProperty
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
-import nichrosia.arcanology.ctype.block.entity.*
+import nichrosia.arcanology.type.content.block.entity.*
 
 open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE, "block_entity") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()

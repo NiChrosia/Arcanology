@@ -6,8 +6,8 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.ctype.gui.description.PulverizerGUIDescription
-import nichrosia.arcanology.ctype.gui.description.RuneInfuserGUIDescription
+import nichrosia.arcanology.type.content.gui.description.PulverizerGUIDescription
+import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.properties.RegistryProperty
 

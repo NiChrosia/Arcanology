@@ -4,7 +4,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
-import nichrosia.arcanology.ctype.block.entity.renderer.AltarBlockEntityRenderer
+import nichrosia.arcanology.type.content.block.entity.renderer.AltarBlockEntityRenderer
 import nichrosia.arcanology.registry.ClientRegistrar
 import nichrosia.arcanology.registry.EmptyRegistrar
 import nichrosia.arcanology.registry.Registrar

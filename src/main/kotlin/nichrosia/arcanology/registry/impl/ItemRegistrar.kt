@@ -3,12 +3,11 @@ package nichrosia.arcanology.registry.impl
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
-import net.minecraft.item.Items
 import net.minecraft.item.MiningToolItem
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.ctype.item.guide.book.GuideBookItem
+import nichrosia.arcanology.type.content.item.guide.book.GuideBookItem
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator

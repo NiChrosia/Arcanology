@@ -19,7 +19,7 @@ abstract class RegistryRegistrar<T>(val minecraftRegistry: Registry<T>, val seri
         val registered = super.register(key, value)
 
         Registry.register(minecraftRegistry, key, registered)
-        Arcanology.resourceManager.englishLang.lang["$serializationType.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
+        Arcanology.runtimeResourceManager.englishLang.lang["$serializationType.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
 
         return registered
     }

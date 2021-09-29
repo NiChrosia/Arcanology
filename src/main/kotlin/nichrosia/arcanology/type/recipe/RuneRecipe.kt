@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.ctype.block.entity.RuneInfuserBlockEntity
+import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
 import kotlin.reflect.KProperty0
 
 @Suppress("LeakingThis")
