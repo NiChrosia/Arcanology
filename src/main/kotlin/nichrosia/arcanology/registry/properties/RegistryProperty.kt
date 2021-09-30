@@ -13,7 +13,6 @@ open class RegistryProperty<R, T : R>(
     val initializer: (String) -> T
 ) : ReadOnlyProperty<Registrar<R>, T>, PropertyDelegateProvider<Registrar<R>, RegistryProperty<R, T>> {
     private var isCreated = false
-    private var isRegistered = false
 
     constructor(ID: String, initializer: (String) -> T) : this(Arcanology.idOf(ID), initializer)
 

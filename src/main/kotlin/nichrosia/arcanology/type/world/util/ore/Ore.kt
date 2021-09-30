@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.data.ore
+package nichrosia.arcanology.type.world.util.ore
 
 import net.minecraft.block.OreBlock
 import net.minecraft.item.BlockItem

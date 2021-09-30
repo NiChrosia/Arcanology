@@ -5,10 +5,10 @@ import net.minecraft.item.ToolMaterial
 import net.minecraft.recipe.Ingredient
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.data.MaterialHelper
-import nichrosia.arcanology.type.data.config.MaterialConfiguration
+import nichrosia.arcanology.type.data.config.MaterialConfig
 import kotlin.reflect.KProperty1
 
-open class ToolMaterialConfiguration(
+open class ToolMaterialConfig(
     name: String,
     val attackDamage: Float,
     val durability: Int,
@@ -16,7 +16,7 @@ open class ToolMaterialConfiguration(
     val miningLevel: Int,
     val miningSpeedMultiplier: Float,
     val repairIngredient: RepairIngredient = RepairIngredient.Ingot
-) : MaterialConfiguration<ToolMaterial, ToolMaterialConfiguration.ToolMaterialImpl>(name, Registrar.toolMaterial, content = {
+) : MaterialConfig<ToolMaterial, ToolMaterialConfig.ToolMaterialImpl>(name, Registrar.toolMaterial, content = {
     ToolMaterialImpl(attackDamage, durability, enchantability, miningLevel, miningSpeedMultiplier) { Ingredient.ofItems(repairIngredient.property(this)) }
 }) {
     open class ToolMaterialImpl(

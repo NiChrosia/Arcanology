@@ -5,13 +5,13 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 import kotlin.reflect.KProperty
 
-open class MaterialConfiguration<R, T : R>(
+open class MaterialConfig<R, T : R>(
     name: String,
     val registrar: Registrar<R>,
     val runOnCreate: MaterialHelper.(T) -> Unit = {},
     /** The content for this material. Content should only return null in empty & unused configurations. */
-    content: MaterialHelper.(MaterialConfiguration<R, T>) -> T?
-) : AbstractConfiguration<T?, MaterialConfiguration<R, T>>(name, content) {
+    content: MaterialHelper.(MaterialConfig<R, T>) -> T?
+) : AbstractConfig<T?, MaterialConfig<R, T>>(name, content) {
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE", "UNCHECKED_CAST")
     override fun getValue(materialHelper: MaterialHelper, property: KProperty<*>): T {
         val value by MaterialProperty(materialHelper)

@@ -10,14 +10,14 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.data.MaterialHelper
-import nichrosia.arcanology.type.data.config.ore.OreConfiguration
-import nichrosia.arcanology.type.data.ore.Ore
+import nichrosia.arcanology.type.data.config.ore.OreConfig
+import nichrosia.arcanology.type.world.util.ore.Ore
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import nichrosia.arcanology.type.world.util.BiomeSelector
 import kotlin.reflect.KProperty
 
-open class VariableOreConfiguration(
+open class VariableOreConfig(
     name: String,
     blockMaterial: Material = Material.STONE,
     oreResistance: Float = 100f,
@@ -26,7 +26,7 @@ open class VariableOreConfiguration(
     range: Pair<Int, Int> = 0 to 50,
     biomeSelector: BiomeSelector = BiomeSelector.Overworld,
     val sizeFactory: (FeatureContext<CustomOreFeatureConfig>) -> Int = { blobsPerChunk }
-) : OreConfiguration<CustomOreFeatureConfig, CustomOreFeature>(name, blockMaterial, oreResistance, oreBlobSize, blobsPerChunk, range, biomeSelector, {
+) : OreConfig<CustomOreFeatureConfig, CustomOreFeature>(name, blockMaterial, oreResistance, oreBlobSize, blobsPerChunk, range, biomeSelector, {
     val oreID = Arcanology.idOf(name)
     val variableOre by RegistrarProperty(Registrar.block, name) {
         OreBlock(FabricBlockSettings.of(blockMaterial)

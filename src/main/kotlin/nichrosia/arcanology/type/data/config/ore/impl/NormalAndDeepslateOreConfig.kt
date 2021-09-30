@@ -11,19 +11,19 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.data.MaterialHelper
-import nichrosia.arcanology.type.data.config.ore.OreConfiguration
-import nichrosia.arcanology.type.data.ore.NormalAndDeepslateOre
+import nichrosia.arcanology.type.data.config.ore.OreConfig
+import nichrosia.arcanology.type.world.util.ore.NormalAndDeepslateOre
 import nichrosia.arcanology.type.world.util.BiomeSelector
 import kotlin.reflect.KProperty
 
-open class NormalAndDeepslateOreConfiguration(
+open class NormalAndDeepslateOreConfig(
     name: String,
     blockMaterial: Material = Material.STONE,
     oreResistance: Float = 100f,
     oreBlobSize: Int = 8,
     blobsPerChunk: Int = 4,
     range: Pair<Int, Int> = 0 to 50,
-) : OreConfiguration<OreFeatureConfig, OreFeature>(name, blockMaterial, oreResistance, oreBlobSize, blobsPerChunk, range, BiomeSelector.Overworld, {
+) : OreConfig<OreFeatureConfig, OreFeature>(name, blockMaterial, oreResistance, oreBlobSize, blobsPerChunk, range, BiomeSelector.Overworld, {
     val oreID = Arcanology.idOf(name)
     val normalOre by RegistrarProperty(Registrar.block, name) { OreBlock(
             FabricBlockSettings.of(blockMaterial)

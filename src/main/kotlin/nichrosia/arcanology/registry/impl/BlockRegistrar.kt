@@ -42,7 +42,7 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
             .requiresTool()
             .strength(5f, 100f)
             .breakByTool(FabricToolTags.PICKAXES, 1),
-            EnergyTier.T1)
+            EnergyTier.Standard)
     }
 
     val runeInfuser by RegistryProperty("rune_infuser") {
