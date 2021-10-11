@@ -5,19 +5,29 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.type.content.gui.description.PulverizerGUIDescription
-import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
+import nichrosia.arcanology.type.content.gui.description.SeparatorGUIDescription
+import nichrosia.arcanology.util.capitalize
 
 open class GUIDescriptionRegistrar : BasicRegistrar<ScreenHandlerType<*>>() {
-    val pulverizer by RegistryProperty("pulverizer") { create("pulverizer", ::PulverizerGUIDescription) }
+    val separator by RegistryProperty("separator") { create("pulverizer", ::SeparatorGUIDescription) }
     val runeInfuser by RegistryProperty("rune_infuser") { create("rune_infuser", ::RuneInfuserGUIDescription) }
+
+    override fun <E : ScreenHandlerType<*>> register(key: Identifier, value: E): E {
+        Arcanology.packManager.englishLang.lang["${Arcanology.modID}.gui.title.${key.path}"] = key.path.capitalize()
+
+        return super.register(key, value)
+    }
 
     fun <T : ScreenHandler> create(key: String, screenHandler: (Int, PlayerInventory, ScreenHandlerContext) -> T): ScreenHandlerType<T> {
         return super.create(key, ScreenHandlerRegistry.registerSimple(Arcanology.idOf(key)) { syncId, inventory ->
-            screenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)
+            val guiDescription = screenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)
+
+            guiDescription
         })
     }
 }

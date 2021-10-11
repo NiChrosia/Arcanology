@@ -22,16 +22,16 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import nichrosia.arcanology.type.content.block.RuneInfuserBlock
-import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.util.*
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.block.entity.Scheduler
 import nichrosia.arcanology.type.block.entity.inventory.AInventory
-import nichrosia.arcanology.type.properties.block.entity.inventory.ItemSlot
-import nichrosia.arcanology.type.recipe.RuneRecipe
+import nichrosia.arcanology.type.content.block.RuneInfuserBlock
+import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
+import nichrosia.arcanology.type.content.recipe.RuneRecipe
+import nichrosia.arcanology.type.delegates.block.entity.inventory.ItemSlot
 import nichrosia.arcanology.type.rune.RuneType
+import nichrosia.arcanology.util.*
 import kotlin.reflect.KMutableProperty0
 
 @Suppress("MemberVisibilityCanBePrivate", "NestedLambdaShadowedImplicitParameter")
@@ -40,7 +40,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
     NamedScreenHandlerFactory, PropertyDelegateHolder, BlockEntityClientSerializable, AInventory, InventoryProvider,
     BlockEntityWithBlock<RuneInfuserBlock>, Scheduler {
     override val inputSlots = (1..6).map { it }.toIntArray()
-    override var items: DefaultedList<ItemStack> = DefaultedList.ofSize(7, ItemStack.EMPTY)
+    override var items: Array<ItemStack> = Array(7) { ItemStack.EMPTY }
     override val schedule: MutableList<Pair<Int, () -> Unit>> = mutableListOf()
 
     private val delegate = object : PropertyDelegate {
@@ -101,11 +101,11 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> {
-        return items
+        return items.toDefaultedList()
     }
 
     override fun setInvStackList(list: DefaultedList<ItemStack>) {
-        items = list
+        items.setToDefaultedList(list)
     }
 
     override fun getPropertyDelegate(): PropertyDelegate {
@@ -145,23 +145,23 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
     }
 
     override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        Inventories.writeNbt(nbt, items)
+        Inventories.writeNbt(nbt, items.toDefaultedList())
 
         return super.writeNbt(nbt)
     }
 
     override fun readNbt(nbt: NbtCompound) {
-        Inventories.readNbt(nbt, items)
+        Inventories.readNbt(nbt, items.toDefaultedList())
 
         super.readNbt(nbt)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        Inventories.readNbt(tag, items)
+        Inventories.readNbt(tag, items.toDefaultedList())
     }
 
     override fun toClientTag(tag: NbtCompound): NbtCompound {
-        Inventories.writeNbt(tag, items)
+        Inventories.writeNbt(tag, items.toDefaultedList())
 
         return tag
     }
@@ -179,7 +179,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
         super.tick()
 
         if (!world.isClient) {
-            world.recipeManager.getFirstMatch(RuneRecipe.type, this, world).asNullable?.let {
+            world.recipeManager.getFirstMatch(RuneRecipe.Companion.Type, this, world).asNullable?.let {
                 recipeValid.asBoolean = true
 
                 if (RuneType.types.any { it.id == runeID }) {

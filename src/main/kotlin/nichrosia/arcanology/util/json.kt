@@ -22,3 +22,15 @@ fun jsonObject(vararg elements: Pair<String, Any>): JsonObject {
 fun jsonArray(vararg elements: Any): JsonArray {
     return JsonArray().apply { elements.forEach { add(toSerializable(it)) } }
 }
+
+val JsonElement.tryObject: JsonObject?
+    get() = if (isJsonObject) asJsonObject else null
+
+val JsonElement.tryPrimitive: JsonPrimitive?
+    get() = if (isJsonPrimitive) asJsonPrimitive else null
+
+val JsonPrimitive.tryString: String?
+    get() = if (isString) asString else null
+
+val JsonPrimitive.tryNumber: Number?
+    get() = if (isNumber) asNumber else null

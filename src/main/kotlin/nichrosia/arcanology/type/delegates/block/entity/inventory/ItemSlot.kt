@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.properties.block.entity.inventory
+package nichrosia.arcanology.type.delegates.block.entity.inventory
 
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack

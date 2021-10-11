@@ -13,7 +13,7 @@ import nichrosia.arcanology.util.*
 
 /** Runtime-resource-pack manager for the given [main] & [common] resource packs. */
 @Suppress("HasPlatformType")
-open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common: RuntimeResourcePack) {
+open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common: RuntimeResourcePack) : Loadable {
     val tags = TagMap()
     val englishLang = lang()
 
@@ -22,7 +22,7 @@ open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common:
         RuntimeResourcePack.create(commonID, commonVersion)
     )
 
-    open fun load() {
+    override fun load() {
         tags.load()
         main.addLang(id("${Arcanology.modID}:en_us"), englishLang)
 

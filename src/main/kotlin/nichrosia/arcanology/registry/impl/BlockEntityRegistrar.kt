@@ -13,17 +13,20 @@ import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.registry.properties.RegistryProperty
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
-import nichrosia.arcanology.type.content.block.entity.*
+import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
+import nichrosia.arcanology.type.content.block.entity.ReactiveBlockEntity
+import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
+import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
 
 open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE, "block_entity") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
     val reactiveBlock by RegistryProperty("reactive_block_entity") { create(it, ::ReactiveBlockEntity, Registrar.block.reactiveBlock) }
     val altar by RegistryProperty("altar_block_entity") { create(it, ::AltarBlockEntity, Registrar.block.altar) }
-    val pulverizer by RegistryProperty("pulverizer_block_entity") { create(it, ::PulverizerBlockEntity, Registrar.block.pulverizer) }
+    val separator by RegistryProperty("separator_block_entity") { create(it, ::SeparatorBlockEntity, Registrar.block.separator) }
     val runeInfuser by RegistryProperty("rune_infuser_block_entity") { create(it, ::RuneInfuserBlockEntity, Registrar.block.runeInfuser) }
 
-    fun <B : Block, E> create(name: String, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
+    open fun <B : Block, E> create(name: String, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
     where E : BlockEntity, E : BlockEntityWithBlock<B> {
         return super.create(name, FabricBlockEntityTypeBuilder.create({ pos: BlockPos, state: BlockState ->
             blockEntity(pos, state, block)

@@ -1,19 +1,19 @@
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
+
 package nichrosia.arcanology.type.item.energy
 
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.type.tooltip.energy.EnergyTooltipDataProvider
-import nichrosia.arcanology.util.energyIO
-import kotlin.math.roundToInt
+import nichrosia.arcanology.util.getEnergyStorage
 
 /** @author GabrielOlvH, with minor modifications by NiChrosia */
 interface EnergyItem : EnergyTooltipDataProvider {
     fun getDurabilityBarProgress(stack: ItemStack): Int {
-        val energyIo = stack.energyIO ?: return 0
-        return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity)
-            .roundToInt() / stack.count
+        val energyIo = stack.getEnergyStorage() ?: return 0
+        return ((13 - (energyIo.capacity - energyIo.amount) * 13 / energyIo.capacity) / stack.count).toInt()
     }
 
-    fun hasDurabilityBar(stack: ItemStack): Boolean = (stack.energyIO?.energy ?: 0.0) > 0
+    fun hasDurabilityBar(stack: ItemStack): Boolean = (stack.getEnergyStorage()?.amount ?: 0L) > 0
 
     fun getDurabilityBarColor(stack: ItemStack): Int {
         val durability = getDurabilityBarProgress(stack) / 13f

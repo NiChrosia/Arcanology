@@ -10,11 +10,11 @@ import nichrosia.arcanology.Arcanology
 /** @author GabrielOlvH */
 open class WProcessBar(
     direction: Direction = Direction.RIGHT,
-    bg: Identifier = PROCESS_EMPTY,
-    bar: Identifier = PROCESS_FULL,
+    bg: Identifier = empty,
+    bar: Identifier = full,
     value: Int = 0,
-    maxValue: Int = 3
-) : WBar(bg, bar, value, maxValue, direction) {
+    maxField: Int = 1,
+) : WBar(bg, bar, value, maxField, direction) {
     override fun addTooltip(information: TooltipBuilder) {
         val progress = properties[field]
         val max = properties[max]
@@ -23,11 +23,11 @@ open class WProcessBar(
 
         val percentage = progress * 100 / max
 
-        information.add(TranslatableText("arcanology.gui.widget.process", percentage).append(LiteralText("%")))
+        information.add(TranslatableText("${Arcanology.modID}.gui.widget.process", percentage).append(LiteralText("%")))
     }
 
     companion object {
-        val PROCESS_EMPTY = Arcanology.idOf("textures/gui/widget/processing_empty.png")
-        val PROCESS_FULL = Arcanology.idOf("textures/gui/widget/processing_full.png")
+        val empty = Arcanology.idOf("textures/gui/widget/processing_empty.png")
+        val full = Arcanology.idOf("textures/gui/widget/processing_full.png")
     }
 }

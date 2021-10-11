@@ -129,6 +129,8 @@ interface Registrar<T> : MutableMap<Identifier, T> {
         val guiDescription = GUIDescriptionRegistrar()
         val material = MaterialRegistrar()
         val configuredFeature = ConfiguredFeatureRegistrar()
+        val recipe = RecipeRegistrar()
+        val sound = SoundRegistrar()
 
         val all: List<Registrar<*>> = this::class.memberProperties.filterIsInstance<KProperty1<Companion, *>>().map { it.get(this) }.filterIsInstance<Registrar<*>>()
 

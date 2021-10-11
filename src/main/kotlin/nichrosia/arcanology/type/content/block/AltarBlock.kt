@@ -1,5 +1,6 @@
 package nichrosia.arcanology.type.content.block
 
+import net.devtech.arrp.json.models.JModel
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
@@ -9,12 +10,17 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.type.block.ModeledBlock
+import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
+import nichrosia.arcanology.type.data.RuntimeResourcePackManager
+import nichrosia.arcanology.util.variable
 
-open class AltarBlock(settings: Settings) : BlockWithEntity(settings) {
+open class AltarBlock(settings: Settings) : BlockWithEntity(settings), ModeledBlock {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
         return AltarBlockEntity(pos, state, this)
     }
@@ -44,5 +50,24 @@ open class AltarBlock(settings: Settings) : BlockWithEntity(settings) {
         )
 
         super.onBreak(world, pos, state, player)
+    }
+
+    override fun generateModel(ID: Identifier, packManager: RuntimeResourcePackManager) {
+        packManager.main.addModel(
+            JModel.model("minecraft:block/cube")
+                .textures(
+                    JModel.textures()
+                        .particle("${Arcanology.modID}:block/altar_top")
+                        .variable(
+                            "east" to "${Arcanology.modID}:block/altar_side",
+                            "west" to "${Arcanology.modID}:block/altar_side",
+                            "north" to "${Arcanology.modID}:block/altar_side",
+                            "south" to "${Arcanology.modID}:block/altar_side",
+                            "down" to "${Arcanology.modID}:block/altar_bottom",
+                            "up" to "${Arcanology.modID}:block/altar_top"
+                        )
+                ),
+            packManager.blockModelID(ID.path)
+        )
     }
 }

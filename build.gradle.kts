@@ -16,11 +16,12 @@ base {
 
 repositories {
     maven {
-        name = "Technici4n"
-        setUrl("https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/")
+        name = "Modmuss50"
+        setUrl("https://maven.modmuss50.me/")
         content {
-            includeGroup("net.fabricmc.fabric-api") // until PR # is merged
-            includeGroup("dev.technici4n")
+            includeGroup("RebornCore")
+            includeGroup("TechReborn")
+            includeGroup("teamreborn")
         }
     }
 
@@ -56,9 +57,10 @@ dependencies {
     modIncludeImplementation("net.fabricmc:fabric-language-kotlin:${getProp("fabric_kotlin_version")}")
     modIncludeImplementation("net.devtech:arrp:${getProp("arrp_version")}")
 
-    modApi(include("dev.technici4n:FastTransferLib:${getProp("ftl_version")}")!!)
     modIncludeImplementation("vazkii.patchouli:Patchouli:${getProp("patchouli_version")}")
     modIncludeImplementation("io.github.cottonmc:LibGui:${getProp("libgui_version")}")
+
+    modApi(include("teamreborn:energy:${getProp("tr_energy_version")}")!!)
 }
 
 tasks.processResources {

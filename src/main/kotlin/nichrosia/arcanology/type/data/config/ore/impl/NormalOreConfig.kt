@@ -12,8 +12,8 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.data.MaterialHelper
 import nichrosia.arcanology.type.data.config.ore.OreConfig
-import nichrosia.arcanology.type.world.util.ore.Ore
 import nichrosia.arcanology.type.world.util.BiomeSelector
+import nichrosia.arcanology.type.world.util.ore.Ore
 import kotlin.reflect.KProperty
 
 open class NormalOreConfig(

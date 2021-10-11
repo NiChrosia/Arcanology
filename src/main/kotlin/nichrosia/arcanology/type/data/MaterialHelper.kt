@@ -8,27 +8,26 @@ import net.minecraft.item.*
 import net.minecraft.util.Rarity
 import net.minecraft.world.gen.feature.*
 import nichrosia.arcanology.Arcanology
+import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.lang.LanguageGenerator
+import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.type.content.item.energy.BatteryItem
 import nichrosia.arcanology.type.content.item.energy.CircuitItem
 import nichrosia.arcanology.type.content.item.energy.WireItem
 import nichrosia.arcanology.type.content.item.magic.HeartItem
 import nichrosia.arcanology.type.content.item.magic.MagicCrystalItem
-import nichrosia.arcanology.type.content.item.weapon.OpenCrossbowItem
-import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.lang.LanguageGenerator
-import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.type.data.config.*
 import nichrosia.arcanology.type.data.config.ore.impl.NormalAndDeepslateOreConfig
 import nichrosia.arcanology.type.data.config.ore.impl.NormalOreConfig
 import nichrosia.arcanology.type.data.config.ore.impl.VariableOreConfig
 import nichrosia.arcanology.type.data.config.tool.ToolMaterialConfig
-import nichrosia.arcanology.type.world.util.ore.NormalAndDeepslateOre
-import nichrosia.arcanology.type.world.util.ore.Ore
+import nichrosia.arcanology.type.delegates.ConditionedProperty
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.type.properties.ConditionedProperty
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
+import nichrosia.arcanology.type.world.util.ore.NormalAndDeepslateOre
+import nichrosia.arcanology.type.world.util.ore.Ore
 import nichrosia.arcanology.util.*
 import kotlin.reflect.KProperty0
 
@@ -37,7 +36,7 @@ data class MaterialHelper(
     val isTech: Boolean,
     val rarity: Rarity,
     val miningLevel: Int = 0,
-    val tier: EnergyTier = EnergyTier.Standard,
+    val tier: EnergyTier = EnergyTier.standard,
     val element: Element = Element.Mana,
     val insulator: Item = Items.GLASS,
     val toolRod: Item = Items.STICK,
@@ -62,27 +61,26 @@ data class MaterialHelper(
     val ingotConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_ingot", Registrar.item) { Item(settings) },
     val wireConfig: MaterialConfig<Item, WireItem> = MaterialConfig("${name}_wire", Registrar.item, {
         wireRecipe(ingot, it)
-        Arcanology.runtimeResourceManager.apply { tags.add(itemTagID("${name}s"), it) }
+        Arcanology.packManager.apply { tags.add(itemTagID("${name}s"), it) }
     }) { WireItem(settings) },
     val dustConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_dust", Registrar.item, {
-        Arcanology.runtimeResourceManager.tags.add(Arcanology.runtimeResourceManager.itemTagID("${name}s"), it)
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
     }) { Item(settings) },
     val crystalConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_crystal", Registrar.item, {
-        Arcanology.runtimeResourceManager.tags.add(Arcanology.runtimeResourceManager.itemTagID("${name}s"), it)
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
     }) { Item(settings) },
     val batteryConfig: MaterialConfig<Item, BatteryItem> = MaterialConfig("${name}_battery", Registrar.item, {
-        Arcanology.runtimeResourceManager.tags.add(Arcanology.runtimeResourceManager.itemTagID(name.replace("battery", "batteries")), it)
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID(name.replace("battery", "batteries")), it)
     }) { BatteryItem(settings, tier) },
     val circuitConfig: MaterialConfig<Item, CircuitItem> = MaterialConfig("${name}_circuit", Registrar.item, {
         circuitRecipe(insulator, wire, it)
-        Arcanology.runtimeResourceManager.tags.add(Arcanology.runtimeResourceManager.itemTagID("${name}s"), it)
-        Arcanology.runtimeResourceManager.tags.add(Arcanology.runtimeResourceManager.itemTagID("insulators"), insulator)
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("insulators"), insulator)
     }) { CircuitItem(settings) },
 
     val magicCrystalConfig: MaterialConfig<Item, MagicCrystalItem> = MaterialConfig("${name}_magic_crystal", Registrar.item) { MagicCrystalItem(settings, element) },
     val magicHeartConfig: MaterialConfig<Item, HeartItem> = MaterialConfig("${name}_heart", Registrar.item) { HeartItem(settings, element) },
 
-    val crossbowConfig: MaterialConfig<Item, OpenCrossbowItem> = MaterialConfig("${name}_crossbow", Registrar.item) { OpenCrossbowItem(settings) },
     /** Configuration for the pickaxe. Must be overridden if used. */
     val pickaxeConfig: MaterialConfig<Item, PickaxeItem> = EmptyConfig("${name}_pickaxe", Registrar.item) {
         pickaxeRecipe(it, ingot, toolRod)
@@ -92,7 +90,7 @@ data class MaterialHelper(
     val normalAndDeepslateOreConfig: NormalAndDeepslateOreConfig = NormalAndDeepslateOreConfig("${name}_feature"),
     val variableOreConfig: VariableOreConfig = VariableOreConfig(("${name}_feature"))
 ) {
-    val settings: Item.Settings by ConditionedProperty(this::isTech, Registrar.item.magicSettings, Registrar.item.techSettings) { it.rarity(rarity) }
+    val settings: Item.Settings by ConditionedProperty(this::isTech, Registrar.item::magicSettings, Registrar.item::techSettings) { it.rarity(rarity) }
     val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
     val toolMaterial: ToolMaterialConfig.ToolMaterialImpl by toolMaterialConfig
@@ -111,7 +109,6 @@ data class MaterialHelper(
     val magicCrystal: MagicCrystalItem by magicCrystalConfig
     val magicHeart: HeartItem by magicHeartConfig
 
-    val crossbow: OpenCrossbowItem by crossbowConfig
     val pickaxe: PickaxeItem by pickaxeConfig
 
     val ore: Ore<OreFeatureConfig, OreFeature> by oreConfig

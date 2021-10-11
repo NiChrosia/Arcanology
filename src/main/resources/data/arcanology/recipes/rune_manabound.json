@@ -1,25 +1,11 @@
 {
-    "type": "arcanology:rune_recipe",
-    "light_item": {
-        "item": null
-    },
-    "void_item": {
-        "item": null
-    },
-    "fire_item": {
-        "item": "arcanology:molten_magic_crystal"
-    },
-    "water_item": {
-        "item": null
-    },
-    "earth_item": {
-        "item": "arcanology:terrene_magic_crystal"
-    },
-    "air_item": {
-        "item": null
-    },
-    "result": {
-        "item": "arcanology:rune_manabound"
-    },
+    "type": "arcanology:rune",
+    "light_item": null,
+    "void_item": null,
+    "fire_item": null,
+    "water_item": null,
+    "earth_item": "arcanology:terrene_magic_crystal",
+    "air_item": null,
+    "result": "arcanology:rune_manabound",
     "rune_type": "arcanology:manabound"
 }

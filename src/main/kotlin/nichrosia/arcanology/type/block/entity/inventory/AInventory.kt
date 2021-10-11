@@ -6,9 +6,11 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
+import nichrosia.arcanology.util.clamp
+import nichrosia.arcanology.util.setAllTo
 
 interface AInventory : SidedInventory {
-    val items: MutableList<ItemStack>
+    val items: Array<ItemStack>
     val inputSlots: IntArray
 
     override fun canExtract(slot: Int, stack: ItemStack, dir: Direction): Boolean {
@@ -16,7 +18,7 @@ interface AInventory : SidedInventory {
     }
 
     override fun canInsert(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
-        return true
+        return inputSlots.contains(slot)
     }
 
     override fun getAvailableSlots(side: Direction): IntArray {
@@ -41,14 +43,12 @@ interface AInventory : SidedInventory {
         return items[slot]
     }
 
-    /**
-     * Removes items from an inventory slot.
+    /** Removes items from an inventory slot.
      * @param slot  The slot to remove from.
      * @param count How many items to remove. If there are less items in the slot than what are requested,
-     * takes all items in that slot.
-     */
+     * takes all items in that slot. */
     override fun removeStack(slot: Int, count: Int): ItemStack {
-        val result = Inventories.splitStack(items, slot, count)
+        val result = Inventories.splitStack(items.toList(), slot, count)
         if (!result.isEmpty) {
             markDirty()
         }
@@ -56,28 +56,53 @@ interface AInventory : SidedInventory {
     }
 
     override fun removeStack(slot: Int): ItemStack {
-        return Inventories.removeStack(items, slot)
+        return Inventories.removeStack(items.toList(), slot)
     }
 
-    /**
-     * Replaces the current stack in an inventory slot with the provided stack.
+    /** Replaces the current stack in an inventory slot with the provided stack.
      * @param slot  The inventory slot of which to replace the itemstack.
      * @param stack The replacing itemstack. If the stack is too big for
      * this inventory ([Inventory.getMaxCountPerStack]),
-     * it gets resized to this inventory's maximum amount.
-     */
+     * it gets resized to this inventory's maximum amount. */
     override fun setStack(slot: Int, stack: ItemStack) {
-        items[slot] = stack
-        if (stack.count > maxCountPerStack) {
-            stack.count = maxCountPerStack
+        items[slot] = stack.copy()
+
+        if (items[slot].count > maxCountPerStack) {
+            items[slot].count = maxCountPerStack
         }
     }
 
-    /**
-     * Clears the inventory.
-     */
+    fun incrementStack(slot: Int, defaultStack: ItemStack): ItemStack {
+        if (items[slot].isEmpty) {
+            setStack(slot, defaultStack)
+        } else {
+            setStack(slot, items[slot].copy().apply { count = (count + 1).clamp(max = maxCount) })
+        }
+
+        return items[slot]
+    }
+
+    fun decrementStack(slot: Int, zeroStack: ItemStack = ItemStack.EMPTY): ItemStack {
+        val stack = items[slot]
+
+        return when {
+            stack.isEmpty -> zeroStack
+            stack.count > 1 -> {
+                val decrementedStack = ItemStack(stack.item, stack.count - 1)
+
+                setStack(slot, decrementedStack)
+                items[slot]
+            }
+            else -> {
+                setStack(slot, zeroStack)
+                items[slot]
+            }
+        }
+    }
+
+    /** Clears the inventory. */
     override fun clear() {
-        items.clear()
+        items.setAllTo(ItemStack.EMPTY)
     }
 
     override fun canPlayerUse(player: PlayerEntity): Boolean {

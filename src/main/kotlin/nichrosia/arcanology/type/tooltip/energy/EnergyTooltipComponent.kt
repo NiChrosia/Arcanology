@@ -10,8 +10,8 @@ import net.minecraft.client.texture.TextureManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.Matrix4f
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.util.formatted
 
 /** @author GabrielOlvH */
@@ -31,7 +31,7 @@ class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
         textureManager: TextureManager
     ) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
-        RenderSystem.setShaderTexture(0, Identifier("arcanology", "textures/gui/energy_icon.png"))
+        RenderSystem.setShaderTexture(0, Arcanology.idOf("textures/gui/energy_icon.png"))
         DrawableHelper.drawTexture(matrices, x, y, z, 0f, 0f, 18, 18, 18, 18)
     }
 
@@ -43,8 +43,7 @@ class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
         immediate: VertexConsumerProvider.Immediate
     ) {
         val percentage = data.energy * 100 / data.maxEnergy
-        val text =
-            LiteralText("${data.energy.formatted} / ${data.maxEnergy.formatted} EF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+        val text = LiteralText("${data.energy.formatted} / ${data.maxEnergy.formatted} EF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
         textRenderer.draw(text, x.toFloat() + 19, (y.toFloat() + 9) - textRenderer.fontHeight / 2, -1, true, matrix4f, immediate, false, 0, 15728880)
     }
 }

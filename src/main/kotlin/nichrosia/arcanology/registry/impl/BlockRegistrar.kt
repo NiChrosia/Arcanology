@@ -6,19 +6,18 @@ import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.type.content.block.AltarBlock
-import nichrosia.arcanology.type.content.block.PulverizerBlock
-import nichrosia.arcanology.type.content.block.ReactiveBlock
-import nichrosia.arcanology.type.content.block.RuneInfuserBlock
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.type.block.ModeledBlock
+import nichrosia.arcanology.type.block.StatedBlock
+import nichrosia.arcanology.type.content.block.AltarBlock
+import nichrosia.arcanology.type.content.block.ReactiveBlock
+import nichrosia.arcanology.type.content.block.RuneInfuserBlock
+import nichrosia.arcanology.type.content.block.SeparatorBlock
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.util.altarBlockModel
-import nichrosia.arcanology.util.normalBlockModel
-import nichrosia.arcanology.util.normalBlockstate
 
 open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
@@ -37,12 +36,12 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
             .breakByTool(FabricToolTags.PICKAXES, 4))
     }
 
-    val pulverizer by RegistryProperty("pulverizer") {
-        PulverizerBlock(FabricBlockSettings.of(Material.METAL)
+    val separator by RegistryProperty("separator") {
+        SeparatorBlock(FabricBlockSettings.of(Material.METAL)
             .requiresTool()
             .strength(5f, 100f)
             .breakByTool(FabricToolTags.PICKAXES, 1),
-            EnergyTier.Standard)
+            EnergyTier.standard)
     }
 
     val runeInfuser by RegistryProperty("rune_infuser") {
@@ -52,14 +51,18 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
             .breakByTool(FabricToolTags.PICKAXES, 3))
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <E : Block> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)
 
-        normalBlockstate(registered)
+        when(registered) {
+            is ModeledBlock -> registered.generateModel(key)
+            else -> ModeledBlock.generateDefaultModel(key)
+        }
 
         when(registered) {
-            is AltarBlock -> altarBlockModel(registered)
-            else -> normalBlockModel(registered)
+            is StatedBlock -> registered.generateBlockState(key)
+            else -> StatedBlock.generateDefaultBlockState(key)
         }
 
         return registered

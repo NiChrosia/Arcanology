@@ -20,7 +20,7 @@ open class ItemGroupRegistrar : BasicRegistrar<ItemGroup>() {
     override fun <E : ItemGroup> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)
 
-        Arcanology.runtimeResourceManager.englishLang.lang["itemGroup.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
+        Arcanology.packManager.englishLang.lang["itemGroup.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
 
         return registered
     }

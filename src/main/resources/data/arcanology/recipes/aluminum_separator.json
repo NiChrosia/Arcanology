@@ -1,0 +1,5 @@
+{
+    "type": "arcanology:separator",
+    "input": "arcanology:raw_aluminum",
+    "result": "arcanology:raw_silver"
+}

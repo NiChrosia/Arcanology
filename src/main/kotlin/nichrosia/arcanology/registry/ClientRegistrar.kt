@@ -6,17 +6,15 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 /** An interface purely to denote that this registrar is used on the client, as well as the companion object for declaring registrars. */
-interface ClientRegistrar {
-    companion object {
-        val blockEntityRenderer = BlockEntityRendererRegistrar()
-        val screen = ScreenRegistrar()
+object ClientRegistrar {
+    val blockEntityRenderer = BlockEntityRendererRegistrar()
+    val screen = ScreenRegistrar()
 
-        val all: List<Registrar<*>> = this::class.memberProperties.filterIsInstance<KProperty1<Companion, *>>().map { it.get(this) }.filterIsInstance<Registrar<*>>()
+    val all: List<Registrar<*>> = this::class.memberProperties.filterIsInstance<KProperty1<ClientRegistrar, *>>().map { it.get(this) }.filterIsInstance<Registrar<*>>()
 
-        /** Forcibly create & register all of the content declared within all registries. */
-        fun fullyRegisterAll() {
-            all.forEach(Registrar<*>::createAll)
-            all.forEach(Registrar<*>::registerAll)
-        }
+    /** Forcibly create & register all of the content declared within all registries. */
+    fun fullyRegisterAll() {
+        all.forEach(Registrar<*>::createAll)
+        all.forEach(Registrar<*>::registerAll)
     }
 }

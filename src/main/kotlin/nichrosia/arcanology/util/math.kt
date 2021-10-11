@@ -57,13 +57,23 @@ fun Float.clamp(min: Float = 0f, max: Float = this): Float {
     return clamp(this, min, max)
 }
 
+/** Clamps and returns the output & overflow of the operation. Meant to be used with destructuring declarations. */
+fun Double.clampPlusOverflow(min: Double = 0.0, max: Double = this): Pair<Double, Double> {
+    return clamp(this, min, max) to overflow(min, max)
+}
+
+/** Clamps and returns the overflow of the operation. */
+fun Double.overflow(min: Double = 0.0, max: Double = this): Double {
+    return ((this - max).clamp() + (min - this).clamp())
+}
+
 fun hexagon(origin: Vec2, distance: Float): Array<Vec2> {
     return (0..5).map {
         origin + Vec2().trns((it + 1) * 60f, distance)
     }.toTypedArray()
 }
 
-infix fun Double.pow(n: Int) = pow(n)
+infix fun Long.pow(n: Int) = toDouble().pow(n).toLong()
 
 const val degreesToRadians = PI.toFloat() / 180
 

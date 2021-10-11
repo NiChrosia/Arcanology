@@ -7,15 +7,13 @@ import net.minecraft.item.MiningToolItem
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.type.content.item.guide.book.GuideBookItem
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.registry.properties.RegistryProperty
-import nichrosia.arcanology.util.blockItemModel
-import nichrosia.arcanology.util.handheldItemModel
-import nichrosia.arcanology.util.normalItemModel
+import nichrosia.arcanology.type.content.item.ModeledItem
+import nichrosia.arcanology.type.content.item.guide.book.GuideBookItem
 
 open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
@@ -24,7 +22,9 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     val techSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.tech)
 
     val altar by RegistryProperty("altar") { BlockItem(Registrar.block.altar, magicSettings.rarity(Rarity.EPIC)) }
-    val pulverizer by RegistryProperty("pulverizer") { BlockItem(Registrar.block.pulverizer, techSettings) }
+
+    val separator by RegistryProperty("separator") { BlockItem(Registrar.block.separator, techSettings) }
+
     val runeInfuser by RegistryProperty("rune_infuser") { BlockItem(Registrar.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)) }
 
     val wireCutter by RegistryProperty("wire_cutter") { Item(techSettings) }
@@ -32,13 +32,15 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     val arcaneAlmanac by RegistryProperty("arcane_almanac") { GuideBookItem(magicSettings, "arcane_almanac") }
     val componentCompendium by RegistryProperty("component_compendium") { GuideBookItem(techSettings, "component_compendium") }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <E : Item> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)
 
         when(registered) {
-            is BlockItem -> blockItemModel(registered)
-            is MiningToolItem -> handheldItemModel(registered)
-            else -> normalItemModel(registered)
+            is BlockItem -> ModeledItem.generateBlockItemModel(registered, key)
+            is MiningToolItem -> ModeledItem.generateHandheldModel(key)
+            is ModeledItem -> registered.generateModel(key)
+            else -> ModeledItem.generateDefaultModel(key)
         }
 
         return registered

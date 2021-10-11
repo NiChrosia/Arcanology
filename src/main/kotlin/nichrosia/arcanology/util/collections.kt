@@ -1,6 +1,7 @@
 package nichrosia.arcanology.util
 
 import net.minecraft.item.ItemStack
+import net.minecraft.util.collection.DefaultedList
 import java.util.*
 import kotlin.reflect.KMutableProperty0
 
@@ -16,6 +17,12 @@ fun ItemStack.mergeCount(other: ItemStack): ItemStack {
 
 fun KMutableProperty0<ItemStack>.decrement() {
     set(get().decrement())
+}
+
+fun <T> List<T>.anyIndexed(runner: (Int, T) -> Boolean): Boolean {
+    return mapIndexed { i, e ->
+        runner(i, e)
+    }.any { it }
 }
 
 /** Performs the given map operation using elements from both arrays.
@@ -40,6 +47,23 @@ inline fun <reified T> Array<T>.sort(crossinline predicate: (T) -> Int): Array<T
     }
 
     return this
+}
+
+inline fun <reified T> Collection<T>.sort(crossinline predicate: (T) -> Int): Array<T> = toTypedArray().sort(predicate)
+
+operator fun <T> List<T>.component6() = this[5]
+operator fun <T> List<T>.component7() = this[6]
+
+fun <T> Array<T>.setAllTo(element: T) {
+    indices.forEach { this[it] = element }
+}
+
+fun Array<ItemStack>.toDefaultedList(): DefaultedList<ItemStack> {
+    return DefaultedList.copyOf(ItemStack.EMPTY, *this)
+}
+
+fun Array<ItemStack>.setToDefaultedList(list: DefaultedList<ItemStack>) {
+    forEachIndexed { i, _ ->  this[i] = list[i] }
 }
 
 /** Checks if both arrays are the same size.
