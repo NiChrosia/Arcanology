@@ -6,12 +6,12 @@ import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.rune.RuneType
 import nichrosia.arcanology.type.rune.impl.ManaboundRuneType
 
 open class RuneRegistrar : BasicRegistrar<RuneType>() {
-    val manabound by RegistryProperty(Arcanology.idOf("manabound")) { ManaboundRuneType() }
+    val manabound by RegistrarProperty(Arcanology.idOf("manabound")) { ManaboundRuneType() }
 
     override fun <E : RuneType> register(key: Identifier, value: E): E {
         val registered = super.register(key, value)

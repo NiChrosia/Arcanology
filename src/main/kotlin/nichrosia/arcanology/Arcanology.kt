@@ -5,6 +5,7 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.mod.IdentifiedMod
 import nichrosia.arcanology.type.mod.RuntimeResourceMod
+import nichrosia.arcanology.util.capitalize
 
 @Suppress("unused")
 object Arcanology : IdentifiedMod(), RuntimeResourceMod, ModInitializer {
@@ -16,6 +17,6 @@ object Arcanology : IdentifiedMod(), RuntimeResourceMod, ModInitializer {
 
         packManager.load()
 
-        log.info("Mod loaded successfully.")
+        log.info("${modID.capitalize()} loaded successfully.")
     }
 }

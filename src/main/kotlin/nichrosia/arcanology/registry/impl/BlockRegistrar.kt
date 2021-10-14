@@ -10,7 +10,7 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.block.ModeledBlock
 import nichrosia.arcanology.type.block.StatedBlock
 import nichrosia.arcanology.type.content.block.AltarBlock
@@ -22,21 +22,21 @@ import nichrosia.arcanology.type.energy.EnergyTier
 open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val reactiveBlock by RegistryProperty("reactive_block") {
+    val reactiveBlock by RegistrarProperty("reactive_block") {
         ReactiveBlock(FabricBlockSettings.of(Registrar.blockMaterial.elementalCrystal)
             .requiresTool()
             .strength(5f, 500f)
             .breakByTool(FabricToolTags.PICKAXES, 3))
     }
 
-    val altar by RegistryProperty("altar") {
+    val altar by RegistrarProperty("altar") {
         AltarBlock(FabricBlockSettings.of(Material.STONE)
             .requiresTool()
             .strength(5f, 1000f)
             .breakByTool(FabricToolTags.PICKAXES, 4))
     }
 
-    val separator by RegistryProperty("separator") {
+    val separator by RegistrarProperty("separator") {
         SeparatorBlock(FabricBlockSettings.of(Material.METAL)
             .requiresTool()
             .strength(5f, 100f)
@@ -44,7 +44,7 @@ open class BlockRegistrar : RegistryRegistrar<Block>(Registry.BLOCK, "block") {
             EnergyTier.standard)
     }
 
-    val runeInfuser by RegistryProperty("rune_infuser") {
+    val runeInfuser by RegistrarProperty("rune_infuser") {
         RuneInfuserBlock(FabricBlockSettings.of(Registrar.blockMaterial.elementalCrystal)
             .requiresTool()
             .strength(5f, 150f)

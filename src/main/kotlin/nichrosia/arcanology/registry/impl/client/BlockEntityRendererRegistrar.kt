@@ -7,11 +7,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
 import nichrosia.arcanology.registry.EmptyRegistrar
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.content.block.entity.renderer.AltarBlockEntityRenderer
 
 open class BlockEntityRendererRegistrar : EmptyRegistrar() {
-    val altar by RegistryProperty("altar") { create(Registrar.blockEntity.altar, ::AltarBlockEntityRenderer) }
+    val altar by RegistrarProperty("altar") { create(Registrar.blockEntity.altar, ::AltarBlockEntityRenderer) }
 
     fun <T : BlockEntity> create(type: BlockEntityType<T>, renderer: (BlockEntityRendererFactory.Context) -> BlockEntityRenderer<T>) {
         BlockEntityRendererRegistry.register(type, renderer)

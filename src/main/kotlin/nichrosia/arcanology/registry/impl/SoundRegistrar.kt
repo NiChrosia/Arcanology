@@ -8,14 +8,14 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import java.io.File
 import kotlin.math.roundToLong
 
 open class SoundRegistrar : RegistryRegistrar<SoundEvent>(Registry.SOUND_EVENT, "subtitles") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val machinery by RegistryProperty("machinery") { SoundEvent(Arcanology.idOf(it)) }
+    val machinery by RegistrarProperty("machinery") { SoundEvent(Arcanology.idOf(it)) }
 
     companion object {
         val SoundEvent.length: Long

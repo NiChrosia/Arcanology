@@ -21,6 +21,7 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.content.item.energy.CircuitItem
 import nichrosia.arcanology.type.content.item.energy.WireItem
 
+/** A separate method for creating a silk touch predicate due to the complexity. */
 fun silkTouchPredicate(): JCondition {
     return predicate("minecraft:match_tool")
         .parameter("predicate", JsonObject().apply { add("enchantments", jsonArray(
@@ -30,6 +31,7 @@ fun silkTouchPredicate(): JCondition {
         )) })
 }
 
+/** A loot table generator for a [Block] to drop a [BlockItem]. */
 fun normalBlockLootTable(block: Block, item: BlockItem) {
     val blockName = Registry.BLOCK.getId(block).path
     val itemName = Registry.ITEM.getId(item).path
@@ -48,6 +50,7 @@ fun normalBlockLootTable(block: Block, item: BlockItem) {
     )
 }
 
+/** A loot table generator to make an [OreBlock] drop its raw ore [Item]. */
 fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
     val blockName = Registry.BLOCK.getId(ore).path
     val itemName = Registry.ITEM.getId(rawOre).path
@@ -79,6 +82,7 @@ fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
     )
 }
 
+/** A recipe generator to generate a wire recipe from wire cutters & ingots. */
 fun wireRecipe(ingot: Item, wire: WireItem) {
     val wireID = Registry.ITEM.getId(wire)
     val wireName = wireID.path
@@ -97,6 +101,7 @@ fun wireRecipe(ingot: Item, wire: WireItem) {
     )
 }
 
+/** A recipe generator to generate a circuit recipe from insulators & wires. */
 fun circuitRecipe(insulator: Item, wire: WireItem, circuitItem: CircuitItem) {
     val circuitID = Registry.ITEM.getId(circuitItem)
 
@@ -118,6 +123,7 @@ fun circuitRecipe(insulator: Item, wire: WireItem, circuitItem: CircuitItem) {
     )
 }
 
+/** A recipe generator to generate a pickaxe recipe from sticks and ingots. */
 fun pickaxeRecipe(pickaxeItem: PickaxeItem, ingot: Item, stick: Item) {
     val pickaxeID = Registry.ITEM.getId(pickaxeItem)
     val ingotID = Registry.ITEM.getId(ingot)
@@ -137,10 +143,14 @@ fun pickaxeRecipe(pickaxeItem: PickaxeItem, ingot: Item, stick: Item) {
     )
 }
 
+/** Renamed function to avoid requiring backticks. */
 fun JTextures.variable(name: String, value: String) = `var`(name, value)
+
+/** Utility function for using [Pair]s instead of individual values. */
 fun JTextures.variable(entry: Pair<String, String>) = variable(entry.first, entry.second)
 
-fun JTextures.variable(vararg entries: Pair<String, String>): JTextures {
+/** Utility function to add several variables at once to the texture. */
+fun JTextures.variables(vararg entries: Pair<String, String>): JTextures {
     entries.forEach(this::variable)
     return this
 }

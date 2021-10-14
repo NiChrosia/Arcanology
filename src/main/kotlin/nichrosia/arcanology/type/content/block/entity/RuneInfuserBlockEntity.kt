@@ -37,11 +37,15 @@ import kotlin.reflect.KMutableProperty0
 @Suppress("MemberVisibilityCanBePrivate", "NestedLambdaShadowedImplicitParameter")
 open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val block: RuneInfuserBlock) :
     LootableContainerBlockEntity(Registrar.blockEntity.runeInfuser, pos, state),
-    NamedScreenHandlerFactory, PropertyDelegateHolder, BlockEntityClientSerializable, AInventory, InventoryProvider,
+    NamedScreenHandlerFactory,
+    PropertyDelegateHolder,
+    BlockEntityClientSerializable,
+    AInventory,
+    InventoryProvider,
     BlockEntityWithBlock<RuneInfuserBlock>, Scheduler {
     override val inputSlots = (1..6).map { it }.toIntArray()
     override var items: Array<ItemStack> = Array(7) { ItemStack.EMPTY }
-    override val schedule: MutableList<Pair<Int, () -> Unit>> = mutableListOf()
+    override var schedule: MutableList<Scheduler.Task> = mutableListOf()
 
     private val delegate = object : PropertyDelegate {
         override fun get(index: Int): Int {
@@ -49,7 +53,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
                 0 -> progress
                 1 -> maxProgress
                 2 -> runeID
-                3 -> recipeValid.asInt
+                3 -> recipeValid
                 else -> -1
             }
         }
@@ -58,7 +62,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
             when(index) {
                 0 -> progress = value
                 2 -> runeID = value
-                3 -> recipeValid.asInt = value
+                3 -> recipeValid = value
             }
         }
 
@@ -71,7 +75,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
     open val maxProgress = 100
 
     open var runeID = -1
-    open var recipeValid = BinaryInt(0)
+    open var recipeValid = 0
 
     var resultSlot by ItemSlot<RuneInfuserBlockEntity>(0)
     var lightSlot by ItemSlot<RuneInfuserBlockEntity>(1)
@@ -105,7 +109,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
     }
 
     override fun setInvStackList(list: DefaultedList<ItemStack>) {
-        items.setToDefaultedList(list)
+        items.setToList(list)
     }
 
     override fun getPropertyDelegate(): PropertyDelegate {
@@ -180,14 +184,14 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
 
         if (!world.isClient) {
             world.recipeManager.getFirstMatch(RuneRecipe.Companion.Type, this, world).asNullable?.let {
-                recipeValid.asBoolean = true
+                recipeValid = true.asBinaryInt
 
                 if (RuneType.types.any { it.id == runeID }) {
                     runeID = -1
                     resultSlot = it.craft(this).mergeCount(resultSlot)
 
                     schedule(1) {
-                        recipeValid.asBoolean = false
+                        recipeValid = false.asBinaryInt
                     }
                 }
             }

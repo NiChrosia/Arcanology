@@ -28,7 +28,7 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.block.entity.MachineBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.util.variable
+import nichrosia.arcanology.util.variables
 import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST", "DEPRECATION")
@@ -136,16 +136,18 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     }
 
     override fun generateModel(ID: Identifier, packManager: RuntimeResourcePackManager) {
+        val side = "${Arcanology.modID}:block/${ID.path}_side"
+
         packManager.main.addModel(
             JModel.model("minecraft:block/cube")
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_front")
-                        .variable(
-                            "east" to "${Arcanology.modID}:block/${ID.path}_left",
-                            "west" to "${Arcanology.modID}:block/${ID.path}_right",
+                        .variables(
+                            "east" to side,
+                            "west" to side,
                             "north" to "${Arcanology.modID}:block/${ID.path}_front",
-                            "south" to "${Arcanology.modID}:block/${ID.path}_back",
+                            "south" to side,
                             "down" to "${Arcanology.modID}:block/${ID.path}_bottom",
                             "up" to "${Arcanology.modID}:block/${ID.path}_top"
                         )
@@ -158,11 +160,11 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_front_active")
-                        .variable(
-                            "east" to "${Arcanology.modID}:block/${ID.path}_left",
-                            "west" to "${Arcanology.modID}:block/${ID.path}_right",
+                        .variables(
+                            "east" to side,
+                            "west" to side,
                             "north" to "${Arcanology.modID}:block/${ID.path}_front_active",
-                            "south" to "${Arcanology.modID}:block/${ID.path}_back",
+                            "south" to side,
                             "down" to "${Arcanology.modID}:block/${ID.path}_bottom",
                             "up" to "${Arcanology.modID}:block/${ID.path}_top"
                         )

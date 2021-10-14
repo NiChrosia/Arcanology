@@ -24,11 +24,11 @@ open class ElementalWrathStatusEffect : StatusEffect(StatusEffectType.HARMFUL, 0
     open fun applyUpdateEffect(entity: LivingEntity, amplifier: Int, origin: BlockPos) {
         super.applyUpdateEffect(entity, amplifier)
 
-        val multiplier = ((15.0 - entity.squaredDistanceTo(
+        val multiplier = clamp(((15.0 - entity.squaredDistanceTo(
             origin.x.toDouble(),
             origin.y.toDouble(),
             origin.z.toDouble()
-        )) / 5.0).clamp(0.0, 3.0)
+        )) / 5.0), 0.0, 3.0)
 
         damageCounter++
 

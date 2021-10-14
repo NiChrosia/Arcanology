@@ -101,7 +101,8 @@ abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KP
                 }
             }
 
-            open fun deserializeItemOrItemStackJson(json: JsonObject, name: String, itemName: String = "item", countName: String = "count"): ItemStack? {
+            /** Attempt to deserialize a [JsonObject] into either an [ItemStack] of 1 count or x count from a JSON value. */
+            open fun deserializeEitherItemStackJson(json: JsonObject, name: String, itemName: String = "item", countName: String = "count"): ItemStack? {
                 return json[name].run {
                     when {
                         isJsonPrimitive && asJsonPrimitive.isString -> ItemStack(deserializeItem(asJsonPrimitive.asString), 1)

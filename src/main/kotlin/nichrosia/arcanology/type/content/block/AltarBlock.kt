@@ -18,7 +18,7 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.block.ModeledBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
-import nichrosia.arcanology.util.variable
+import nichrosia.arcanology.util.variables
 
 open class AltarBlock(settings: Settings) : BlockWithEntity(settings), ModeledBlock {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
@@ -58,7 +58,7 @@ open class AltarBlock(settings: Settings) : BlockWithEntity(settings), ModeledBl
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/altar_top")
-                        .variable(
+                        .variables(
                             "east" to "${Arcanology.modID}:block/altar_side",
                             "west" to "${Arcanology.modID}:block/altar_side",
                             "north" to "${Arcanology.modID}:block/altar_side",

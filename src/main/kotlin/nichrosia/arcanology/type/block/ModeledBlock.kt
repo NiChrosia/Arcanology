@@ -6,6 +6,7 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.util.variable
 
+/** An interface for generating block models at runtime. */
 interface ModeledBlock {
     fun generateModel(ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
         packManager.main.addModel(

@@ -11,7 +11,7 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.content.block.entity.ReactiveBlockEntity
@@ -21,10 +21,10 @@ import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
 open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE, "block_entity") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val reactiveBlock by RegistryProperty("reactive_block_entity") { create(it, ::ReactiveBlockEntity, Registrar.block.reactiveBlock) }
-    val altar by RegistryProperty("altar_block_entity") { create(it, ::AltarBlockEntity, Registrar.block.altar) }
-    val separator by RegistryProperty("separator_block_entity") { create(it, ::SeparatorBlockEntity, Registrar.block.separator) }
-    val runeInfuser by RegistryProperty("rune_infuser_block_entity") { create(it, ::RuneInfuserBlockEntity, Registrar.block.runeInfuser) }
+    val reactiveBlock by RegistrarProperty("reactive_block_entity") { create(it, ::ReactiveBlockEntity, Registrar.block.reactiveBlock) }
+    val altar by RegistrarProperty("altar_block_entity") { create(it, ::AltarBlockEntity, Registrar.block.altar) }
+    val separator by RegistrarProperty("separator_block_entity") { create(it, ::SeparatorBlockEntity, Registrar.block.separator) }
+    val runeInfuser by RegistrarProperty("rune_infuser_block_entity") { create(it, ::RuneInfuserBlockEntity, Registrar.block.runeInfuser) }
 
     open fun <B : Block, E> create(name: String, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
     where E : BlockEntity, E : BlockEntityWithBlock<B> {

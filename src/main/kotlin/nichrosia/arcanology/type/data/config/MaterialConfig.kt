@@ -2,7 +2,7 @@ package nichrosia.arcanology.type.data.config
 
 import nichrosia.arcanology.type.data.MaterialHelper
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.RegistrarProperty
+import nichrosia.arcanology.registry.properties.ExternalRegistrarProperty
 import kotlin.reflect.KProperty
 
 open class MaterialConfig<R, T : R>(
@@ -19,7 +19,7 @@ open class MaterialConfig<R, T : R>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    open inner class MaterialProperty(val materialHelper: MaterialHelper) : RegistrarProperty<R, T>(registrar, name, true, { content(materialHelper, this) ?: throw IllegalStateException("Attempted to access property with empty material configuration.") }) {
+    open inner class MaterialProperty(val materialHelper: MaterialHelper) : ExternalRegistrarProperty<R, T>(registrar, name, true, { content(materialHelper, this) ?: throw IllegalStateException("Attempted to access property with empty material configuration.") }) {
         override fun create(thisRef: Registrar<R>) {
             super.create(thisRef)
 

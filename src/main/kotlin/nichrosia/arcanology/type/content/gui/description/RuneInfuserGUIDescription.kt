@@ -16,15 +16,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.type.content.item.magic.MagicCrystalItem
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.util.BinaryInt
+import nichrosia.arcanology.type.content.item.magic.MagicCrystalItem
+import nichrosia.arcanology.type.element.Element
+import nichrosia.arcanology.type.math.Vec2
+import nichrosia.arcanology.type.rune.RuneType
 import nichrosia.arcanology.util.add
+import nichrosia.arcanology.util.asBoolean
 import nichrosia.arcanology.util.hexagon
 import nichrosia.arcanology.util.minecraftClient
-import nichrosia.arcanology.type.math.Vec2
-import nichrosia.arcanology.type.element.Element
-import nichrosia.arcanology.type.rune.RuneType
 
 @Suppress("LeakingThis", "MemberVisibilityCanBePrivate")
 open class RuneInfuserGUIDescription(
@@ -88,7 +88,7 @@ open class RuneInfuserGUIDescription(
 
         RuneType.types.forEachIndexed { i, r ->
             val runeWidget = WRune(r.item, r) { runeType ->
-                if (BinaryInt(propertyDelegate[3]).asBoolean) clientNetworking.send(Arcanology.idOf("change_rune_id")) {
+                if (propertyDelegate[3].asBoolean) clientNetworking.send(Arcanology.idOf("change_rune_id")) {
                     it.writeInt(runeType.id ?: -1)
                 }
 
@@ -136,7 +136,7 @@ open class RuneInfuserGUIDescription(
 
     inner class WRune(val item: ItemStack, val runeType: RuneType, val clickListener: (RuneType) -> InputResult) : WWidget() {
         val runeColor: Int
-            get() = if (BinaryInt(propertyDelegate[3]).asBoolean) correctColor else incorrectColor
+            get() = if (propertyDelegate[3].asBoolean) correctColor else incorrectColor
 
         init {
             setSize(36, 36)

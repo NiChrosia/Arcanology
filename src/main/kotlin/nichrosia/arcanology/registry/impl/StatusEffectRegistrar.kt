@@ -6,10 +6,10 @@ import nichrosia.arcanology.type.content.status.effect.ElementalWrathStatusEffec
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 
 open class StatusEffectRegistrar : RegistryRegistrar<StatusEffect>(Registry.STATUS_EFFECT, "status_effect") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val elementalWrath by RegistryProperty("elemental_wrath") { ElementalWrathStatusEffect() }
+    val elementalWrath by RegistrarProperty("elemental_wrath") { ElementalWrathStatusEffect() }
 }

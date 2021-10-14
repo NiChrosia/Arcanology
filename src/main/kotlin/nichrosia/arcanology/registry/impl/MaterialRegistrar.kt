@@ -4,7 +4,7 @@ import net.minecraft.util.Rarity
 import nichrosia.arcanology.type.content.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.data.MaterialHelper
 import nichrosia.arcanology.type.data.config.MaterialConfig
 import nichrosia.arcanology.type.data.config.ore.impl.NormalAndDeepslateOreConfig
@@ -16,43 +16,43 @@ import nichrosia.arcanology.util.distanceToOreSize
 import nichrosia.arcanology.util.pickaxeRecipe
 
 open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
-    val prismatic by RegistryProperty("prismatic") {
+    val prismatic by RegistrarProperty("prismatic") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Light)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val desolate by RegistryProperty("desolate") {
+    val desolate by RegistrarProperty("desolate") {
         MaterialHelper(it, false, Rarity.RARE,element = Element.Void)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val molten by RegistryProperty("molten") {
+    val molten by RegistrarProperty("molten") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Fire)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val tidal by RegistryProperty("tidal") {
+    val tidal by RegistrarProperty("tidal") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Water)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val terrene by RegistryProperty("terrene") {
+    val terrene by RegistrarProperty("terrene") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Earth)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val celestial by RegistryProperty("celestial") {
+    val celestial by RegistrarProperty("celestial") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Air)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
-    val arcane by RegistryProperty("arcane") {
+    val arcane by RegistrarProperty("arcane") {
         MaterialHelper(it, false, Rarity.EPIC, element = Element.Mana)
             .apply { add(::magicCrystal, ::magicHeart) }
     }
 
     // Generation: Slightly rarer than gold.
-    val velosium by RegistryProperty("velosium") {
+    val velosium by RegistrarProperty("velosium") {
         MaterialHelper(it, false, Rarity.COMMON, 3, variableOreConfig = VariableOreConfig(
             "${it}_ore",
             Registrar.blockMaterial.velosium,
@@ -66,7 +66,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
             .apply { add(::ingot, ::variableOre, ::rawOreBlock, ::rawOreBlockItem, ::rawOre) }
     }
 
-    val aegirite by RegistryProperty("aegirite") {
+    val aegirite by RegistrarProperty("aegirite") {
         MaterialHelper(it, false, Rarity.COMMON, 3, variableOreConfig = VariableOreConfig(
             "${it}_ore",
             Registrar.blockMaterial.elementalCrystal,
@@ -81,7 +81,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
     }
 
     // Generation: Slightly rarer than diamond, more common than ancient debris. Purity (0-1) varies depending on how close the ore generated to a magical hotspot.
-    val xenothite by RegistryProperty("xenothite") {
+    val xenothite by RegistrarProperty("xenothite") {
         MaterialHelper(it, false, Rarity.UNCOMMON, 4, variableOreConfig = VariableOreConfig(
             "${it}_ore",
             Registrar.blockMaterial.xenothite,
@@ -95,7 +95,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
             .apply { add(::ingot, ::variableOre, ::rawOreBlock, ::rawOreBlockItem, ::rawOre) }
     }
 
-    val aluminum by RegistryProperty("aluminum") {
+    val aluminum by RegistrarProperty("aluminum") {
         MaterialHelper(it, true, Rarity.COMMON, 2, normalAndDeepslateOreConfig = NormalAndDeepslateOreConfig(
             "${it}_ore",
             Registrar.blockMaterial.aluminum,
@@ -104,7 +104,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
             .apply { add(::ingot, ::wire, ::circuit, ::normalAndDeepslateOre, ::rawOreBlock, ::rawOreBlockItem, ::rawOre) }
     }
 
-    val silver by RegistryProperty("silver") {
+    val silver by RegistrarProperty("silver") {
         MaterialHelper(
             it,
             false,
@@ -123,7 +123,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
         .apply { add(::ingot, ::pickaxe, ::normalAndDeepslateOre, ::rawOreBlock, ::rawOreBlockItem, ::rawOre) }
     }
 
-    val nickelZinc by RegistryProperty("nickel_zinc") {
+    val nickelZinc by RegistrarProperty("nickel_zinc") {
         MaterialHelper(it, true, Rarity.COMMON, 4)
             .apply { add(::battery) }
     }

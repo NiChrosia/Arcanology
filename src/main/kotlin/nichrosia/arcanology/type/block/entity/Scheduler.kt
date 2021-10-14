@@ -1,19 +1,27 @@
 package nichrosia.arcanology.type.block.entity
 
 interface Scheduler {
-    val schedule: MutableList<Pair<Int, () -> Unit>>
+    var schedule: MutableList<Task>
 
     fun tick() {
-        schedule.mapNotNull { (ticksRemaining, task) ->
-            if (ticksRemaining == 0) {
-                task(); null
+        schedule.forEach { task ->
+            if (task.ticksUntilRun == 0) {
+                task.task()
+
+                task.completed = true
             } else {
-                (ticksRemaining - 1) to task
+                task.ticksUntilRun--
             }
         }
+
+        schedule = schedule.filter { !it.completed }.toMutableList()
     }
 
     fun schedule(ticksUntilRun: Int, task: () -> Unit) {
-        schedule.add(ticksUntilRun to task)
+        schedule.add(Task(ticksUntilRun, task))
+    }
+
+    data class Task(var ticksUntilRun: Int, val task: () -> Unit) {
+        var completed = false
     }
 }

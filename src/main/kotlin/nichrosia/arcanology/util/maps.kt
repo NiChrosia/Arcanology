@@ -1,5 +1,6 @@
 package nichrosia.arcanology.util
 
+/** Get the next key after this one in the given [Map]. */
 fun <V> Map<Long, V>.nextKey(key: Long): Long? {
     return (keys.indexOf(key) + 1).let { if (it == 0 || it >= keys.size) null else it }?.let { keys.toList()[it] }
 }

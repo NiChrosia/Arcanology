@@ -59,9 +59,9 @@ open class RuneRecipe(
                     "water",
                     "earth",
                     "air"
-                ).map { deserializeItemOrItemStackJson(json, "${it}_item") }
+                ).map { deserializeEitherItemStackJson(json, "${it}_item") }
 
-                val result = deserializeItemOrItemStackJson(json, "result") ?: throw IllegalStateException("Result cannot be null.")
+                val result = deserializeEitherItemStackJson(json, "result") ?: throw IllegalStateException("Result cannot be null.")
 
                 return RuneRecipe(result, lightItem, voidItem, fireItem, waterItem, earthItem, airItem)
             }

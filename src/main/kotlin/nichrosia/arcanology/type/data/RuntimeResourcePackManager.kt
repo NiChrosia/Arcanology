@@ -9,11 +9,10 @@ import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.util.*
 
 /** Runtime-resource-pack manager for the given [main] & [common] resource packs. */
 @Suppress("HasPlatformType")
-open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common: RuntimeResourcePack) : Loadable {
+open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common: RuntimeResourcePack) {
     val tags = TagMap()
     val englishLang = lang()
 
@@ -22,11 +21,16 @@ open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common:
         RuntimeResourcePack.create(commonID, commonVersion)
     )
 
-    override fun load() {
+    open fun load() {
         tags.load()
         main.addLang(id("${Arcanology.modID}:en_us"), englishLang)
 
-        RRPCallback.BEFORE_VANILLA.register { it.addAll(main, common) }
+        RRPCallback.BEFORE_VANILLA.register {
+            it.apply {
+                add(main)
+                add(common)
+            }
+        }
 
         arrayOf(main, common).forEach { it.dump() }
     }

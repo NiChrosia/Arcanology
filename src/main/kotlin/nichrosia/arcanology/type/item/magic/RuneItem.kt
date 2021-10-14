@@ -4,8 +4,8 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import nichrosia.arcanology.util.clamp
 import nichrosia.arcanology.type.instance.rune.Rune
+import nichrosia.arcanology.util.clamp
 
 interface RuneItem {
     fun appendTooltip(runes: Array<Rune>, text: MutableList<Text>, context: TooltipContext) {
@@ -20,9 +20,9 @@ interface RuneItem {
     fun Int.toRomanNumeral(): String {
         return when {
             this < 4 -> "I".repeat(this)
-            this < 9 -> "I".repeat(if (this < 5) 1 else 0) + "V" + "I".repeat((this - 5).clamp())
-            this < 14 -> "I".repeat(if (this < 10) 1 else 0) + "X" + "I".repeat((this - 10).clamp())
-            this < 19 -> "X" + "I".repeat(if (this < 15) 1 else 0) + "V" + "I".repeat((this - 15).clamp())
+            this < 9 -> "I".repeat(if (this < 5) 1 else 0) + "V" + "I".repeat(clamp(this - 5))
+            this < 14 -> "I".repeat(if (this < 10) 1 else 0) + "X" + "I".repeat(clamp(this - 10))
+            this < 19 -> "X" + "I".repeat(if (this < 15) 1 else 0) + "V" + "I".repeat(clamp(this - 15))
             this < 21 -> "X" + "I".repeat(if (this < 20) 1 else 0) + "X"
             else -> "§k00§r"
         }

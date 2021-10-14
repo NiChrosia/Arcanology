@@ -10,10 +10,10 @@ import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.util.*
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.mana
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.runes
 import nichrosia.arcanology.type.item.magic.RuneItem
+import nichrosia.arcanology.util.clamp
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class RunicPickaxeItem(material: ToolMaterial, attackDamage: Int, attackSpeed: Float, settings: Settings) : PickaxeItem(material, attackDamage, attackSpeed, settings),
@@ -34,7 +34,7 @@ open class RunicPickaxeItem(material: ToolMaterial, attackDamage: Int, attackSpe
                 if (stack.runes.any { !it.type.useDurability(stack) }) {
                     stack.mana -= 1
 
-                    stack.mana.clamp(max = stack.runes.maxOf { it.type.maxMana })
+                    stack.mana = clamp(stack.mana, max = stack.runes.maxOf { it.type.maxMana })
                 }
             }
         }
@@ -53,7 +53,7 @@ open class RunicPickaxeItem(material: ToolMaterial, attackDamage: Int, attackSpe
     }
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState): Float {
-        return stack.runes.map { it.type.miningSpeedMultiplier }.product()
+        return stack.runes.map { it.type.miningSpeedMultiplier }.fold(1f) { i, e -> i * e }
     }
 
     override fun getItemBarColor(stack: ItemStack): Int {

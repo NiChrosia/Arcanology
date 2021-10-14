@@ -1,6 +1,6 @@
 package nichrosia.arcanology.type.math
 
-import nichrosia.arcanology.util.degreesToRadians
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -21,7 +21,7 @@ data class Vec2(var x: Float, var y: Float) {
     }
 
     fun rotate(degrees: Float): Vec2 {
-        return rotateRad(degrees * degreesToRadians)
+        return rotateRad(degrees * (PI.toFloat() / 180))
     }
 
     fun rotateRad(radians: Float): Vec2 {

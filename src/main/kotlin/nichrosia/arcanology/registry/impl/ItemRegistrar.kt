@@ -11,7 +11,7 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.content.item.ModeledItem
 import nichrosia.arcanology.type.content.item.guide.book.GuideBookItem
 
@@ -21,16 +21,16 @@ open class ItemRegistrar : RegistryRegistrar<Item>(Registry.ITEM, "item") {
     val magicSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.magic)
     val techSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.tech)
 
-    val altar by RegistryProperty("altar") { BlockItem(Registrar.block.altar, magicSettings.rarity(Rarity.EPIC)) }
+    val altar by RegistrarProperty("altar") { BlockItem(Registrar.block.altar, magicSettings.rarity(Rarity.EPIC)) }
 
-    val separator by RegistryProperty("separator") { BlockItem(Registrar.block.separator, techSettings) }
+    val separator by RegistrarProperty("separator") { BlockItem(Registrar.block.separator, techSettings) }
 
-    val runeInfuser by RegistryProperty("rune_infuser") { BlockItem(Registrar.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)) }
+    val runeInfuser by RegistrarProperty("rune_infuser") { BlockItem(Registrar.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)) }
 
-    val wireCutter by RegistryProperty("wire_cutter") { Item(techSettings) }
+    val wireCutter by RegistrarProperty("wire_cutter") { Item(techSettings) }
 
-    val arcaneAlmanac by RegistryProperty("arcane_almanac") { GuideBookItem(magicSettings, "arcane_almanac") }
-    val componentCompendium by RegistryProperty("component_compendium") { GuideBookItem(techSettings, "component_compendium") }
+    val arcaneAlmanac by RegistrarProperty("arcane_almanac") { GuideBookItem(magicSettings, "arcane_almanac") }
+    val componentCompendium by RegistrarProperty("component_compendium") { GuideBookItem(techSettings, "component_compendium") }
 
     @Suppress("UNCHECKED_CAST")
     override fun <E : Item> register(key: Identifier, value: E): E {

@@ -7,43 +7,37 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+@Suppress("UNCHECKED_CAST", "LeakingThis")
 open class RegistrarProperty<R, T : R>(
-    val registrar: Registrar<R>,
     val ID: Identifier,
-    /** Whether to call the create function using the specified [initializer]. */
-    val createContent: Boolean = true,
     val initializer: (String) -> T
-) : ReadOnlyProperty<Any?, T>, PropertyDelegateProvider<Any?, RegistrarProperty<R, T>> {
-    var isCreated = false
-    var isRegistered = false
+) : ReadOnlyProperty<Registrar<R>, T>, PropertyDelegateProvider<Registrar<R>, RegistrarProperty<R, T>> {
+    private var isCreated = false
 
-    constructor(registrar: Registrar<R>, ID: String, createContent: Boolean = true, initializer: (String) -> T) : this(registrar, Arcanology.idOf(ID), createContent, initializer)
+    constructor(ID: String, initializer: (String) -> T) : this(Arcanology.idOf(ID), initializer)
 
-    @Suppress("UNCHECKED_CAST")
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        registrar.apply {
+    override fun getValue(thisRef: Registrar<R>, property: KProperty<*>): T {
+        thisRef.apply {
             if (!containsKey(ID) || !isCreated) {
-                val content = initializer(ID.path)
-
-                if (createContent) create(ID, content)
+                create(ID, initializer(ID.path))
             }
 
             isCreated = containsKey(ID)
         }
 
-        return registrar[ID] as T
+        return thisRef[ID] as T
     }
 
-    override fun provideDelegate(thisRef: Any?, property: KProperty<*>): RegistrarProperty<R, T> {
-        return apply { registrar.registrarProperties.add(this) }
+    override fun provideDelegate(thisRef: Registrar<R>, property: KProperty<*>): RegistrarProperty<R, T> {
+        return apply {
+            thisRef.registrarProperties.add(this)
+        }
     }
 
     open fun create(thisRef: Registrar<R>) {
         thisRef.apply {
             if (!containsKey(ID)) {
-                val content = initializer(ID.path)
-
-                if (createContent) create(ID, content)
+                create(ID, initializer(ID.path))
             }
 
             isCreated = containsKey(ID)

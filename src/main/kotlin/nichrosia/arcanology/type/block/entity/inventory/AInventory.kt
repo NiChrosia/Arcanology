@@ -6,7 +6,8 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
-import nichrosia.arcanology.util.clamp
+import nichrosia.arcanology.util.decrement
+import nichrosia.arcanology.util.increment
 import nichrosia.arcanology.util.setAllTo
 
 interface AInventory : SidedInventory {
@@ -76,7 +77,7 @@ interface AInventory : SidedInventory {
         if (items[slot].isEmpty) {
             setStack(slot, defaultStack)
         } else {
-            setStack(slot, items[slot].copy().apply { count = (count + 1).clamp(max = maxCount) })
+            setStack(slot, items[slot].copy().increment())
         }
 
         return items[slot]
@@ -86,15 +87,15 @@ interface AInventory : SidedInventory {
         val stack = items[slot]
 
         return when {
-            stack.isEmpty -> zeroStack
-            stack.count > 1 -> {
-                val decrementedStack = ItemStack(stack.item, stack.count - 1)
+            stack.isEmpty -> zeroStack.copy()
 
-                setStack(slot, decrementedStack)
+            stack.count > 1 -> {
+                setStack(slot, stack.decrement(zeroStack.copy()))
                 items[slot]
             }
+
             else -> {
-                setStack(slot, zeroStack)
+                setStack(slot, zeroStack.copy())
                 items[slot]
             }
         }

@@ -34,7 +34,7 @@ open class SeparatorRecipe(input: ItemStack, result: ItemStack) : MachineRecipe<
         object Serializer : MachineRecipe.Companion.Serializer<SeparatorBlockEntity, SeparatorRecipe>(ID, ::types) {
             override fun read(id: Identifier, json: JsonObject): SeparatorRecipe {
                 val (input, result) = arrayOf("input", "result").map {
-                    deserializeItemOrItemStackJson(json, it) ?: throw IllegalStateException("${it.capitalize()} cannot be null.")
+                    deserializeEitherItemStackJson(json, it) ?: throw IllegalStateException("${it.capitalize()} cannot be null.")
                 }
 
                 return SeparatorRecipe(input, result)

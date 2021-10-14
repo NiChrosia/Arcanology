@@ -8,14 +8,14 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.BasicRegistrar
-import nichrosia.arcanology.registry.properties.RegistryProperty
+import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.content.gui.description.RuneInfuserGUIDescription
 import nichrosia.arcanology.type.content.gui.description.SeparatorGUIDescription
 import nichrosia.arcanology.util.capitalize
 
 open class GUIDescriptionRegistrar : BasicRegistrar<ScreenHandlerType<*>>() {
-    val separator by RegistryProperty("separator") { create("pulverizer", ::SeparatorGUIDescription) }
-    val runeInfuser by RegistryProperty("rune_infuser") { create("rune_infuser", ::RuneInfuserGUIDescription) }
+    val separator by RegistrarProperty("separator") { create("pulverizer", ::SeparatorGUIDescription) }
+    val runeInfuser by RegistrarProperty("rune_infuser") { create("rune_infuser", ::RuneInfuserGUIDescription) }
 
     override fun <E : ScreenHandlerType<*>> register(key: Identifier, value: E): E {
         Arcanology.packManager.englishLang.lang["${Arcanology.modID}.gui.title.${key.path}"] = key.path.capitalize()

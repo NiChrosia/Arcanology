@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 
+/** An interface for generating blockstates at runtime. */
 interface StatedBlock {
     fun generateBlockState(ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
         packManager.main.addBlockState(
