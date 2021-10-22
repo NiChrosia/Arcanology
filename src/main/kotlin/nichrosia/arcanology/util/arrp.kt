@@ -1,7 +1,6 @@
 package nichrosia.arcanology.util
 
 import com.google.gson.JsonObject
-import net.devtech.arrp.api.RuntimeResourcePack.id
 import net.devtech.arrp.json.loot.JCondition
 import net.devtech.arrp.json.loot.JLootTable.*
 import net.devtech.arrp.json.models.JTextures
@@ -16,9 +15,9 @@ import net.minecraft.block.OreBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.PickaxeItem
+import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.type.content.item.energy.CircuitItem
 import nichrosia.arcanology.type.content.item.energy.WireItem
 
 /** A separate method for creating a silk touch predicate due to the complexity. */
@@ -36,18 +35,20 @@ fun normalBlockLootTable(block: Block, item: BlockItem) {
     val blockName = Registry.BLOCK.getId(block).path
     val itemName = Registry.ITEM.getId(item).path
 
-    Arcanology.packManager.main.addLootTable(
-        Arcanology.packManager.blockID(blockName),
+    Arcanology.apply {
+        packManager.main.addLootTable(
+        packManager.blockID(blockName),
         loot("minecraft:block")
             .pool(pool()
                 .rolls(1)
                 .entry(entry()
                     .type("minecraft:item")
-                    .name("${Arcanology.modID}:$itemName")
+                    .name("${modID}:$itemName")
                 )
                 .condition(predicate("minecraft:survives_explosion"))
             )
     )
+    }
 }
 
 /** A loot table generator to make an [OreBlock] drop its raw ore [Item]. */
@@ -55,31 +56,33 @@ fun rawOreLootTable(ore: OreBlock, rawOre: Item) {
     val blockName = Registry.BLOCK.getId(ore).path
     val itemName = Registry.ITEM.getId(rawOre).path
 
-    Arcanology.packManager.main.addLootTable(
-        Arcanology.packManager.blockID(blockName),
-        loot("minecraft:block")
-            .pool(pool()
-                .rolls(1)
-                .bonus(0)
-                .entry(entry()
-                    .type("minecraft:alternatives")
-                    .child(entry()
-                        .type("minecraft:item")
-                        .condition(silkTouchPredicate())
-                        .name("${Arcanology.modID}:$blockName")
-                    )
-                    .child(entry()
-                        .type("minecraft:item")
-                        .function(function("apply_bonus")
-                            .parameter("enchantment", "minecraft:fortune")
-                            .parameter("formula", "minecraft:ore_drops")
+    Arcanology.apply {
+        packManager.main.addLootTable(
+            packManager.blockID(blockName),
+            loot("minecraft:block")
+                .pool(pool()
+                    .rolls(1)
+                    .bonus(0)
+                    .entry(entry()
+                        .type("minecraft:alternatives")
+                        .child(entry()
+                            .type("minecraft:item")
+                            .condition(silkTouchPredicate())
+                            .name("$modID:$blockName")
                         )
-                        .function(function("minecraft:explosion_decay"))
-                        .name("${Arcanology.modID}:$itemName")
+                        .child(entry()
+                            .type("minecraft:item")
+                            .function(function("apply_bonus")
+                                .parameter("enchantment", "minecraft:fortune")
+                                .parameter("formula", "minecraft:ore_drops")
+                            )
+                            .function(function("minecraft:explosion_decay"))
+                            .name("$modID:$itemName")
+                        )
                     )
                 )
-            )
-    )
+        )
+    }
 }
 
 /** A recipe generator to generate a wire recipe from wire cutters & ingots. */
@@ -90,35 +93,32 @@ fun wireRecipe(ingot: Item, wire: WireItem) {
     val ingotID = Registry.ITEM.getId(ingot)
     val ingotName = ingotID.path
 
-    Arcanology.packManager.main.addRecipe(
-        id("${Arcanology.modID}:$wireName"),
-        shapeless(
-            ingredients()
-                .add(ingredient().tag("c:wire_cutters"))
-                .add(ingredient().tag("c:${ingotName}s")),
-            result("${Arcanology.modID}:$wireName")
+    Arcanology.apply {
+        packManager.main.addRecipe(
+            Identifier("$modID:$wireName"),
+            shapeless(
+                ingredients()
+                    .add(ingredient().tag("c:wire_cutters"))
+                    .add(ingredient().tag("c:${ingotName}s")),
+                result("$modID:$wireName")
+            )
         )
-    )
+    }
 }
 
 /** A recipe generator to generate a circuit recipe from insulators & wires. */
-fun circuitRecipe(insulator: Item, wire: WireItem, circuitItem: CircuitItem) {
-    val circuitID = Registry.ITEM.getId(circuitItem)
-
-    val wireID = Registry.ITEM.getId(wire)
-    val wireName = wireID.path
-
+fun circuitRecipe(insulatorID: Identifier, wireID: Identifier, circuitID: Identifier) {
     Arcanology.packManager.main.addRecipe(
-        id("$circuitID"),
+        circuitID,
         shaped(
             pattern()
                 .row1(" GW")
                 .row2("GWG")
                 .row3("WG "),
             keys()
-                .key("W", ingredient().tag("c:${wireName}s"))
-                .key("G", ingredient().item(insulator)),
-            result("$circuitID")
+                .key("W", ingredient().tag("c:${wireID.path}s"))
+                .key("G", ingredient().item(insulatorID.toString())),
+            result(circuitID.toString())
         )
     )
 }
@@ -129,7 +129,7 @@ fun pickaxeRecipe(pickaxeItem: PickaxeItem, ingot: Item, stick: Item) {
     val ingotID = Registry.ITEM.getId(ingot)
 
     Arcanology.packManager.main.addRecipe(
-        id("$pickaxeID"),
+        pickaxeID,
         shaped(
             pattern()
                 .row1("III")

@@ -1,10 +1,11 @@
 package nichrosia.arcanology.registry.impl
 
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
-import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.registry.Registrar
@@ -17,6 +18,7 @@ import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.content.block.entity.ReactiveBlockEntity
 import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
+import nichrosia.arcanology.type.id.block.AbstractBlock
 
 open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE, "block_entity") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
@@ -26,9 +28,9 @@ open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry
     val separator by RegistrarProperty("separator_block_entity") { create(it, ::SeparatorBlockEntity, Registrar.block.separator) }
     val runeInfuser by RegistrarProperty("rune_infuser_block_entity") { create(it, ::RuneInfuserBlockEntity, Registrar.block.runeInfuser) }
 
-    open fun <B : Block, E> create(name: String, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
-    where E : BlockEntity, E : BlockEntityWithBlock<B> {
-        return super.create(name, FabricBlockEntityTypeBuilder.create({ pos: BlockPos, state: BlockState ->
+    open fun <B, E> create(ID: Identifier, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
+    where B : AbstractBlock, B : BlockWithEntity, E : BlockEntity, E : BlockEntityWithBlock<B> {
+        return super.create(ID, FabricBlockEntityTypeBuilder.create({ pos: BlockPos, state: BlockState ->
             blockEntity(pos, state, block)
         }, block).build(null))
     }

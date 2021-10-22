@@ -1,9 +1,15 @@
+@file:Suppress("UnstableApiUsage", "deprecation")
+
 package nichrosia.arcanology.type.block
 
 import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.blockstate.JState
 import net.devtech.arrp.json.models.JModel
-import net.minecraft.block.*
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.minecraft.block.Block
+import net.minecraft.block.BlockRenderType
+import net.minecraft.block.BlockState
+import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
@@ -28,22 +34,28 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.block.entity.MachineBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.type.id.block.IdentifiedBlockWithEntity
 import nichrosia.arcanology.util.variables
 import team.reborn.energy.api.EnergyStorage
 
-@Suppress("UNCHECKED_CAST", "DEPRECATION")
+@Suppress("UNCHECKED_CAST")
 abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : MachineBlockEntity<B, S, *, *>>(
     settings: Settings,
     val entityConstructor: (BlockPos, BlockState, B) -> E,
     val type: () -> BlockEntityType<E>,
-    val tier: EnergyTier
-) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, StatedBlock {
+    val tier: EnergyTier,
+    ID: Identifier
+) : IdentifiedBlockWithEntity(settings, ID), InventoryProvider, ModeledBlock, StatedBlock {
     init {
+        defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
+
         EnergyStorage.SIDED.registerForBlocks({ _, _, _, blockEntity, _ ->
-            (blockEntity as MachineBlockEntity<*, *, *, *>).energyStorage
+            (blockEntity as? MachineBlockEntity<*, *, *, *>)?.energyStorage
         }, this)
 
-        defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
+        FluidStorage.SIDED.registerForBlocks({ _, _, _, blockEntity, _ ->
+            (blockEntity as? MachineBlockEntity<*, *, *, *>)?.fluidStorage
+        }, this)
     }
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
@@ -142,7 +154,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
             JModel.model("minecraft:block/cube")
                 .textures(
                     JModel.textures()
-                        .particle("${Arcanology.modID}:block/${ID.path}_front")
+                        .particle("${Arcanology.modID}:block/${ID.path}_top")
                         .variables(
                             "east" to side,
                             "west" to side,
@@ -159,7 +171,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
             JModel.model("minecraft:block/cube")
                 .textures(
                     JModel.textures()
-                        .particle("${Arcanology.modID}:block/${ID.path}_front_active")
+                        .particle("${Arcanology.modID}:block/${ID.path}_top")
                         .variables(
                             "east" to side,
                             "west" to side,

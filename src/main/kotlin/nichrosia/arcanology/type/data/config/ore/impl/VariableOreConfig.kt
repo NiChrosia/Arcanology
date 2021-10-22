@@ -3,14 +3,13 @@ package nichrosia.arcanology.type.data.config.ore.impl
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Material
-import net.minecraft.block.OreBlock
-import net.minecraft.item.BlockItem
 import net.minecraft.world.gen.feature.util.FeatureContext
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.ExternalRegistrarProperty
 import nichrosia.arcanology.type.data.MaterialHelper
 import nichrosia.arcanology.type.data.config.ore.OreConfig
+import nichrosia.arcanology.type.id.block.IdentifiedOreBlock
+import nichrosia.arcanology.type.id.item.IdentifiedBlockItem
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import nichrosia.arcanology.type.world.util.BiomeSelector
@@ -28,24 +27,24 @@ open class VariableOreConfig(
     val sizeFactory: (FeatureContext<CustomOreFeatureConfig>) -> Int = { blobsPerChunk }
 ) : OreConfig<CustomOreFeatureConfig, CustomOreFeature>(name, blockMaterial, oreResistance, oreBlobSize, blobsPerChunk, range, biomeSelector, {
     val oreID = Arcanology.idOf(name)
-    val variableOre by ExternalRegistrarProperty(Registrar.block, name) {
-        OreBlock(FabricBlockSettings.of(blockMaterial)
+    val variableOre by Registrar.block.propertyOf(name) {
+        IdentifiedOreBlock(FabricBlockSettings.of(blockMaterial)
             .requiresTool()
             .strength(5f, oreResistance)
-            .breakByTool(FabricToolTags.PICKAXES, miningLevel))
+            .breakByTool(FabricToolTags.PICKAXES, miningLevel), it)
     }
 
-    val variableOreItem by ExternalRegistrarProperty(Registrar.item, name) { BlockItem(variableOre, settings) }
+    val variableOreItem by Registrar.item.propertyOf(name) { IdentifiedBlockItem(variableOre, settings, it) }
 
-    val variableOreFeature by ExternalRegistrarProperty(Registrar.configuredFeature, name, false) { Registrar.configuredFeature.createVariableOre(oreID, variableOre, range, blobsPerChunk, biomeSelector, sizeFactory) }
+    val variableOreFeature by Registrar.configuredFeature.propertyOf(name, false) { Registrar.configuredFeature.createVariableOre(oreID, variableOre, range, blobsPerChunk, biomeSelector, sizeFactory) }
 
     Ore(variableOre, variableOreItem, variableOreFeature)
 }) {
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun getValue(materialHelper: MaterialHelper, property: KProperty<*>): Ore<CustomOreFeatureConfig, CustomOreFeature> {
         return content(materialHelper, this).run {
-            val block by ExternalRegistrarProperty(Registrar.block, name) { block }
-            val item by ExternalRegistrarProperty(Registrar.item, name) { item }
+            val block by Registrar.block.propertyOf(ID) { block }
+            val item by Registrar.item.propertyOf(ID) { item }
 
             Ore(block, item, feature)
         }

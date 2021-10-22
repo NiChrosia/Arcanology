@@ -1,10 +1,10 @@
 package nichrosia.arcanology.registry.impl
 
 import net.minecraft.util.Rarity
-import nichrosia.arcanology.type.content.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
+import nichrosia.arcanology.type.content.item.magic.RunicPickaxeItem
 import nichrosia.arcanology.type.data.MaterialHelper
 import nichrosia.arcanology.type.data.config.MaterialConfig
 import nichrosia.arcanology.type.data.config.ore.impl.NormalAndDeepslateOreConfig
@@ -15,6 +15,7 @@ import nichrosia.arcanology.type.world.util.BiomeSelector
 import nichrosia.arcanology.util.distanceToOreSize
 import nichrosia.arcanology.util.pickaxeRecipe
 
+@Suppress("NestedLambdaShadowedImplicitParameter")
 open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
     val prismatic by RegistrarProperty("prismatic") {
         MaterialHelper(it, false, Rarity.RARE, element = Element.Light)
@@ -54,7 +55,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
     // Generation: Slightly rarer than gold.
     val velosium by RegistrarProperty("velosium") {
         MaterialHelper(it, false, Rarity.COMMON, 3, variableOreConfig = VariableOreConfig(
-            "${it}_ore",
+            "${it.path}_ore",
             Registrar.blockMaterial.velosium,
             150f,
             8,
@@ -68,7 +69,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
 
     val aegirite by RegistrarProperty("aegirite") {
         MaterialHelper(it, false, Rarity.COMMON, 3, variableOreConfig = VariableOreConfig(
-            "${it}_ore",
+            "${it.path}_ore",
             Registrar.blockMaterial.elementalCrystal,
             100f,
             3,
@@ -83,7 +84,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
     // Generation: Slightly rarer than diamond, more common than ancient debris. Purity (0-1) varies depending on how close the ore generated to a magical hotspot.
     val xenothite by RegistrarProperty("xenothite") {
         MaterialHelper(it, false, Rarity.UNCOMMON, 4, variableOreConfig = VariableOreConfig(
-            "${it}_ore",
+            "${it.path}_ore",
             Registrar.blockMaterial.xenothite,
             100f,
             4,
@@ -97,7 +98,7 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
 
     val aluminum by RegistrarProperty("aluminum") {
         MaterialHelper(it, true, Rarity.COMMON, 2, normalAndDeepslateOreConfig = NormalAndDeepslateOreConfig(
-            "${it}_ore",
+            "${it.path}_ore",
             Registrar.blockMaterial.aluminum,
             range = 0 to 64
         ))
@@ -110,12 +111,14 @@ open class MaterialRegistrar : BasicRegistrar<MaterialHelper>() {
             false,
             Rarity.COMMON,
             2,
-            toolMaterialConfig = ToolMaterialConfig("${it}_material", 5f, 350, 25, 2, 6f),
-            pickaxeConfig = MaterialConfig("${it}_pickaxe", Registrar.item, { pickaxe ->
-                pickaxeRecipe(pickaxe, ingot, toolRod)
-            }) { RunicPickaxeItem(toolMaterial, 1, -2.9f, settings) },
+            toolMaterialConfig = ToolMaterialConfig("${it.path}_material", 5f, 350, 25, 2, 6f),
+            pickaxeConfig = MaterialConfig("${it.path}_pickaxe", Registrar.item) {
+                RunicPickaxeItem(toolMaterial, 0, -2.9f, settings, it.ID).also { pickaxe ->
+                    pickaxeRecipe(pickaxe, ingot, toolRod)
+                }
+            },
             normalAndDeepslateOreConfig = NormalAndDeepslateOreConfig(
-                "${it}_ore",
+                "${it.path}_ore",
                 Registrar.blockMaterial.silver,
                 range = 12 to 72
             )

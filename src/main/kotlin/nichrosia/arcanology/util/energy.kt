@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack
 import team.reborn.energy.api.EnergyStorage
 import kotlin.math.pow
 
-/** The formatted version of this [Number], utilizing Roman numerals. */
+/** The formatted version of this [Number], utilizing standard large number initialing. */
 val Number.formatted: String
     get() {
         var value = toFloat()
@@ -31,7 +31,7 @@ fun ItemStack.getEnergyStorage(context: ContainerItemContext = ContainerItemCont
 /** A list of all the powers of 1000. */
 private val thousands = (1..10).map { 1000f.pow(it) }.reversed()
 
-/** A map of powers of 1000s to Roman numerals. */
+/** A map of powers of 1000s to large number initials. */
 private val thousandsNumeralMap = mapOf(
     0L to "",
     1000L.pow(1) to "k",

@@ -3,9 +3,9 @@ package nichrosia.arcanology.type.energy
 /** Currently not balanced at all, as they aren't used */
 open class EnergyTier(
     open val storage: Long,
-    open val maxInput: Long,
-    open val maxOutput: Long,
-    open val baseUsagePerTick: Long,
+    open val maxInputPerTick: Long,
+    open val maxOutputPerTick: Long,
+    open val baseConsumptionPerTick: Long,
     /** Base progress out of 1000 per tick. */
     open val baseProgressPerTick: Int
 ) {

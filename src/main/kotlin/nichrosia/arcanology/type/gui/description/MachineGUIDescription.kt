@@ -18,7 +18,7 @@ abstract class MachineGUIDescription(
     context: ScreenHandlerContext,
     inventorySize: Int,
     propertyDelegateSize: Int,
-    val titleText: String,
+    titleText: String,
     width: Int = 150,
     height: Int = 190
 ) : SyncedGuiDescription(type, syncID, playerInventory, getBlockInventory(context, inventorySize), getBlockPropertyDelegate(context, propertyDelegateSize)) {

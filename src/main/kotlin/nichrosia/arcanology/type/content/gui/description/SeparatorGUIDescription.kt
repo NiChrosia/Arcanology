@@ -33,7 +33,7 @@ open class SeparatorGUIDescription(
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 99, 36)
 
-        root.add(this.createPlayerInventoryPanel(), 0, 90)
+        root.add(createPlayerInventoryPanel(), 0, 90)
 
         root.validate(this)
     }

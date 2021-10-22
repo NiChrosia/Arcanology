@@ -3,7 +3,6 @@ package nichrosia.arcanology.type.content.block
 import net.devtech.arrp.json.models.JModel
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
-import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
@@ -18,9 +17,10 @@ import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.block.ModeledBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
+import nichrosia.arcanology.type.id.block.IdentifiedBlockWithEntity
 import nichrosia.arcanology.util.variables
 
-open class AltarBlock(settings: Settings) : BlockWithEntity(settings), ModeledBlock {
+open class AltarBlock(settings: Settings, ID: Identifier) : IdentifiedBlockWithEntity(settings, ID), ModeledBlock {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
         return AltarBlockEntity(pos, state, this)
     }

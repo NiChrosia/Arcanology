@@ -21,8 +21,8 @@ import kotlin.reflect.KProperty0
 abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KProperty0<MutableList<T>>) : Recipe<I> {
     abstract val result: ItemStack
     abstract val ID: Identifier
-    abstract val recipeType: RecipeType<T>
-    abstract val recipeSerializer: RecipeSerializer<T>
+    abstract val recipeType: Type<I, T>
+    abstract val recipeSerializer: Serializer<I, T>
 
     open val packetID: Int = run {
         types().add(this as T)
@@ -56,23 +56,22 @@ abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KP
     override fun getType(): RecipeType<T> {
         return recipeType
     }
-    
-    companion object {
-        open class Type<I : Inventory, T : SimpleRecipe<I, T>>(ID: Identifier) : RecipeType<T> {
+
+    open class Type<I : Inventory, T : SimpleRecipe<I, T>>(ID: Identifier) : RecipeType<T> {
             init {
                 Registry.register(Registry.RECIPE_TYPE, ID, this)
             }
         }
-        
+
         abstract class Serializer<I : Inventory, T : SimpleRecipe<I, T>>(val ID: Identifier, val types: KProperty0<MutableList<T>>) : RecipeSerializer<T> {
             init {
                 Registry.register(Registry.RECIPE_SERIALIZER, ID, this)
             }
-    
+
             override fun read(id: Identifier, buf: PacketByteBuf): T {
                 return types()[buf.readInt()]
             }
-    
+
             override fun write(buf: PacketByteBuf, recipe: T) {
                 buf.writeInt(recipe.packetID)
             }
@@ -112,5 +111,4 @@ abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KP
                 }
             }
         }
-    }
 }

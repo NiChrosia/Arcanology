@@ -2,8 +2,6 @@ package nichrosia.arcanology.type.content.recipe
 
 import com.google.gson.JsonObject
 import net.minecraft.item.ItemStack
-import net.minecraft.recipe.RecipeSerializer
-import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
@@ -23,8 +21,8 @@ open class RuneRecipe(
     open val airItem: ItemStack?
 ) : SimpleRecipe<RuneInfuserBlockEntity, RuneRecipe>(Companion::types) {
     override val ID: Identifier = Companion.ID
-    override val recipeType: RecipeType<RuneRecipe> = Type
-    override val recipeSerializer: RecipeSerializer<RuneRecipe> = Serializer
+    override val recipeType: SimpleRecipe.Type<RuneInfuserBlockEntity, RuneRecipe> = Type
+    override val recipeSerializer: SimpleRecipe.Serializer<RuneInfuserBlockEntity, RuneRecipe> = Serializer
 
     open val inputItems: Array<KProperty0<ItemStack?>>
         get() = arrayOf(::lightItem, ::voidItem, ::fireItem, ::waterItem, ::earthItem, ::airItem)
@@ -44,27 +42,27 @@ open class RuneRecipe(
         return super.craft(inventory)
     }
 
+    object Type : SimpleRecipe.Type<RuneInfuserBlockEntity, RuneRecipe>(ID)
+
+    object Serializer : SimpleRecipe.Serializer<RuneInfuserBlockEntity, RuneRecipe>(ID, Companion::types) {
+        override fun read(id: Identifier, json: JsonObject): RuneRecipe {
+            val (lightItem, voidItem, fireItem, waterItem, earthItem, airItem) = arrayOf(
+                "light",
+                "void",
+                "fire",
+                "water",
+                "earth",
+                "air"
+            ).map { deserializeEitherItemStackJson(json, "${it}_item") }
+
+            val result = deserializeEitherItemStackJson(json, "result") ?: throw IllegalStateException("Result cannot be null.")
+
+            return RuneRecipe(result, lightItem, voidItem, fireItem, waterItem, earthItem, airItem)
+        }
+    }
+
     companion object {
         val ID = Arcanology.idOf("rune")
         val types = mutableListOf<RuneRecipe>()
-
-        object Type : SimpleRecipe.Companion.Type<RuneInfuserBlockEntity, RuneRecipe>(ID)
-
-        object Serializer : SimpleRecipe.Companion.Serializer<RuneInfuserBlockEntity, RuneRecipe>(ID, Companion::types) {
-            override fun read(id: Identifier, json: JsonObject): RuneRecipe {
-                val (lightItem, voidItem, fireItem, waterItem, earthItem, airItem) = arrayOf(
-                    "light",
-                    "void",
-                    "fire",
-                    "water",
-                    "earth",
-                    "air"
-                ).map { deserializeEitherItemStackJson(json, "${it}_item") }
-
-                val result = deserializeEitherItemStackJson(json, "result") ?: throw IllegalStateException("Result cannot be null.")
-
-                return RuneRecipe(result, lightItem, voidItem, fireItem, waterItem, earthItem, airItem)
-            }
-        }
     }
 }

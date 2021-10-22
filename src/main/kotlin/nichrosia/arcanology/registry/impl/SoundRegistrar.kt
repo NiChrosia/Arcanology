@@ -4,7 +4,6 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.sound.OggAudioStream
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.RegistryRegistrar
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
@@ -15,7 +14,7 @@ import kotlin.math.roundToLong
 open class SoundRegistrar : RegistryRegistrar<SoundEvent>(Registry.SOUND_EVENT, "subtitles") {
     override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val machinery by RegistrarProperty("machinery") { SoundEvent(Arcanology.idOf(it)) }
+    val machinery by RegistrarProperty("machinery") { SoundEvent(it) }
 
     companion object {
         val SoundEvent.length: Long

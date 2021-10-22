@@ -10,16 +10,16 @@ import kotlin.reflect.KProperty
 @Suppress("UNCHECKED_CAST", "LeakingThis")
 open class RegistrarProperty<R, T : R>(
     val ID: Identifier,
-    val initializer: (String) -> T
+    val initializer: (Identifier) -> T
 ) : ReadOnlyProperty<Registrar<R>, T>, PropertyDelegateProvider<Registrar<R>, RegistrarProperty<R, T>> {
     private var isCreated = false
 
-    constructor(ID: String, initializer: (String) -> T) : this(Arcanology.idOf(ID), initializer)
+    constructor(ID: String, initializer: (Identifier) -> T) : this(Arcanology.idOf(ID), initializer)
 
     override fun getValue(thisRef: Registrar<R>, property: KProperty<*>): T {
         thisRef.apply {
             if (!containsKey(ID) || !isCreated) {
-                create(ID, initializer(ID.path))
+                create(ID, initializer(ID))
             }
 
             isCreated = containsKey(ID)
@@ -37,7 +37,7 @@ open class RegistrarProperty<R, T : R>(
     open fun create(thisRef: Registrar<R>) {
         thisRef.apply {
             if (!containsKey(ID)) {
-                create(ID, initializer(ID.path))
+                create(ID, initializer(ID))
             }
 
             isCreated = containsKey(ID)

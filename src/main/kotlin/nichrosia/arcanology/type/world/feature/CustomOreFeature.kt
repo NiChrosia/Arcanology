@@ -10,7 +10,10 @@ import net.minecraft.world.ChunkSectionCache
 import net.minecraft.world.Heightmap
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.chunk.WorldChunk
-import net.minecraft.world.gen.feature.*
+import net.minecraft.world.gen.feature.Feature
+import net.minecraft.world.gen.feature.FeatureConfig
+import net.minecraft.world.gen.feature.OreFeature
+import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.util.FeatureContext
 import java.util.*
 import kotlin.math.PI
@@ -140,7 +143,7 @@ open class CustomOreFeature(codec: Codec<CustomOreFeatureConfig>) : Feature<Cust
                                             if (!bitSet[am]) {
                                                 bitSet.set(am)
                                                 mutable[ag, ai] = ak
-                                                if (structureWorldAccess.method_37368(mutable)) {
+                                                if (structureWorldAccess.isValidForSetBlock(mutable)) {
                                                     val chunkSection = chunkSectionCache.getSection(mutable)
                                                     if (chunkSection !== WorldChunk.EMPTY_SECTION) {
                                                         val an = ChunkSectionPos.getLocalCoord(ag)

@@ -4,12 +4,12 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.attribute.AttributeContainer
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectType
+import net.minecraft.entity.effect.StatusEffectCategory
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.util.math.BlockPos
 import nichrosia.arcanology.util.clamp
 
-open class ElementalWrathStatusEffect : StatusEffect(StatusEffectType.HARMFUL, 0xBD00DE) {
+open class ElementalWrathStatusEffect : StatusEffect(StatusEffectCategory.HARMFUL, 0xBD00DE) {
     private var damageCounter = 0
     private val ticksPerDamage = 5
 

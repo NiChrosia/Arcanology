@@ -3,6 +3,7 @@ package nichrosia.arcanology.registry.impl
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
 import net.minecraft.block.MapColor
 import net.minecraft.block.Material
+import net.minecraft.util.Identifier
 import nichrosia.arcanology.registry.BasicRegistrar
 import nichrosia.arcanology.registry.properties.RegistrarProperty
 
@@ -13,7 +14,7 @@ open class BlockMaterialRegistrar : BasicRegistrar<Material>() {
     val aluminum by RegistrarProperty("aluminum") { create(it, MapColor.LIGHT_GRAY) }
     val silver by RegistrarProperty("silver") { create(it, MapColor.LIGHT_GRAY) }
 
-    fun create(name: String, color: MapColor): Material {
-        return super.create(name, FabricMaterialBuilder(color).build())
+    fun create(ID: Identifier, color: MapColor): Material {
+        return super.create(ID, FabricMaterialBuilder(color).build())
     }
 }

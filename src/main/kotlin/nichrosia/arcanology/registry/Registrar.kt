@@ -116,6 +116,14 @@ interface Registrar<T> : MutableMap<Identifier, T> {
         registry.clear()
     }
 
+    fun <E : T> propertyOf(ID: Identifier, createContent: Boolean = true, initializer: (Identifier) -> E): ExternalRegistrarProperty<T, E> {
+        return ExternalRegistrarProperty(this, ID, true, initializer)
+    }
+
+    fun <E : T> propertyOf(ID: String, createContent: Boolean = true, initializer: (Identifier) -> E): ExternalRegistrarProperty<T, E> {
+        return propertyOf(Arcanology.idOf(ID), createContent, initializer)
+    }
+
     /** The core loader for [Registrar]s, contains a list of all registrars, as well as loading methods. */
     companion object {
         val blockMaterial = BlockMaterialRegistrar()

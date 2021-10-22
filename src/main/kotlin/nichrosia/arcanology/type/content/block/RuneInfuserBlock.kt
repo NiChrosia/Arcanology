@@ -2,7 +2,6 @@ package nichrosia.arcanology.type.content.block
 
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
-import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
@@ -11,14 +10,16 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
 import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
+import nichrosia.arcanology.type.id.block.IdentifiedBlockWithEntity
 
-open class RuneInfuserBlock(settings: Settings) : BlockWithEntity(settings), InventoryProvider {
+open class RuneInfuserBlock(settings: Settings, ID: Identifier) : IdentifiedBlockWithEntity(settings, ID), InventoryProvider {
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
         return RuneInfuserBlockEntity(pos, state, this)
     }

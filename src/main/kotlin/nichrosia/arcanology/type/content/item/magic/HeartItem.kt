@@ -1,6 +1,6 @@
 package nichrosia.arcanology.type.content.item.magic
 
-import net.minecraft.item.Item
-import nichrosia.arcanology.type.element.Element
+import net.minecraft.util.Identifier
+import nichrosia.arcanology.type.id.item.IdentifiedItem
 
-open class HeartItem(settings: Settings, val element: Element) : Item(settings)
+open class HeartItem(settings: Settings, ID: Identifier) : IdentifiedItem(settings, ID)

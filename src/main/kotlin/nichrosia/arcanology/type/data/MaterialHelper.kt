@@ -2,10 +2,11 @@ package nichrosia.arcanology.type.data
 
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.item.*
+import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.gen.feature.*
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.Registrar
@@ -24,6 +25,12 @@ import nichrosia.arcanology.type.data.config.tool.ToolMaterialConfig
 import nichrosia.arcanology.type.delegates.ConditionedProperty
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.arcanology.type.id.block.AbstractBlock
+import nichrosia.arcanology.type.id.block.IdentifiedBlock
+import nichrosia.arcanology.type.id.item.AbstractItem
+import nichrosia.arcanology.type.id.item.IdentifiedBlockItem
+import nichrosia.arcanology.type.id.item.IdentifiedItem
+import nichrosia.arcanology.type.id.item.IdentifiedPickaxeItem
 import nichrosia.arcanology.type.world.feature.CustomOreFeature
 import nichrosia.arcanology.type.world.feature.CustomOreFeatureConfig
 import nichrosia.arcanology.type.world.util.ore.NormalAndDeepslateOre
@@ -31,8 +38,10 @@ import nichrosia.arcanology.type.world.util.ore.Ore
 import nichrosia.arcanology.util.*
 import kotlin.reflect.KProperty0
 
+// TODO: make this code remotely nice looking
+@Suppress("NestedLambdaShadowedImplicitParameter")
 data class MaterialHelper(
-    val name: String,
+    val ID: Identifier,
     val isTech: Boolean,
     val rarity: Rarity,
     val miningLevel: Int = 0,
@@ -42,74 +51,72 @@ data class MaterialHelper(
     val toolRod: Item = Items.STICK,
     val rawOreBlockResistance: Float = 10f,
 
-    val toolMaterialConfig: ToolMaterialConfig = ToolMaterialConfig("${name}_material", 0f, 0, 0, 0, 0f),
+    val toolMaterialConfig: ToolMaterialConfig = ToolMaterialConfig("${ID.path}_material", 0f, 0, 0, 0, 0f),
 
-    val rawOreBlockConfig: MaterialConfig<Block, Block> = MaterialConfig("raw_${name}_block", Registrar.block) {
-        Block(FabricBlockSettings.of(Material.METAL)
+    val rawOreConfig: MaterialConfig<AbstractItem, IdentifiedItem> = MaterialConfig("raw_${ID.path}", Registrar.item) { IdentifiedItem(settings, it.ID).also {
+        rawOreLootTable(ore.block, it)
+        rawOreLootTable(normalAndDeepslateOre.deepslateBlock, it)
+    } },
+    val rawOreBlockConfig: MaterialConfig<AbstractBlock, IdentifiedBlock> = MaterialConfig("raw_${ID.path}_block", Registrar.block) {
+        IdentifiedBlock(FabricBlockSettings.of(Material.METAL)
             .requiresTool()
             .strength(5f, rawOreBlockResistance)
-            .breakByTool(FabricToolTags.PICKAXES, miningLevel))
+            .breakByTool(FabricToolTags.PICKAXES, miningLevel), it.ID)
     },
-    val rawOreBlockItemConfig: MaterialConfig<Item, BlockItem> = MaterialConfig("raw_${name}_block", Registrar.item, {
-        normalBlockLootTable(rawOreBlock, it)
-    }) { BlockItem(rawOreBlock, settings) },
-    val rawOreConfig: MaterialConfig<Item, Item> = MaterialConfig("raw_$name", Registrar.item, {
-        rawOreLootTable(ore.block, rawOre)
-        rawOreLootTable(normalAndDeepslateOre.deepslateBlock, rawOre)
-    }) { Item(settings) },
+    val rawOreBlockItemConfig: MaterialConfig<AbstractItem, IdentifiedBlockItem<IdentifiedBlock>> = MaterialConfig("raw_${ID.path}_block", Registrar.item) {
+        IdentifiedBlockItem(rawOreBlock, settings, it.ID).also { normalBlockLootTable(rawOreBlock, it) }
+    },
 
-    val ingotConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_ingot", Registrar.item) { Item(settings) },
-    val wireConfig: MaterialConfig<Item, WireItem> = MaterialConfig("${name}_wire", Registrar.item, {
+    val ingotConfig: MaterialConfig<AbstractItem, IdentifiedItem> = MaterialConfig("${ID.path}_ingot", Registrar.item) { IdentifiedItem(settings, it.ID) },
+    val wireConfig: MaterialConfig<AbstractItem, WireItem> = MaterialConfig("${ID.path}_wire", Registrar.item) { WireItem(settings, it.ID).also {
         wireRecipe(ingot, it)
-        Arcanology.packManager.apply { tags.add(itemTagID("${name}s"), it) }
-    }) { WireItem(settings) },
-    val dustConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_dust", Registrar.item, {
-        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
-    }) { Item(settings) },
-    val crystalConfig: MaterialConfig<Item, Item> = MaterialConfig("${name}_crystal", Registrar.item, {
-        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
-    }) { Item(settings) },
-    val batteryConfig: MaterialConfig<Item, BatteryItem> = MaterialConfig("${name}_battery", Registrar.item, {
-        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID(name.replace("battery", "batteries")), it)
-    }) { BatteryItem(settings, tier) },
-    val circuitConfig: MaterialConfig<Item, CircuitItem> = MaterialConfig("${name}_circuit", Registrar.item, {
-        circuitRecipe(insulator, wire, it)
-        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${name}s"), it)
+        Arcanology.packManager.apply { tags.add(itemTagID("${ID.path}s"), it) }
+    } },
+    val dustConfig: MaterialConfig<AbstractItem, IdentifiedItem> = MaterialConfig("${ID.path}_dust", Registrar.item) { IdentifiedItem(settings, it.ID).also {
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${ID.path}s"), it)
+    } },
+    val crystalConfig: MaterialConfig<AbstractItem, IdentifiedItem> = MaterialConfig("${ID.path}_crystal", Registrar.item) { IdentifiedItem(settings, it.ID).also {
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${ID.path}s"), it)
+    } },
+    val batteryConfig: MaterialConfig<AbstractItem, BatteryItem> = MaterialConfig("${ID.path}_battery", Registrar.item) { BatteryItem(settings, it.ID, tier).also {
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID(ID.path.replace("battery", "batteries")), it)
+    } },
+    val circuitConfig: MaterialConfig<AbstractItem, CircuitItem> = MaterialConfig("${ID.path}_circuit", Registrar.item) { CircuitItem(settings, it.ID).also {
+        circuitRecipe(Registry.ITEM.getId(insulator), Arcanology.idOf("${ID.path}_wire"), Arcanology.idOf("${ID.path}_circuit"))
+        Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("${ID.path}s"), it)
         Arcanology.packManager.tags.add(Arcanology.packManager.itemTagID("insulators"), insulator)
-    }) { CircuitItem(settings) },
+    } },
 
-    val magicCrystalConfig: MaterialConfig<Item, MagicCrystalItem> = MaterialConfig("${name}_magic_crystal", Registrar.item) { MagicCrystalItem(settings, element) },
-    val magicHeartConfig: MaterialConfig<Item, HeartItem> = MaterialConfig("${name}_heart", Registrar.item) { HeartItem(settings, element) },
+    val magicCrystalConfig: MaterialConfig<AbstractItem, MagicCrystalItem> = MaterialConfig("${ID.path}_magic_crystal", Registrar.item) { MagicCrystalItem(settings, it.ID, element) },
+    val magicHeartConfig: MaterialConfig<AbstractItem, HeartItem> = MaterialConfig("${ID.path}_heart", Registrar.item) { HeartItem(settings, it.ID) },
 
     /** Configuration for the pickaxe. Must be overridden if used. */
-    val pickaxeConfig: MaterialConfig<Item, PickaxeItem> = EmptyConfig("${name}_pickaxe", Registrar.item) {
-        pickaxeRecipe(it, ingot, toolRod)
-    },
+    val pickaxeConfig: MaterialConfig<AbstractItem, IdentifiedPickaxeItem> = EmptyConfig(Registrar.item),
 
-    val oreConfig: NormalOreConfig = NormalOreConfig("${name}_feature"),
-    val normalAndDeepslateOreConfig: NormalAndDeepslateOreConfig = NormalAndDeepslateOreConfig("${name}_feature"),
-    val variableOreConfig: VariableOreConfig = VariableOreConfig(("${name}_feature"))
+    val oreConfig: NormalOreConfig = NormalOreConfig("${ID.path}_feature"),
+    val normalAndDeepslateOreConfig: NormalAndDeepslateOreConfig = NormalAndDeepslateOreConfig("${ID.path}_feature"),
+    val variableOreConfig: VariableOreConfig = VariableOreConfig(("${ID.path}_feature"))
 ) {
     val settings: Item.Settings by ConditionedProperty(this::isTech, Registrar.item::magicSettings, Registrar.item::techSettings) { it.rarity(rarity) }
     val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
     val toolMaterial: ToolMaterialConfig.ToolMaterialImpl by toolMaterialConfig
     
-    val rawOre: Item by rawOreConfig
-    val rawOreBlock: Block by rawOreBlockConfig
-    val rawOreBlockItem: BlockItem by rawOreBlockItemConfig
+    val rawOre: IdentifiedItem by rawOreConfig
+    val rawOreBlock: IdentifiedBlock by rawOreBlockConfig
+    val rawOreBlockItem: IdentifiedBlockItem<IdentifiedBlock> by rawOreBlockItemConfig
     
-    val ingot: Item by ingotConfig
+    val ingot: IdentifiedItem by ingotConfig
     val wire: WireItem by wireConfig
-    val dust: Item by dustConfig
-    val crystal: Item by crystalConfig
+    val dust: IdentifiedItem by dustConfig
+    val crystal: IdentifiedItem by crystalConfig
     val battery: BatteryItem by batteryConfig
     val circuit: CircuitItem by circuitConfig
 
     val magicCrystal: MagicCrystalItem by magicCrystalConfig
     val magicHeart: HeartItem by magicHeartConfig
 
-    val pickaxe: PickaxeItem by pickaxeConfig
+    val pickaxe: IdentifiedPickaxeItem by pickaxeConfig
 
     val ore: Ore<OreFeatureConfig, OreFeature> by oreConfig
     val normalAndDeepslateOre: NormalAndDeepslateOre by normalAndDeepslateOreConfig

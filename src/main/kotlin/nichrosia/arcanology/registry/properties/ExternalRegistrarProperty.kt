@@ -7,23 +7,24 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+/** RegistrarProperty for pre-existing registrars. */
 open class ExternalRegistrarProperty<R, T : R>(
     val registrar: Registrar<R>,
     val ID: Identifier,
     /** Whether to call the create function using the specified [initializer]. */
     val createContent: Boolean = true,
-    val initializer: (String) -> T
+    val initializer: (Identifier) -> T
 ) : ReadOnlyProperty<Any?, T>, PropertyDelegateProvider<Any?, ExternalRegistrarProperty<R, T>> {
     var isCreated = false
     var isRegistered = false
 
-    constructor(registrar: Registrar<R>, ID: String, createContent: Boolean = true, initializer: (String) -> T) : this(registrar, Arcanology.idOf(ID), createContent, initializer)
+    constructor(registrar: Registrar<R>, ID: String, createContent: Boolean = true, initializer: (Identifier) -> T) : this(registrar, Arcanology.idOf(ID), createContent, initializer)
 
     @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         registrar.apply {
             if (!containsKey(ID) || !isCreated) {
-                val content = initializer(ID.path)
+                val content = initializer(ID)
 
                 if (createContent) create(ID, content)
             }
@@ -41,7 +42,7 @@ open class ExternalRegistrarProperty<R, T : R>(
     open fun create(thisRef: Registrar<R>) {
         thisRef.apply {
             if (!containsKey(ID)) {
-                val content = initializer(ID.path)
+                val content = initializer(ID)
 
                 if (createContent) create(ID, content)
             }

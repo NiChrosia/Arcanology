@@ -5,19 +5,25 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.item.PickaxeItem
-import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import nichrosia.arcanology.type.id.item.IdentifiedPickaxeItem
+import nichrosia.arcanology.type.data.config.tool.ToolMaterialConfig
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.mana
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.runes
 import nichrosia.arcanology.type.item.magic.RuneItem
 import nichrosia.arcanology.util.clamp
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class RunicPickaxeItem(material: ToolMaterial, attackDamage: Int, attackSpeed: Float, settings: Settings) : PickaxeItem(material, attackDamage, attackSpeed, settings),
-    RuneItem {
+open class RunicPickaxeItem(
+    material: ToolMaterialConfig.ToolMaterialImpl,
+    additionalAttackDamage: Int,
+    attackSpeed: Float,
+    settings: Settings,
+    ID: Identifier
+) : IdentifiedPickaxeItem(material, additionalAttackDamage, attackSpeed, settings, ID), RuneItem {
     override fun postMine(
         stack: ItemStack,
         world: World,
@@ -48,7 +54,7 @@ open class RunicPickaxeItem(material: ToolMaterial, attackDamage: Int, attackSpe
         tooltip: MutableList<Text>,
         context: TooltipContext
     ) {
-        super<PickaxeItem>.appendTooltip(stack, world, tooltip, context)
+        super<IdentifiedPickaxeItem>.appendTooltip(stack, world, tooltip, context)
         super<RuneItem>.appendTooltip(stack.runes, tooltip, context)
     }
 

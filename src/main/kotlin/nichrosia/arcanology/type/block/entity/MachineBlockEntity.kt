@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtInt
 import net.minecraft.nbt.NbtLong
-import net.minecraft.recipe.RecipeType
 import net.minecraft.screen.NamedScreenHandlerFactory
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
@@ -34,6 +33,7 @@ import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.nbt.NBTEditor
 import nichrosia.arcanology.type.property.MutableProperty
 import nichrosia.arcanology.type.recipe.MachineRecipe
+import nichrosia.arcanology.type.storage.fluid.SimpleFluidStorage
 import nichrosia.arcanology.util.asNullable
 import nichrosia.arcanology.util.setToList
 import nichrosia.arcanology.util.toDefaultedList
@@ -41,7 +41,7 @@ import team.reborn.energy.api.base.SimpleEnergyStorage
 
 /** A machine block entity with unified abstract methods for simplified usage. */
 @Suppress("UnstableApiUsage", "DEPRECATION", "UNCHECKED_CAST")
-abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, R : MachineRecipe<T, *>, T : MachineBlockEntity<B, S, R, T>>(
+abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, R : MachineRecipe<T, R>, T : MachineBlockEntity<B, S, R, T>>(
     type: BlockEntityType<*>,
     pos: BlockPos,
     state: BlockState,
@@ -55,9 +55,10 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     override val inputSlots: IntArray = inputSlots.toIntArray()
     override val items: Array<ItemStack> = Array(inputSlots.size + outputSlots.size) { ItemStack.EMPTY }
 
-    abstract val recipeType: RecipeType<R>
+    abstract val recipeType: MachineRecipe.Type<T, R>
     
     open val energyStorage = BlockEntityEnergyStorage(block.tier)
+    open val fluidStorage = SimpleFluidStorage()
     open val outputDirections = Direction.values()
     open val maxProgress = 1000
     open val maxSoundProgress = Registrar.sound.machinery.length
@@ -126,7 +127,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
 
             val transaction = Transaction.openOuter()
 
-            energyStorage.extract(block.tier.baseUsagePerTick, transaction)
+            energyStorage.extract(block.tier.baseConsumptionPerTick, transaction)
             transaction.commit()
 
             markDirty()
@@ -138,7 +139,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     /** Whether the machine can increase the progression value & consume power. */
     open fun canProgress(world: World): Boolean {
         return inputSlots.any { !items[it].isEmpty } &&
-            energyStorage.amount >= block.tier.baseUsagePerTick &&
+            energyStorage.amount >= block.tier.baseConsumptionPerTick &&
             world.recipeManager.getFirstMatch(recipeType, this as T, world).isPresent
     }
 
@@ -184,7 +185,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
         }
     }
 
-    open inner class BlockEntityEnergyStorage(tier: EnergyTier) : SimpleEnergyStorage(tier.storage, tier.maxInput, tier.maxOutput) {
+    open inner class BlockEntityEnergyStorage(tier: EnergyTier) : SimpleEnergyStorage(tier.storage, tier.maxInputPerTick, tier.maxOutputPerTick) {
         override fun onFinalCommit() {
             markDirty()
         }

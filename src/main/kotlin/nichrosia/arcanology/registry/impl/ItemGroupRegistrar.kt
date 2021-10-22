@@ -25,8 +25,8 @@ open class ItemGroupRegistrar : BasicRegistrar<ItemGroup>() {
         return registered
     }
 
-    fun create(name: String, icon: () -> ItemStack): ItemGroup {
-        return super.create(name, FabricItemGroupBuilder.create(Arcanology.idOf(name))
+    fun create(ID: Identifier, icon: () -> ItemStack): ItemGroup {
+        return super.create(ID, FabricItemGroupBuilder.create(ID)
             .icon(icon)
             .build())
     }

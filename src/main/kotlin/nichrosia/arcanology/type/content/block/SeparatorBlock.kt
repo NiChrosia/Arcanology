@@ -1,5 +1,6 @@
 package nichrosia.arcanology.type.content.block
 
+import net.minecraft.util.Identifier
 import nichrosia.arcanology.registry.Registrar
 import nichrosia.arcanology.type.block.MachineBlock
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
@@ -9,10 +10,12 @@ import nichrosia.arcanology.type.energy.EnergyTier
 @Suppress("LeakingThis")
 open class SeparatorBlock(
     settings: Settings,
-    tier: EnergyTier
+    tier: EnergyTier,
+    ID: Identifier
 ) : MachineBlock<SeparatorBlock, SeparatorGUIDescription, SeparatorBlockEntity>(
     settings,
     ::SeparatorBlockEntity,
     { Registrar.blockEntity.separator },
-    tier
+    tier,
+    ID
 )

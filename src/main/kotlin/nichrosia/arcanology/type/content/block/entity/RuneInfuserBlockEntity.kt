@@ -183,7 +183,7 @@ open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val
         super.tick()
 
         if (!world.isClient) {
-            world.recipeManager.getFirstMatch(RuneRecipe.Companion.Type, this, world).asNullable?.let {
+            world.recipeManager.getFirstMatch(RuneRecipe.Type, this, world).asNullable?.let {
                 recipeValid = true.asBinaryInt
 
                 if (RuneType.types.any { it.id == runeID }) {
