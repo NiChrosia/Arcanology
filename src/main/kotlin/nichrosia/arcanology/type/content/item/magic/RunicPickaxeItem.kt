@@ -11,8 +11,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.mana
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.runes
-import nichrosia.arcanology.type.item.magic.RuneItem
-import nichrosia.arcanology.type.item.tool.BasicToolMaterial
+import nichrosia.arcanology.type.content.item.tool.BasicToolMaterial
 import nichrosia.arcanology.util.clamp
 
 @Suppress("MemberVisibilityCanBePrivate")

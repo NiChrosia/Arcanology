@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.item.tool
+package nichrosia.arcanology.type.content.item.tool
 
 import net.minecraft.item.ToolMaterial
 import net.minecraft.recipe.Ingredient

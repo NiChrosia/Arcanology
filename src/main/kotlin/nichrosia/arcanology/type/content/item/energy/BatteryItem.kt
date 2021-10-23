@@ -2,9 +2,7 @@ package nichrosia.arcanology.type.content.item.energy
 
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.Identifier
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.type.item.energy.EnergyItem
 import team.reborn.energy.api.base.SimpleBatteryItem
 
 /** The base class for all batteries.

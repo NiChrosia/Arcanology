@@ -4,8 +4,8 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.arcanology.type.rune.RuneType
-import nichrosia.arcanology.type.rune.impl.ManaboundRuneType
+import nichrosia.arcanology.type.content.rune.RuneType
+import nichrosia.arcanology.type.content.rune.impl.ManaboundRuneType
 import nichrosia.common.identity.ID
 import nichrosia.registry.BasicRegistrar
 import nichrosia.registry.Registrar

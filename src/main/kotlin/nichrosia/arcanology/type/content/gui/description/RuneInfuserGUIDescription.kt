@@ -20,7 +20,7 @@ import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.content.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.math.Vec2
-import nichrosia.arcanology.type.rune.RuneType
+import nichrosia.arcanology.type.content.rune.RuneType
 import nichrosia.arcanology.util.add
 import nichrosia.arcanology.util.asBoolean
 import nichrosia.arcanology.util.hexagon

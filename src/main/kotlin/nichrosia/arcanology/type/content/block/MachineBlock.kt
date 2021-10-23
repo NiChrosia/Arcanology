@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage", "deprecation")
 
-package nichrosia.arcanology.type.block
+package nichrosia.arcanology.type.content.block
 
 import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.blockstate.JState
@@ -28,7 +28,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.type.block.entity.MachineBlockEntity
+import nichrosia.arcanology.type.content.block.entity.MachineBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.util.variables

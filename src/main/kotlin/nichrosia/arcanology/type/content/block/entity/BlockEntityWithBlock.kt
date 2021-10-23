@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block.entity
+package nichrosia.arcanology.type.content.block.entity
 
 import net.minecraft.block.Block
 

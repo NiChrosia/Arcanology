@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.item.magic
+package nichrosia.arcanology.type.content.item.magic
 
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.text.LiteralText

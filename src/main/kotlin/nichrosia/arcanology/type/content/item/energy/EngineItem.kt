@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.item.energy
+package nichrosia.arcanology.type.content.item.energy
 
 import kotlin.math.pow
 import kotlin.math.roundToInt

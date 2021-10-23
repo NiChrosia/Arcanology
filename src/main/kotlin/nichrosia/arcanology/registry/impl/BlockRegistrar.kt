@@ -9,8 +9,8 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.type.block.ModeledBlock
-import nichrosia.arcanology.type.block.StatedBlock
+import nichrosia.arcanology.type.content.block.ModeledBlock
+import nichrosia.arcanology.type.content.block.StatedBlock
 import nichrosia.arcanology.type.content.block.AltarBlock
 import nichrosia.arcanology.type.content.block.ReactiveBlock
 import nichrosia.arcanology.type.content.block.RuneInfuserBlock

@@ -17,9 +17,8 @@ import nichrosia.arcanology.util.formatted
 /** @author GabrielOlvH */
 @Suppress("MemberVisibilityCanBePrivate")
 class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
-    override fun getHeight(): Int = 18
-
-    override fun getWidth(textRenderer: TextRenderer): Int = 18
+    override fun getHeight() = 18
+    override fun getWidth(textRenderer: TextRenderer) = 18
 
     override fun drawItems(
         textRenderer: TextRenderer,

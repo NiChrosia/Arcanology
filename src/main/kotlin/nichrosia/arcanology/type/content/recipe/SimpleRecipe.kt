@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.recipe
+package nichrosia.arcanology.type.content.recipe
 
 import com.google.gson.JsonObject
 import net.minecraft.inventory.Inventory

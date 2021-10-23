@@ -6,7 +6,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
-import nichrosia.arcanology.type.recipe.SimpleRecipe
 import nichrosia.arcanology.util.component6
 import kotlin.reflect.KProperty0
 

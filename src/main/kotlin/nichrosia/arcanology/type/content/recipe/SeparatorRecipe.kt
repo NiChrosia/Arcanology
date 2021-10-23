@@ -6,7 +6,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
-import nichrosia.arcanology.type.recipe.MachineRecipe
 import nichrosia.arcanology.util.capitalize
 
 open class SeparatorRecipe(input: ItemStack, result: ItemStack) : MachineRecipe<SeparatorBlockEntity, SeparatorRecipe>(input, result, Companion::types) {

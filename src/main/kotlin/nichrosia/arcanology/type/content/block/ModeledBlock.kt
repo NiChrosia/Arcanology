@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block
+package nichrosia.arcanology.type.content.block
 
 import net.devtech.arrp.json.models.JModel
 import net.minecraft.util.Identifier

@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block
+package nichrosia.arcanology.type.content.block
 
 import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.blockstate.JState

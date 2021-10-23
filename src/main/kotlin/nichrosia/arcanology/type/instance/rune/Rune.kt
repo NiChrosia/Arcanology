@@ -2,7 +2,7 @@ package nichrosia.arcanology.type.instance.rune
 
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.arcanology.type.rune.RuneType
+import nichrosia.arcanology.type.content.rune.RuneType
 import nichrosia.registry.Registrar
 
 @Suppress("MemberVisibilityCanBePrivate")

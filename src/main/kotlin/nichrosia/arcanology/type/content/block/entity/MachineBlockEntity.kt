@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package nichrosia.arcanology.type.block.entity
+package nichrosia.arcanology.type.content.block.entity
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
@@ -27,12 +27,12 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.registry.impl.SoundRegistrar.Companion.length
-import nichrosia.arcanology.type.block.MachineBlock
-import nichrosia.arcanology.type.block.entity.inventory.AInventory
+import nichrosia.arcanology.type.content.block.MachineBlock
+import nichrosia.arcanology.type.content.block.entity.inventory.AInventory
+import nichrosia.arcanology.type.content.recipe.MachineRecipe
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.nbt.NBTEditor
 import nichrosia.arcanology.type.property.MutableProperty
-import nichrosia.arcanology.type.recipe.MachineRecipe
 import nichrosia.arcanology.type.storage.fluid.SimpleFluidStorage
 import nichrosia.arcanology.util.asNullable
 import nichrosia.arcanology.util.setToList
@@ -52,7 +52,8 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     val guiDescriptionConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
     val inputDirections: Array<Direction> = Direction.values(),
     val screenName: Text = TranslatableText(block.translationKey),
-) : BlockEntity(type, pos, state), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, BlockEntityWithBlock<B> {
+) : BlockEntity(type, pos, state), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder,
+    BlockEntityWithBlock<B> {
     override val inputSlots: IntArray = inputSlots.toIntArray()
     override val items: Array<ItemStack> = Array(inputSlots.size + outputSlots.size) { ItemStack.EMPTY }
 
@@ -76,7 +77,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     )
 
     open val nbtEditors = arrayOf(
-        NBTEditor("total_energy", energyStorage::amount, { it.longValue() }, NbtLong::of),
+        NBTEditor("energy", energyStorage::amount, { it.longValue() }, NbtLong::of),
         NBTEditor("progress", ::progress, { it.intValue() }, NbtInt::of)
     )
 

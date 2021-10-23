@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.rune
+package nichrosia.arcanology.type.content.rune
 
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.MathHelper

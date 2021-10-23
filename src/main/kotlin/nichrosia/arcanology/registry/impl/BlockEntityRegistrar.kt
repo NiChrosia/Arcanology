@@ -8,7 +8,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
+import nichrosia.arcanology.type.content.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.content.block.entity.ReactiveBlockEntity
 import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity

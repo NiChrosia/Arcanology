@@ -1,8 +1,8 @@
-package nichrosia.arcanology.type.rune.impl
+package nichrosia.arcanology.type.content.rune.impl
 
 import net.minecraft.item.ItemStack
 import nichrosia.arcanology.type.instance.rune.Rune.Companion.mana
-import nichrosia.arcanology.type.rune.RuneType
+import nichrosia.arcanology.type.content.rune.RuneType
 import kotlin.math.roundToInt
 
 open class ManaboundRuneType(name: String = "manabound") : RuneType(name) {

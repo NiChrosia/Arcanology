@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.block.entity
+package nichrosia.arcanology.type.content.block.entity
 
 interface Scheduler {
     var schedule: MutableList<Task>

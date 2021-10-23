@@ -15,7 +15,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.arcanology.type.block.ModeledBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.util.variables
