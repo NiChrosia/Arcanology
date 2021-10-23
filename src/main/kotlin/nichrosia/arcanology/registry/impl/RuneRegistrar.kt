@@ -1,24 +1,23 @@
 package nichrosia.arcanology.registry.impl
 
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.registry.BasicRegistrar
-import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.ExternalRegistrarProperty
-import nichrosia.arcanology.registry.properties.RegistrarProperty
-import nichrosia.arcanology.type.id.item.IdentifiedItem
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.rune.RuneType
 import nichrosia.arcanology.type.rune.impl.ManaboundRuneType
+import nichrosia.common.identity.ID
+import nichrosia.registry.BasicRegistrar
+import nichrosia.registry.Registrar
 
 open class RuneRegistrar : BasicRegistrar<RuneType>() {
-    val manabound by RegistrarProperty(Arcanology.idOf("manabound")) { ManaboundRuneType() }
+    val manabound by memberOf(ID(Arcanology.modID, "manabound")) { ManaboundRuneType() }
 
     @Suppress("UNUSED_EXPRESSION")
-    override fun <E : RuneType> register(key: Identifier, value: E): E {
-        val registered = super.register(key, value)
+    override fun <E : RuneType> register(location: ID, value: E): E {
+        val registered = super.register(location, value)
 
-        val runeItem by ExternalRegistrarProperty(Registrar.item, "rune_${key.path}") { IdentifiedItem(Registrar.item.magicSettings, it).apply {
+        val runeItem by Registrar.arcanology.item.memberOf(ID(Arcanology.modID, "rune_${location.path}")) { Item(Registrar.arcanology.item.magicSettings).apply {
             value.item = ItemStack(this)
         }}
 

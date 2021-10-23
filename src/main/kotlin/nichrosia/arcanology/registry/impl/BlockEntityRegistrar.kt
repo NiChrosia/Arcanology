@@ -5,33 +5,29 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.RegistryRegistrar
-import nichrosia.arcanology.registry.lang.LanguageGenerator
-import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistrarProperty
+import nichrosia.arcanology.Arcanology
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
 import nichrosia.arcanology.type.content.block.entity.ReactiveBlockEntity
 import nichrosia.arcanology.type.content.block.entity.RuneInfuserBlockEntity
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
-import nichrosia.arcanology.type.id.block.AbstractBlock
+import nichrosia.common.identity.ID
+import nichrosia.registry.BasicRegistrar
+import nichrosia.registry.Registrar
 
-open class BlockEntityRegistrar : RegistryRegistrar<BlockEntityType<*>>(Registry.BLOCK_ENTITY_TYPE, "block_entity") {
-    override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
+open class BlockEntityRegistrar : BasicRegistrar<BlockEntityType<*>>() {
+    //val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val reactiveBlock by RegistrarProperty("reactive_block_entity") { create(it, ::ReactiveBlockEntity, Registrar.block.reactiveBlock) }
-    val altar by RegistrarProperty("altar_block_entity") { create(it, ::AltarBlockEntity, Registrar.block.altar) }
-    val separator by RegistrarProperty("separator_block_entity") { create(it, ::SeparatorBlockEntity, Registrar.block.separator) }
-    val runeInfuser by RegistrarProperty("rune_infuser_block_entity") { create(it, ::RuneInfuserBlockEntity, Registrar.block.runeInfuser) }
+    val reactiveBlock by memberOf(ID(Arcanology.modID, "reactive_block_entity")) { create(::ReactiveBlockEntity, Registrar.arcanology.block.reactiveBlock) }
+    val altar by memberOf(ID(Arcanology.modID, "altar_block_entity")) { create(::AltarBlockEntity, Registrar.arcanology.block.altar) }
+    val separator by memberOf(ID(Arcanology.modID, "separator_block_entity")) { create(::SeparatorBlockEntity, Registrar.arcanology.block.separator) }
+    val runeInfuser by memberOf(ID(Arcanology.modID, "rune_infuser_block_entity")) { create(::RuneInfuserBlockEntity, Registrar.arcanology.block.runeInfuser) }
 
-    open fun <B, E> create(ID: Identifier, blockEntity: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E>
-    where B : AbstractBlock, B : BlockWithEntity, E : BlockEntity, E : BlockEntityWithBlock<B> {
-        return super.create(ID, FabricBlockEntityTypeBuilder.create({ pos: BlockPos, state: BlockState ->
-            blockEntity(pos, state, block)
-        }, block).build(null))
+    open fun <B, E> create(entityFactory: (BlockPos, BlockState, B) -> E, block: B): BlockEntityType<E> where B : BlockWithEntity, E : BlockEntity, E : BlockEntityWithBlock<B> {
+        return FabricBlockEntityTypeBuilder.create({ pos, state ->
+            entityFactory(pos, state, block)
+        }, block).build(null)
     }
 }

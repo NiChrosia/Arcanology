@@ -4,9 +4,10 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.gui.description.MachineGUIDescription
 import nichrosia.arcanology.type.gui.widget.WProcessBar
+import nichrosia.registry.Registrar
 
 @Suppress("MemberVisibilityCanBePrivate", "JoinDeclarationAndAssignment", "LeakingThis")
 open class SeparatorGUIDescription(
@@ -14,7 +15,7 @@ open class SeparatorGUIDescription(
     playerInventory: PlayerInventory,
     context: ScreenHandlerContext,
 ) : MachineGUIDescription(
-    Registrar.guiDescription.separator,
+    Registrar.arcanology.guiDescription.separator,
     syncId,
     playerInventory,
     context,

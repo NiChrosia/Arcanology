@@ -8,8 +8,8 @@ import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Vec3f
-import nichrosia.arcanology.util.minecraftClient
 import nichrosia.arcanology.type.content.block.entity.AltarBlockEntity
+import nichrosia.arcanology.util.minecraftClient
 
 @Suppress("MemberVisibilityCanBePrivate", "unused", "unused_parameter")
 open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context) : BlockEntityRenderer<AltarBlockEntity> {
@@ -30,7 +30,7 @@ open class AltarBlockEntityRenderer(context: BlockEntityRendererFactory.Context)
 
             val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
             minecraftClient.itemRenderer.renderItem(
-                entity.let { if (it.heartInitialized) ItemStack(it.heart) else ItemStack.EMPTY },
+                ItemStack(entity.heart),
                 ModelTransformation.Mode.GROUND,
                 lightAbove,
                 overlay,

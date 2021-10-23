@@ -2,13 +2,13 @@ package nichrosia.arcanology.type.content.item
 
 import net.devtech.arrp.json.models.JModel
 import net.minecraft.item.BlockItem
-import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
+import nichrosia.common.identity.ID
 
 interface ModeledItem {
-    fun generateModel(ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
+    fun generateModel(ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
         packManager.main.addModel(
             JModel.model("item/generated")
                 .textures(JModel.textures().layer0("${Arcanology.modID}:item/${ID.path}")),
@@ -17,7 +17,7 @@ interface ModeledItem {
     }
 
     companion object {
-        fun generateDefaultModel(ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
+        fun generateDefaultModel(ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
             packManager.main.addModel(
                 JModel.model("item/generated")
                     .textures(JModel.textures().layer0("${Arcanology.modID}:item/${ID.path}")),
@@ -25,7 +25,7 @@ interface ModeledItem {
             )
         }
 
-        fun generateBlockItemModel(item: BlockItem, ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
+        fun generateBlockItemModel(item: BlockItem, ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
             val blockID = Registry.BLOCK.getId(item.block)
 
             packManager.main.addModel(
@@ -34,7 +34,7 @@ interface ModeledItem {
             )
         }
 
-        fun generateHandheldModel(ID: Identifier, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
+        fun generateHandheldModel(ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager) {
             packManager.main.addModel(
                 JModel.model("item/handheld")
                     .textures(JModel.textures().layer0("${Arcanology.modID}:item/${ID.path}")),

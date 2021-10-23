@@ -4,71 +4,46 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.MiningToolItem
-import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.registry.BasicRegistrar
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistrarProperty
 import nichrosia.arcanology.type.content.item.ModeledItem
 import nichrosia.arcanology.type.content.item.guide.book.GuideBookItem
-import nichrosia.arcanology.type.id.item.AbstractItem
-import nichrosia.arcanology.type.id.item.IdentifiedBlockItem
-import nichrosia.arcanology.type.id.item.IdentifiedItem
+import nichrosia.common.identity.ID
+import nichrosia.registry.BasicRegistrar
+import nichrosia.registry.Registrar
 
-open class ItemRegistrar : BasicRegistrar<AbstractItem>() {
-    open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
+open class ItemRegistrar : BasicRegistrar<Item>() {
+    val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val magicSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.magic)
-    val techSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.itemGroup.tech)
+    val magicSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.arcanology.itemGroup.magic)
+    val techSettings: FabricItemSettings get() = FabricItemSettings().group(Registrar.arcanology.itemGroup.tech)
 
-    val altar by RegistrarProperty("altar") { IdentifiedBlockItem(Registrar.block.altar, magicSettings.rarity(Rarity.EPIC), it) }
+    val altar by memberOf(ID(Arcanology.modID, "altar")) { BlockItem(Registrar.arcanology.block.altar, magicSettings.rarity(Rarity.EPIC)) }
 
-    val separator by RegistrarProperty("separator") { IdentifiedBlockItem(Registrar.block.separator, techSettings, it) }
+    val separator by memberOf(ID(Arcanology.modID, "separator")) { BlockItem(Registrar.arcanology.block.separator, techSettings) }
 
-    val runeInfuser by RegistrarProperty("rune_infuser") { IdentifiedBlockItem(Registrar.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON), it) }
+    val runeInfuser by memberOf(ID(Arcanology.modID, "rune_infuser")) { BlockItem(Registrar.arcanology.block.runeInfuser, magicSettings.rarity(Rarity.UNCOMMON)) }
 
-    val wireCutter by RegistrarProperty("wire_cutter") { IdentifiedItem(techSettings, it) }
+    val wireCutter by memberOf(ID(Arcanology.modID, "wire_cutter")) { Item(techSettings) }
 
-    val arcaneAlmanac by RegistrarProperty("arcane_almanac") { GuideBookItem(magicSettings, it, "arcane_almanac") }
-    val componentCompendium by RegistrarProperty("component_compendium") { GuideBookItem(techSettings, it, "component_compendium") }
+    val arcaneAlmanac by memberOf(ID(Arcanology.modID, "arcane_almanac")) { GuideBookItem(magicSettings, "arcane_almanac") }
+    val componentCompendium by memberOf(ID(Arcanology.modID, "component_compendium")) { GuideBookItem(techSettings, "component_compendium") }
 
-    open fun <E> register(key: Identifier, value: E): E where E : AbstractItem, E : Item {
-        val registered = super.register(key, value)
+    override fun <E : Item> register(location: ID, value: E): E {
+        return super.register(location, value).also {
+            Registry.register(Registry.ITEM, location.asIdentifier, it)
+            Arcanology.packManager.englishLang.lang["item.${location.split(".")}"] = languageGenerator.generateLang(location)
 
-        Registry.register(Registry.ITEM, key, registered)
-        Arcanology.packManager.englishLang.lang["item.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
-
-        when(registered) {
-            is BlockItem -> ModeledItem.generateBlockItemModel(registered, key)
-            is MiningToolItem -> ModeledItem.generateHandheldModel(key)
-            is ModeledItem -> registered.generateModel(key)
-            else -> ModeledItem.generateDefaultModel(key)
-        }
-
-        return registered
-    }
-
-    open fun <E> create(key: Identifier, value: E): E where E : AbstractItem, E : Item {
-        return super.create(key, value)
-    }
-
-    override fun <E : AbstractItem> register(key: Identifier, value: E): E {
-        if (value !is Item) {
-            throw IllegalArgumentException("Cannot register an AbstractItem that does not extend item.")
-        } else {
-            return register(key, value)
-        }
-    }
-
-    override fun <E : AbstractItem> create(key: Identifier, value: E): E {
-        if (value !is Item) {
-            throw IllegalArgumentException("Cannot create an AbstractItem that does not extend item.")
-        } else {
-            return create(key, value)
+            when(it) {
+                is BlockItem -> ModeledItem.generateBlockItemModel(it, location)
+                is MiningToolItem -> ModeledItem.generateHandheldModel(location)
+                is ModeledItem -> it.generateModel(location)
+                else -> ModeledItem.generateDefaultModel(location)
+            }
         }
     }
 }

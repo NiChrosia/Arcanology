@@ -4,17 +4,25 @@ import net.minecraft.SharedConstants
 import net.minecraft.client.sound.OggAudioStream
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.registry.RegistryRegistrar
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.registry.properties.RegistrarProperty
+import nichrosia.common.identity.ID
+import nichrosia.registry.BasicRegistrar
 import java.io.File
 import kotlin.math.roundToLong
 
-open class SoundRegistrar : RegistryRegistrar<SoundEvent>(Registry.SOUND_EVENT, "subtitles") {
-    override val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
+open class SoundRegistrar : BasicRegistrar<SoundEvent>() {
+    open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val machinery by RegistrarProperty("machinery") { SoundEvent(it) }
+    val machinery by memberOf(ID(Arcanology.modID, "machinery")) { SoundEvent(it.asIdentifier) }
+
+    override fun <E : SoundEvent> register(location: ID, value: E): E {
+        return super.register(location, value).also {
+            Registry.register(Registry.SOUND_EVENT, location.asIdentifier, value)
+            Arcanology.packManager.englishLang.lang["subtitles.${location.split(".")}"] = languageGenerator.generateLang(location)
+        }
+    }
 
     companion object {
         val SoundEvent.length: Long

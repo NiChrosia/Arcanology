@@ -6,10 +6,7 @@ import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.blockstate.JState
 import net.devtech.arrp.json.models.JModel
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
-import net.minecraft.block.Block
-import net.minecraft.block.BlockRenderType
-import net.minecraft.block.BlockState
-import net.minecraft.block.InventoryProvider
+import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
@@ -34,7 +31,6 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.block.entity.MachineBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.type.id.block.IdentifiedBlockWithEntity
 import nichrosia.arcanology.util.variables
 import team.reborn.energy.api.EnergyStorage
 
@@ -43,9 +39,8 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     settings: Settings,
     val entityConstructor: (BlockPos, BlockState, B) -> E,
     val type: () -> BlockEntityType<E>,
-    val tier: EnergyTier,
-    ID: Identifier
-) : IdentifiedBlockWithEntity(settings, ID), InventoryProvider, ModeledBlock, StatedBlock {
+    val tier: EnergyTier
+) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, StatedBlock {
     init {
         defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
 

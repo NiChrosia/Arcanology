@@ -7,15 +7,17 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.Text
-import nichrosia.arcanology.type.content.gui.SeparatorGUI
-import nichrosia.arcanology.type.content.gui.RuneInfuserGUI
+import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.EmptyRegistrar
-import nichrosia.arcanology.registry.Registrar
-import nichrosia.arcanology.registry.properties.RegistrarProperty
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
+import nichrosia.arcanology.type.content.gui.RuneInfuserGUI
+import nichrosia.arcanology.type.content.gui.SeparatorGUI
+import nichrosia.common.identity.ID
+import nichrosia.registry.Registrar
 
 open class ScreenRegistrar : EmptyRegistrar() {
-    val pulverizer by RegistrarProperty("pulverizer") { create(Registrar.guiDescription.separator, ::SeparatorGUI) }
-    val runeInfuser by RegistrarProperty("rune_infuser") { create(Registrar.guiDescription.runeInfuser, ::RuneInfuserGUI) }
+    val pulverizer by memberOf(ID(Arcanology.modID, "pulverizer")) { create(Registrar.arcanology.guiDescription.separator, ::SeparatorGUI) }
+    val runeInfuser by memberOf(ID(Arcanology.modID, "rune_infuser")) { create(Registrar.arcanology.guiDescription.runeInfuser, ::RuneInfuserGUI) }
 
     fun <T : ScreenHandler, S> create(type: ScreenHandlerType<T>, factory: (T, PlayerInventory, Text) -> S) where S : Screen, S : ScreenHandlerProvider<T> {
         ScreenRegistry.register(type, factory)

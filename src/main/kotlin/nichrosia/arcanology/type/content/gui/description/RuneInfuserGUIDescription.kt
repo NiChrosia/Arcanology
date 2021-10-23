@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.content.item.magic.MagicCrystalItem
 import nichrosia.arcanology.type.element.Element
 import nichrosia.arcanology.type.math.Vec2
@@ -25,6 +25,7 @@ import nichrosia.arcanology.util.add
 import nichrosia.arcanology.util.asBoolean
 import nichrosia.arcanology.util.hexagon
 import nichrosia.arcanology.util.minecraftClient
+import nichrosia.registry.Registrar
 
 @Suppress("LeakingThis", "MemberVisibilityCanBePrivate")
 open class RuneInfuserGUIDescription(
@@ -33,7 +34,7 @@ open class RuneInfuserGUIDescription(
     val context: ScreenHandlerContext,
     inventorySize: Int = 7
 ) : SyncedGuiDescription(
-    Registrar.guiDescription.runeInfuser,
+    Registrar.arcanology.guiDescription.runeInfuser,
     syncId,
     playerInventory,
     getBlockInventory(context, inventorySize),

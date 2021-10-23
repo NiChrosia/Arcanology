@@ -1,8 +1,9 @@
 package nichrosia.arcanology.type.instance.rune
 
 import net.minecraft.item.ItemStack
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.rune.RuneType
+import nichrosia.registry.Registrar
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class Rune(val type: RuneType, val level: Int) {
@@ -20,7 +21,7 @@ open class Rune(val type: RuneType, val level: Int) {
                 }
 
                 if (empty) {
-                    val runeArray = arrayOf(Rune(Registrar.rune.manabound, 1))
+                    val runeArray = arrayOf(Rune(Registrar.arcanology.rune.manabound, 1))
                     runes = runeArray
 
                     return runeArray

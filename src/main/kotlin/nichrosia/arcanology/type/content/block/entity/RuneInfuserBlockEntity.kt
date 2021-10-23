@@ -22,7 +22,7 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.block.entity.BlockEntityWithBlock
 import nichrosia.arcanology.type.block.entity.Scheduler
 import nichrosia.arcanology.type.block.entity.inventory.AInventory
@@ -32,11 +32,12 @@ import nichrosia.arcanology.type.content.recipe.RuneRecipe
 import nichrosia.arcanology.type.delegates.block.entity.inventory.ItemSlot
 import nichrosia.arcanology.type.rune.RuneType
 import nichrosia.arcanology.util.*
+import nichrosia.registry.Registrar
 import kotlin.reflect.KMutableProperty0
 
 @Suppress("MemberVisibilityCanBePrivate", "NestedLambdaShadowedImplicitParameter")
 open class RuneInfuserBlockEntity(pos: BlockPos, state: BlockState, override val block: RuneInfuserBlock) :
-    LootableContainerBlockEntity(Registrar.blockEntity.runeInfuser, pos, state),
+    LootableContainerBlockEntity(Registrar.arcanology.blockEntity.runeInfuser, pos, state),
     NamedScreenHandlerFactory,
     PropertyDelegateHolder,
     BlockEntityClientSerializable,

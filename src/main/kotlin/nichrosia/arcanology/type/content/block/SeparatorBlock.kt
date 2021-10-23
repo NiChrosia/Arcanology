@@ -1,21 +1,19 @@
 package nichrosia.arcanology.type.content.block
 
-import net.minecraft.util.Identifier
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.type.block.MachineBlock
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
 import nichrosia.arcanology.type.content.gui.description.SeparatorGUIDescription
 import nichrosia.arcanology.type.energy.EnergyTier
+import nichrosia.registry.Registrar
 
 @Suppress("LeakingThis")
 open class SeparatorBlock(
     settings: Settings,
-    tier: EnergyTier,
-    ID: Identifier
+    tier: EnergyTier
 ) : MachineBlock<SeparatorBlock, SeparatorGUIDescription, SeparatorBlockEntity>(
     settings,
     ::SeparatorBlockEntity,
-    { Registrar.blockEntity.separator },
-    tier,
-    ID
+    { Registrar.arcanology.blockEntity.separator },
+    tier
 )

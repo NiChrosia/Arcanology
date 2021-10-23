@@ -25,7 +25,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import nichrosia.arcanology.registry.Registrar
+import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
 import nichrosia.arcanology.registry.impl.SoundRegistrar.Companion.length
 import nichrosia.arcanology.type.block.MachineBlock
 import nichrosia.arcanology.type.block.entity.inventory.AInventory
@@ -37,6 +37,7 @@ import nichrosia.arcanology.type.storage.fluid.SimpleFluidStorage
 import nichrosia.arcanology.util.asNullable
 import nichrosia.arcanology.util.setToList
 import nichrosia.arcanology.util.toDefaultedList
+import nichrosia.registry.Registrar
 import team.reborn.energy.api.base.SimpleEnergyStorage
 
 /** A machine block entity with unified abstract methods for simplified usage. */
@@ -59,9 +60,20 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     
     open val energyStorage = BlockEntityEnergyStorage(block.tier)
     open val fluidStorage = SimpleFluidStorage()
+
+    open val sound = Registrar.arcanology.sound.machinery
+
     open val outputDirections = Direction.values()
+
     open val maxProgress = 1000
-    open val maxSoundProgress = Registrar.sound.machinery.length
+    open val maxSoundProgress = sound.length
+
+    open val delegate = KPropertyDelegate(
+        MutableProperty(::progress, { it }, { it }),
+        MutableProperty(::maxProgress, { it }, { it }),
+        MutableProperty(energyStorage::amount, { it.toInt() }, { it.toLong() }),
+        MutableProperty(block.tier::storage, { it.toInt() }, { it.toLong() })
+    )
 
     open val nbtEditors = arrayOf(
         NBTEditor("total_energy", energyStorage::amount, { it.longValue() }, NbtLong::of),
@@ -70,13 +82,6 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
 
     open var progress = 0
     open var soundProgress = 0L
-
-    override fun getPropertyDelegate() = KPropertyDelegate(
-        MutableProperty(::progress, { it }, { it }),
-        MutableProperty(::maxProgress, { it }, { it }),
-        MutableProperty(energyStorage::amount, { it.toInt() }, { it.toLong() }),
-        MutableProperty(block.tier::storage, { it.toInt() }, { it.toLong() })
-    )
 
     override fun writeNbt(nbt: NbtCompound): NbtCompound {
         nbtEditors.forEach { it.write(nbt) }
@@ -100,6 +105,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     override fun canInsert(slot: Int, stack: ItemStack, dir: Direction?) = inputDirections.contains(dir) && inputSlots.contains(slot)
     override fun canExtract(slot: Int, stack: ItemStack, dir: Direction) = outputDirections.contains(dir) && outputSlots.contains(slot)
     override fun getDisplayName() = screenName
+    override fun getPropertyDelegate() = delegate
 
     /** The core ticking for this block entity. Should not be overridden unless core behavior needs to be changed. */
     open fun tick(world: World, pos: BlockPos, state: BlockState) {
@@ -121,7 +127,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
 
             setState(world, pos, state, MachineBlock.active, true)
 
-            if (soundProgress == 0L && !world.isClient) world.playSound(null, pos, Registrar.sound.machinery, SoundCategory.BLOCKS, 1f, 1f)
+            if (soundProgress == 0L && !world.isClient) world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
 
             soundProgress += 1
 
@@ -157,7 +163,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     open fun onSoundCompletion(world: World, pos: BlockPos) {
         soundProgress = 0L
 
-        if (!world.isClient) world.playSound(null, pos, Registrar.sound.machinery, SoundCategory.BLOCKS, 1f, 1f)
+        if (!world.isClient) world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
 
         markDirty()
     }
