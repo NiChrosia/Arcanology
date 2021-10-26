@@ -12,28 +12,27 @@ import nichrosia.registry.BasicRegistrar
 import java.io.File
 import kotlin.math.roundToLong
 
-open class SoundRegistrar : BasicRegistrar<SoundEvent>() {
+open class SoundRegistrar : BasicRegistrar<SoundRegistrar.DurativeSoundEvent>() {
     open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val machinery by memberOf(ID(Arcanology.modID, "machinery")) { SoundEvent(it.asIdentifier) }
+    val machinery by memberOf(Arcanology.identify("machinery")) { DurativeSoundEvent(it) }
 
-    override fun <E : SoundEvent> register(location: ID, value: E): E {
+    override fun <E : DurativeSoundEvent> register(location: ID, value: E): E {
         return super.register(location, value).also {
-            Registry.register(Registry.SOUND_EVENT, location.asIdentifier, value)
-            Arcanology.packManager.englishLang.lang["subtitles.${location.split(".")}"] = languageGenerator.generateLang(location)
+            Registry.register(Registry.SOUND_EVENT, location, value)
+            Arcanology.packManager.english.lang["subtitles.${location.split(".")}"] = languageGenerator.generateLang(location)
         }
     }
 
-    companion object {
-        val SoundEvent.length: Long
-            get() {
-                val file = this@Companion::class.java.getResource("../../../../assets/${id.namespace}/sounds/${id.path}.ogg")?.file?.let { File(it) } ?: throw IllegalStateException("Identifier must have a matching sound file.")
+    open class DurativeSoundEvent(ID: ID) : SoundEvent(ID) {
+        val length = run {
+            val file = this::class.java.getResource("../../../../assets/${ID.namespace}/sounds/${ID.path}.ogg")?.file?.let { File(it) } ?: throw IllegalStateException("Identifier must have a matching sound file.")
 
-                val audioStream = OggAudioStream(file.inputStream())
-                val format = audioStream.format
-                val recordedTimeInSec = file.length() / (format.frameSize * format.frameRate)
+            val audioStream = OggAudioStream(file.inputStream())
+            val format = audioStream.format
+            val recordedTimeInSec = file.length() / (format.frameSize * format.frameRate)
 
-                return (recordedTimeInSec * SharedConstants.TICKS_PER_SECOND).roundToLong()
-            }
+            (recordedTimeInSec * SharedConstants.TICKS_PER_SECOND).roundToLong()
+        }
     }
 }

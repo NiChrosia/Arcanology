@@ -66,9 +66,13 @@ dependencies {
 tasks.processResources {
     inputs.property("version", project.version)
 
-    filesMatching("fabric.mod.json") {
+    from("fabric.mod.json") {
         expand("version" to project.version)
     }
+}
+
+loom {
+    accessWidenerPath.set(file("src/main/resources/arcanology.accesswidener"))
 }
 
 tasks.withType<JavaCompile> {

@@ -13,7 +13,7 @@ import vazkii.patchouli.api.PatchouliAPI
 open class GuideBookItem(settings: Settings, private val bookNamespace: String) : Item(settings) {
     override fun use(world: World, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
         if (!world.isClient) {
-            PatchouliAPI.get().openBookGUI(user as ServerPlayerEntity, Arcanology.idOf(bookNamespace))
+            PatchouliAPI.get().openBookGUI(user as ServerPlayerEntity, Arcanology.identify(bookNamespace))
             return TypedActionResult.success(user.getStackInHand(hand))
         }
 

@@ -1,17 +1,18 @@
 package nichrosia.arcanology.type.mod
 
-import net.minecraft.util.Identifier
 import nichrosia.arcanology.util.capitalize
+import nichrosia.common.identity.ID
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-abstract class IdentifiedMod {
-    abstract val modID: String
+/** A simple unified interface for a mod with an ID. */
+interface IdentifiedMod {
+    val modID: String
 
     val log: Logger
         get() = LogManager.getLogger(modID.capitalize())
 
-    fun idOf(path: String): Identifier {
-        return Identifier(modID, path)
+    fun identify(path: String): ID {
+        return ID(modID, path)
     }
 }

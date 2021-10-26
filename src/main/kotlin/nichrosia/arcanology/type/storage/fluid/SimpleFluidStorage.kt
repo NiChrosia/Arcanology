@@ -8,19 +8,27 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
+import net.minecraft.fluid.Fluids
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.util.Identifier
+import net.minecraft.util.registry.Registry
+import nichrosia.arcanology.type.nbt.NbtObject
 import kotlin.math.min
 
 open class SimpleFluidStorage(
-    var fluid: FluidVariant? = null,
-    val maxInsert: Long = 500L,
-    val maxExtract: Long = 500L,
-    val fluidCapacity: Long = FluidConstants.BUCKET,
-    var fluidAmount: Long = 0L
-) : SnapshotParticipant<Long>(), SingleSlotStorage<FluidVariant> {
+    open var variant: FluidVariant = FluidVariant.blank(),
+    open val maxInsert: Long = FluidConstants.BUCKET / 2,
+    open val maxExtract: Long = FluidConstants.BUCKET / 2,
+    open val fluidCapacity: Long = FluidConstants.BUCKET,
+    initial: Long = 0L
+) : SnapshotParticipant<Long>(), SingleSlotStorage<FluidVariant>, NbtObject {
+    open var fluidAmount = initial
+
     init {
         StoragePreconditions.notNegative(fluidCapacity)
         StoragePreconditions.notNegative(maxInsert)
         StoragePreconditions.notNegative(maxExtract)
+        StoragePreconditions.notNegative(initial)
     }
 
     override fun createSnapshot(): Long? {
@@ -42,7 +50,10 @@ open class SimpleFluidStorage(
 
         return if (inserted > 0L) {
             updateSnapshots(transaction)
+
             fluidAmount += inserted
+            if (resource.fluid != variant.fluid) variant = FluidVariant.of(resource.fluid, resource.nbt)
+
             inserted
         } else {
             0L
@@ -58,9 +69,12 @@ open class SimpleFluidStorage(
 
         val extracted = min(maxExtract, min(maxAmount, fluidAmount))
 
-        return if (extracted > 0L) {
+        return if (extracted > 0L && fluidAmount - extracted > 0L) {
             updateSnapshots(transaction)
+
             fluidAmount -= extracted
+            if (fluidAmount == 0L) variant = FluidVariant.blank()
+
             extracted
         } else {
             0L
@@ -75,11 +89,23 @@ open class SimpleFluidStorage(
         return fluidCapacity
     }
 
-    override fun getResource(): FluidVariant? {
-        return fluid
+    override fun getResource(): FluidVariant {
+        return variant
     }
 
     override fun isResourceBlank(): Boolean {
-        return fluid == null
+        return variant.fluid == Fluids.EMPTY
+    }
+
+    override fun writeNbt(nbt: NbtCompound): NbtCompound {
+        return nbt.apply {
+            putString("fluid", Registry.FLUID.getId(variant.fluid).toString())
+        }
+    }
+
+    override fun readNbt(nbt: NbtCompound) {
+        nbt.apply {
+            variant = FluidVariant.of(Registry.FLUID.get(Identifier(getString("fluid"))))
+        }
     }
 }

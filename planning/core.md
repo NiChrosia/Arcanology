@@ -133,6 +133,12 @@ Coolant can be provided to a machine to make it significantly faster. Potential 
 
 [^temperature]: (Might potentially be replaced with a temperature based system)
 
+### Assembly Lines
+
+The primary categorization of machines will be based on tiers & type. The two types will be first, standard machinery, 
+used for manual production, as well as second, assembly lines, used to produce refined products from raw extracted
+resources.
+
 #### Formulas
 
 The following are formulas for additional efficiency based on the cryo-efficiency percent, `e`.

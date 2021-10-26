@@ -15,12 +15,13 @@ import nichrosia.arcanology.util.tryNumber
 import nichrosia.arcanology.util.tryObject
 import nichrosia.arcanology.util.tryPrimitive
 import nichrosia.arcanology.util.tryString
+import nichrosia.common.identity.ID
 import kotlin.reflect.KProperty0
 
 @Suppress("UNCHECKED_CAST")
 abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KProperty0<MutableList<T>>) : Recipe<I> {
     abstract val result: ItemStack
-    abstract val ID: Identifier
+    abstract val ID: ID
     abstract val recipeType: Type<I, T>
     abstract val recipeSerializer: Serializer<I, T>
 
@@ -57,13 +58,13 @@ abstract class SimpleRecipe<I : Inventory, T : SimpleRecipe<I, T>>(val types: KP
         return recipeType
     }
 
-    open class Type<I : Inventory, T : SimpleRecipe<I, T>>(ID: Identifier) : RecipeType<T> {
+    open class Type<I : Inventory, T : SimpleRecipe<I, T>>(ID: ID) : RecipeType<T> {
             init {
                 Registry.register(Registry.RECIPE_TYPE, ID, this)
             }
         }
 
-        abstract class Serializer<I : Inventory, T : SimpleRecipe<I, T>>(val ID: Identifier, val types: KProperty0<MutableList<T>>) : RecipeSerializer<T> {
+        abstract class Serializer<I : Inventory, T : SimpleRecipe<I, T>>(val ID: ID, val types: KProperty0<MutableList<T>>) : RecipeSerializer<T> {
             init {
                 Registry.register(Registry.RECIPE_SERIALIZER, ID, this)
             }

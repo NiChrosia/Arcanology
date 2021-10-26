@@ -2,7 +2,6 @@
 
 package nichrosia.arcanology.type.content.block
 
-import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.json.blockstate.JState
 import net.devtech.arrp.json.models.JModel
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
@@ -19,7 +18,6 @@ import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -32,6 +30,7 @@ import nichrosia.arcanology.type.content.block.entity.MachineBlockEntity
 import nichrosia.arcanology.type.data.RuntimeResourcePackManager
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.util.variables
+import nichrosia.common.identity.ID
 import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST")
@@ -40,7 +39,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     val entityConstructor: (BlockPos, BlockState, B) -> E,
     val type: () -> BlockEntityType<E>,
     val tier: EnergyTier
-) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, StatedBlock {
+) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, BlockWithState {
     init {
         defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
 
@@ -124,7 +123,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         return world.getBlockEntity(pos) as MachineBlockEntity<*, *, *, *>
     }
 
-    override fun generateBlockState(ID: Identifier, packManager: RuntimeResourcePackManager) {
+    override fun generateBlockState(ID: ID): Map<ID, JState> {
         val name = Registry.BLOCK.getId(this).path
 
         val variant = JState.variant()
@@ -139,14 +138,14 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
             }
         }
 
-        packManager.main.addBlockState(JState.state(variant), RuntimeResourcePack.id("${Arcanology.modID}:$name"))
+        return mapOf(ID to JState.state(variant))
     }
 
-    override fun generateModel(ID: Identifier, packManager: RuntimeResourcePackManager) {
+    override fun generateModel(ID: ID, packManager: RuntimeResourcePackManager): Map<ID, JModel> {
         val side = "${Arcanology.modID}:block/${ID.path}_side"
 
-        packManager.main.addModel(
-            JModel.model("minecraft:block/cube")
+        return mapOf(
+            packManager.blockModelID(ID) to JModel.model("minecraft:block/cube")
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_top")
@@ -159,11 +158,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
                             "up" to "${Arcanology.modID}:block/${ID.path}_top"
                         )
                 ),
-            packManager.blockModelID(ID.path)
-        )
-
-        packManager.main.addModel(
-            JModel.model("minecraft:block/cube")
+            packManager.blockModelID(ID.path { it + "_active" }) to JModel.model("minecraft:block/cube")
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_top")
@@ -175,8 +170,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
                             "down" to "${Arcanology.modID}:block/${ID.path}_bottom",
                             "up" to "${Arcanology.modID}:block/${ID.path}_top"
                         )
-                ),
-            packManager.blockModelID("${ID.path}_active")
+                )
         )
     }
 

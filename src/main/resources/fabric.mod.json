@@ -34,6 +34,7 @@
   "mixins": [
     "arcanology.mixins.json"
   ],
+  "accessWidener": "arcanology.accesswidener",
   "depends": {
     "fabricloader": ">=0.8.7",
     "fabric": "*",

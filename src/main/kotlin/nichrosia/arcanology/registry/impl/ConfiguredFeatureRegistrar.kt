@@ -14,7 +14,7 @@ open class ConfiguredFeatureRegistrar : BasicRegistrar<ConfiguredFeature<*, *>>(
 //    override fun <E : ConfiguredFeature<*, *>> register(location: ID, value: E): E {
 //        super.register(location, value)
 //
-//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, location.asIdentifier, value)
+//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, location, value)
 //
 //        val metadata = metadataRegistry[location] ?: throw IllegalStateException("Attempted to find metadata in registry, but it was not created correctly.")
 //
@@ -38,7 +38,7 @@ open class ConfiguredFeatureRegistrar : BasicRegistrar<ConfiguredFeature<*, *>>(
 //        biomeSelector: BiomeSelector = BiomeSelector.Overworld,
 //        generationStep: GenerationStep.Feature = GenerationStep.Feature.UNDERGROUND_ORES
 //    ): ConfiguredFeature<*, *> {
-//        return registerOre(RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, location.asIdentifier), value, biomeSelector, generationStep)
+//        return registerOre(RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, location), value, biomeSelector, generationStep)
 //    }
 //
 //    open fun registerOre(
@@ -47,7 +47,7 @@ open class ConfiguredFeatureRegistrar : BasicRegistrar<ConfiguredFeature<*, *>>(
 //        biomeSelector: BiomeSelector = BiomeSelector.Overworld,
 //        generationStep: GenerationStep.Feature = GenerationStep.Feature.UNDERGROUND_ORES
 //    ): ConfiguredFeature<*, *> {
-//        return registerOre(ID(Arcanology.modID, path), value, biomeSelector, generationStep)
+//        return registerOre(Arcanology.identify(path), value, biomeSelector, generationStep)
 //    }
 //
 //    /** Register a normal ore in an arbitrary dimension. */

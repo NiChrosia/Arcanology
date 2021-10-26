@@ -30,7 +30,7 @@ class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
         textureManager: TextureManager
     ) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
-        RenderSystem.setShaderTexture(0, Arcanology.idOf("textures/gui/energy_icon.png"))
+        RenderSystem.setShaderTexture(0, Arcanology.identify("textures/gui/energy_icon.png"))
         DrawableHelper.drawTexture(matrices, x, y, z, 0f, 0f, 18, 18, 18, 18)
     }
 

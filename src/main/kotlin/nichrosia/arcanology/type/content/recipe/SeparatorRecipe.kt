@@ -7,9 +7,10 @@ import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.type.content.block.entity.SeparatorBlockEntity
 import nichrosia.arcanology.util.capitalize
+import nichrosia.common.identity.ID
 
 open class SeparatorRecipe(input: ItemStack, result: ItemStack) : MachineRecipe<SeparatorBlockEntity, SeparatorRecipe>(input, result, Companion::types) {
-    override val ID: Identifier = Companion.ID
+    override val ID: ID = Companion.ID
     override val recipeType: MachineRecipe.Type<SeparatorBlockEntity, SeparatorRecipe> = Type
     override val recipeSerializer: MachineRecipe.Serializer<SeparatorBlockEntity, SeparatorRecipe> = Serializer
 
@@ -30,7 +31,7 @@ open class SeparatorRecipe(input: ItemStack, result: ItemStack) : MachineRecipe<
     }
 
     companion object {
-        val ID = Arcanology.idOf("separator")
+        val ID = Arcanology.identify("separator")
         val types = mutableListOf<SeparatorRecipe>()
     }
 }

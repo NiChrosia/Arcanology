@@ -11,13 +11,12 @@ object ArcanologyCategory : RegistrarCategory(ID(Arcanology.modID)) {
         get() = this@ArcanologyCategory
 
     val blockMaterial = BlockMaterialRegistrar()
+    val itemGroup = ItemGroupRegistrar()
+    val item = ItemRegistrar()
     val block = BlockRegistrar()
     val blockEntity = BlockEntityRegistrar()
-    val itemGroup = ItemGroupRegistrar()
     val toolMaterial = ToolMaterialRegistrar()
-    val item = ItemRegistrar()
     val statusEffect = StatusEffectRegistrar()
-    val rune = RuneRegistrar()
     val guiDescription = GUIDescriptionRegistrar()
     val configuredFeature = ConfiguredFeatureRegistrar()
     val recipe = RecipeRegistrar()

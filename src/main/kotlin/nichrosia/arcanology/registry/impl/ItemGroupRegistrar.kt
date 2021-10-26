@@ -13,19 +13,19 @@ open class ItemGroupRegistrar : BasicRegistrar<ItemGroup>() {
     /** The language generator for translating the ID to formatted English. This should be used in the [registry]. */
     val languageGenerator: LanguageGenerator = ItemGroupLanguageGenerator()
 
-    val magic by memberOf(ID(Arcanology.modID, "magic")) { create(it) { ItemStack.EMPTY } }
-    val tech by memberOf(ID(Arcanology.modID, "tech")) { create(it) { ItemStack.EMPTY } }
+    val magic by memberOf(Arcanology.identify("magic")) { create(it) { ItemStack.EMPTY } }
+    val tech by memberOf(Arcanology.identify("tech")) { create(it) { ItemStack.EMPTY } }
 
     override fun <E : ItemGroup> register(location: ID, value: E): E {
         val registered = super.register(location, value)
 
-        Arcanology.packManager.englishLang.lang["itemGroup.${location.split(".")}"] = languageGenerator.generateLang(location)
+        Arcanology.packManager.english.lang["itemGroup.${location.split(".")}"] = languageGenerator.generateLang(location)
 
         return registered
     }
 
     fun create(ID: ID, icon: () -> ItemStack): ItemGroup {
-        return FabricItemGroupBuilder.create(ID.asIdentifier)
+        return FabricItemGroupBuilder.create(ID)
             .icon(icon)
             .build()
     }

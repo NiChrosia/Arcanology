@@ -17,6 +17,6 @@ open class BatteryItem(settings: Settings, val tier: EnergyTier) : Item(settings
     override fun isEnchantable(stack: ItemStack): Boolean = false
     override fun canRepair(stack: ItemStack, ingredient: ItemStack): Boolean = false
     override fun getEnergyCapacity() = tier.storage
-    override fun getEnergyMaxInput() = tier.maxInputPerTick
-    override fun getEnergyMaxOutput() = tier.maxOutputPerTick
+    override fun getEnergyMaxInput() = tier.maxInputSpeed
+    override fun getEnergyMaxOutput() = tier.maxOutputSpeed
 }

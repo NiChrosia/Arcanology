@@ -3,16 +3,13 @@ package nichrosia.arcanology.type.content.block.entity
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.registry.Registrar
 import nichrosia.arcanology.type.content.block.SeparatorBlock
-import nichrosia.arcanology.type.content.gui.description.SeparatorGUIDescription
+import nichrosia.arcanology.type.content.gui.description.SeparatorGuiDescription
 import nichrosia.arcanology.type.content.recipe.SeparatorRecipe
-import nichrosia.arcanology.type.content.recipe.MachineRecipe
+import nichrosia.registry.Registrar
 
 open class SeparatorBlockEntity(
     pos: BlockPos, state: BlockState, block: SeparatorBlock
-) : MachineBlockEntity<SeparatorBlock, SeparatorGUIDescription, SeparatorRecipe, SeparatorBlockEntity>(
-    Registrar.arcanology.blockEntity.separator, pos, state, arrayOf(0), block, arrayOf(1), ::SeparatorGUIDescription
-) {
-    override val recipeType: MachineRecipe.Type<SeparatorBlockEntity, SeparatorRecipe> = SeparatorRecipe.Type
-}
+) : MachineBlockEntity<SeparatorBlock, SeparatorGuiDescription, SeparatorRecipe, SeparatorBlockEntity>(
+    Registrar.arcanology.blockEntity.separator, pos, state, intArrayOf(0), block, intArrayOf(1), ::SeparatorGuiDescription, SeparatorRecipe.Type
+)

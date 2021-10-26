@@ -4,54 +4,31 @@ import net.devtech.arrp.api.RRPCallback
 import net.devtech.arrp.api.RuntimeResourcePack
 import net.devtech.arrp.api.RuntimeResourcePack.id
 import net.devtech.arrp.json.lang.JLang.lang
-import net.devtech.arrp.json.tags.JTag.tag
-import net.minecraft.item.Item
-import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
+import net.fabricmc.loader.api.FabricLoader
 import nichrosia.arcanology.Arcanology
+import nichrosia.common.identity.ID
 
 /** Runtime-resource-pack manager for the given [main] & [common] resource packs. */
 @Suppress("HasPlatformType")
 open class RuntimeResourcePackManager(val main: RuntimeResourcePack, val common: RuntimeResourcePack) {
-    val tags = TagMap()
-    val englishLang = lang()
+    val english = lang()
 
-    constructor(mainID: String, commonID: String, mainVersion: Int = 1, commonVersion: Int = 1) : this(
-        RuntimeResourcePack.create(mainID, mainVersion),
-        RuntimeResourcePack.create(commonID, commonVersion)
-    )
+    constructor(modID: String, mainVersion: Int = 1, commonVersion: Int = 1) : this(RuntimeResourcePack.create("$modID:main", mainVersion), RuntimeResourcePack.create("c:$modID", commonVersion))
 
     open fun load() {
-        tags.load()
-        main.addLang(id("${Arcanology.modID}:en_us"), englishLang)
+        main.addLang(id("${Arcanology.modID}:en_us"), english)
 
-        RRPCallback.BEFORE_VANILLA.register {
-            it.apply {
-                add(main)
-                add(common)
-            }
-        }
+        val packs = arrayOf(main, common)
 
-        arrayOf(main, common).forEach { it.dump() }
-    }
+        RRPCallback.BEFORE_VANILLA.register { it.addAll(packs) }
 
-    fun folderID(folder: String, name: String, modID: String = Arcanology.modID) = Identifier(modID, "$folder/$name")
-    fun blockID(name: String) = folderID("blocks", name)
-    fun blockModelID(name: String) = folderID("block", name)
-    fun itemModelID(name: String) = folderID("item", name)
-    fun itemTagID(name: String) = folderID("item", name, "c")
-
-    open inner class TagMap : LinkedHashMap<Identifier, MutableList<Identifier>>() {
-        open fun add(id: Identifier, vararg items: Item) {
-            tags.putIfAbsent(id, mutableListOf())
-
-            tags[id]?.addAll(items.map { Registry.ITEM.getId(it) })
-        }
-
-        open fun load() {
-            forEach { (name, items) ->
-                common.apply { addTag(name, tag().apply { items.forEach { add(it) } }) }
-            }
+        if (FabricLoader.getInstance().isDevelopmentEnvironment) {
+            packs.forEach(RuntimeResourcePack::dump)
         }
     }
+
+    fun folderID(folder: String, ID: ID) = ID(ID.namespace, "$folder/${ID.path}")
+    fun blockID(ID: ID) = folderID("blocks", ID)
+    fun blockModelID(ID: ID) = folderID("block", ID)
+    fun itemModelID(ID: ID) = folderID("item", ID)
 }
