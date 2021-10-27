@@ -1,6 +1,6 @@
-<center><img alt=Icon src=src/main/resources/assets/arcanology/icon.png"width=128</center>
+<div align="center"><img alt="Icon" src="src/main/resources/assets/arcanology/icon.png"></img></div>
 
-# <center>Arcanology</center>
+# <div align="center">Arcanology</div>
 
 ## About
 
