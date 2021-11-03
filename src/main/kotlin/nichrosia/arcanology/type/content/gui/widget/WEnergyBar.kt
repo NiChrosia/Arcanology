@@ -1,34 +1,32 @@
 package nichrosia.arcanology.type.content.gui.widget
 
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
-import io.github.cottonmc.cotton.gui.widget.WBar
+import io.github.cottonmc.cotton.gui.widget.data.Texture
 import net.minecraft.text.TranslatableText
 import nichrosia.arcanology.Arcanology
+import nichrosia.arcanology.util.energyName
 import nichrosia.arcanology.util.formatted
-import nichrosia.common.identity.ID
 
 open class WEnergyBar(
-    direction: Direction = Direction.UP,
-    empty: ID = Companion.empty,
-    full: ID = Companion.full,
     field: Int = 2,
-    max: Int = 3,
-) : WBar(
-    empty,
-    full,
-    field,
-    max,
-    direction
+    maxField: Int = 3,
+) : WTriLayerBar(
+    field, maxField, bottom, overlay, ::full
 ) {
     override fun addTooltip(information: TooltipBuilder) {
-        val energy = properties[field]
-        val max = properties[max]
+        val translationKey = "${Arcanology.modID}.gui.widget.energy"
+        val formattedValue = fieldValue.toLong().formatted
+        val formattedMax = maxFieldValue.toLong().formatted
 
-        information.add(TranslatableText("${Arcanology.modID}.gui.widget.energy", "${energy.toLong().formatted} / ${max.toLong().formatted} LF"))
+        information.add(TranslatableText(
+            translationKey,
+            "$formattedValue / $formattedMax $energyName"
+        ))
     }
 
     companion object {
-        val empty = Arcanology.identify("textures/gui/widget/energy_bar_empty.png")
-        val full = Arcanology.identify("textures/gui/widget/energy_bar_full.png")
+        val bottom = Texture(Arcanology.identify("textures/gui/widget/energy_bottom.png"))
+        val full = Texture(Arcanology.identify("textures/gui/widget/energy_full.png"))
+        val overlay = Texture(Arcanology.identify("textures/gui/widget/energy_overlay.png"))
     }
 }

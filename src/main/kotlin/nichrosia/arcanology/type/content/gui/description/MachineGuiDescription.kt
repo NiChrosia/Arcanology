@@ -19,21 +19,29 @@ abstract class MachineGuiDescription(
     inventorySize: Int,
     propertyDelegateSize: Int,
     titleText: String,
-    width: Int = 150,
-    height: Int = 190
+    val screenWidth: Int,
+    val screenHeight: Int
 ) : SyncedGuiDescription(type, syncID, playerInventory, getBlockInventory(context, inventorySize), getBlockPropertyDelegate(context, propertyDelegateSize)) {
     val root = WPlainPanel()
     val title = WLabel(TranslatableText(titleText))
 
     init {
         setRootPanel(root)
-        root.setSize(width, height)
-        root.insets = Insets.ROOT_PANEL
 
-        title.horizontalAlignment = HorizontalAlignment.CENTER
-        root.add(title, width / 2, 0, 18, 18)
+        root.apply {
+            setSize(screenWidth, screenHeight)
+            insets = Insets.ROOT_PANEL
 
-        val energyBar = WEnergyBar()
-        root.add(energyBar, 0, 2, 18, 84)
+            title.horizontalAlignment = HorizontalAlignment.CENTER
+            add(title, width / 2, 0, 18, 18)
+
+            val energyBar = WEnergyBar()
+            add(energyBar, 0, 2, energyBarWidth, energyBarHeight)
+        }
+    }
+
+    companion object {
+        const val energyBarWidth = 16
+        const val energyBarHeight = 84
     }
 }

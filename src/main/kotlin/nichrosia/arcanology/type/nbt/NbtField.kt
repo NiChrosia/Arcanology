@@ -26,6 +26,7 @@ open class NbtField<T>(
     override fun writeNbt(nbt: NbtCompound): NbtCompound {
         return nbt.apply {
             when(value) {
+                is Short -> nbt.putShort(name, value as Short)
                 is Int -> nbt.putInt(name, value as Int)
                 is Float -> nbt.putFloat(name, value as Float)
                 is Double -> nbt.putDouble(name, value as Double)
@@ -38,6 +39,7 @@ open class NbtField<T>(
     override fun readNbt(nbt: NbtCompound) {
         nbt.apply {
             when(value) {
+                is Short -> value = nbt.getShort(name) as T
                 is Int -> value = nbt.getInt(name) as T
                 is Float -> value = nbt.getFloat(name) as T
                 is Double -> value = nbt.getDouble(name) as T

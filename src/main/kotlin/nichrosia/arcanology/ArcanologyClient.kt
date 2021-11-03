@@ -1,13 +1,33 @@
 package nichrosia.arcanology
 
 import net.fabricmc.api.ClientModInitializer
-import nichrosia.arcanology.registry.category.ArcanologyClientCategory.arcanologyClient
-import nichrosia.registry.Registrar
+import nichrosia.arcanology.registry.impl.client.BlockEntityRendererRegistrar
+import nichrosia.arcanology.registry.impl.client.FluidBarTextureRegistrar
+import nichrosia.arcanology.registry.impl.client.ScreenRegistrar
+import nichrosia.arcanology.type.mod.IdentifiedMod
+import nichrosia.arcanology.util.capitalize
+import nichrosia.common.identity.ID
+import nichrosia.common.registry.type.category.RegistrarCategory
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
-object ArcanologyClient : ClientModInitializer {
-    const val modID = "arcanology"
+object ArcanologyClient : IdentifiedMod, ClientModInitializer {
+    override val modID = "arcanology"
+    override val category = Category
+    override val log: Logger = LogManager.getLogger(modID.capitalize())
 
     override fun onInitializeClient() {
-        Registrar.arcanologyClient.register()
+        category.register()
+
+        log.info("${modID.capitalize()} (client) loaded successfully.")
+    }
+
+    object Category : RegistrarCategory(ID(modID)) {
+        val Arcanology.Category.client: Category
+            get() = this@Category
+
+        val blockEntityRenderer by registrarOf(::BlockEntityRendererRegistrar)
+        val screen by registrarOf(::ScreenRegistrar)
+        val fluidBarTexture by registrarOf(::FluidBarTextureRegistrar)
     }
 }

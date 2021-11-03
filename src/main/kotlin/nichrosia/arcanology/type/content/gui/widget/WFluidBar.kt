@@ -1,58 +1,61 @@
+@file:Suppress("UnstableApiUsage", "DEPRECATION")
+
 package nichrosia.arcanology.type.content.gui.widget
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing
-import io.github.cottonmc.cotton.gui.widget.WBar
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.data.Texture
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.texture.NativeImageBackedTexture
-import net.minecraft.client.util.math.MatrixStack
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants
+import net.minecraft.block.Blocks
 import net.minecraft.fluid.Fluid
-import net.minecraft.item.Items
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.registry.Registry
+import net.minecraft.text.TranslatableText
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.util.clamp
-import nichrosia.arcanology.util.scale
-import nichrosia.arcanology.util.toBuffered
-import nichrosia.arcanology.util.toNative
-import kotlin.math.roundToInt
+import nichrosia.arcanology.Arcanology.Category.arcanology
+import nichrosia.arcanology.ArcanologyClient.Category.client
+import nichrosia.arcanology.type.texture.ColoredTexture
+import nichrosia.arcanology.util.formatted
+import nichrosia.common.registry.type.Registrar
 
-@Suppress("UnstableApiUsage")
 open class WFluidBar(
     minField: Int = 4,
     maxField: Int = 5,
-    direction: Direction = Direction.UP,
     val fluidProvider: () -> Fluid,
-) : WBar(background, background, minField, maxField, direction) {
-    val barTexture = { Texture(fluids[fluidProvider()]?.first ?: emptyFluid) }
-    val fluidColor = { fluids[fluidProvider()]?.second }
+) : WTriLayerBar(minField, maxField, bottom, overlay, { fluidProvider().texture }, { fluidProvider().color }) {
+    override fun addTooltip(information: TooltipBuilder) {
+        val formattedValue = (fieldValue.toLong() / (FluidConstants.BUCKET / 1000)).formatted
+        val formattedMax = (maxFieldValue.toLong() / (FluidConstants.BUCKET / 1000)).formatted
 
-    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-		val percent = clamp(properties.get(field) / properties[max].toFloat(), 0f, 1f).let { (it * height).toInt() / height.toFloat() }
-		val barSize = (height * percent).roundToInt()//.also { if (it <= 0) return }
+        val fluid = fluidProvider()
 
-        ScreenDrawing.texturedRect(matrices, x, (y + getHeight()) - barSize, getWidth(), barSize, barTexture().image(), barTexture().u1(), MathHelper.lerp(percent, barTexture().v2(), barTexture().v1()), barTexture().u2(), barTexture().v2(), fluidColor() ?: 0xFF_FFFFFF.toInt())
-        ScreenDrawing.texturedRect(matrices, x, y, getWidth(), getHeight(), bg, 0xFF_FFFFFF.toInt())
+        val bucketKey = fluid.bucketItem.translationKey.also {
+            if (it == Blocks.AIR.translationKey) return // air is empty, and therefore should not be displayed
+        }
+
+        val blockKey = bucketKey.replace("item.", "")
+            .replace("block.", "")
+            .replace("_bucket", "")
+            .let { "block.$it" }
+
+        val translated = TranslatableText(blockKey)
+        translated.append(": $formattedValue / $formattedMax mB")
+
+        information.add(translated)
     }
-    
-    companion object {
-        val background = Arcanology.identify("textures/gui/widget/liquid_bar_empty.png")
-        val emptyFluid = Arcanology.identify("textures/gui/widget/liquid_empty.png")
 
-        val fluids = mutableMapOf(
-            *Registry.FLUID.toList().filter { it.bucketItem != Items.AIR }.map { fluid ->
-                fluid!! to FluidRenderHandlerRegistry.INSTANCE.get(fluid).let {
-                    it.getFluidSprites(null, null, fluid.defaultState)[0].let { sprite ->
-                        sprite.images[0].toBuffered().scale(18, 84)
-                    } to it.getFluidColor(null, null, fluid.defaultState)
-                }
-            }.map {
-                MinecraftClient.getInstance().textureManager.run {
-                    registerTexture(Registry.FLUID.getId(it.first), NativeImageBackedTexture(it.second.first.toNative()))
-                    it.first to (Registry.FLUID.getId(it.first) to it.second.second)
-                }
-            }.toTypedArray()
-        )
+    companion object {
+        const val width = 27
+        const val height = 54
+
+        val bottom = Texture(Arcanology.identify("textures/gui/widget/liquid_bottom.png"))
+        val overlay = Texture(Arcanology.identify("textures/gui/widget/liquid_overlay.png"))
+        val empty = Texture(Arcanology.identify("textures/gui/widget/liquid_empty.png"))
+
+        val Fluid.coloredTexture: ColoredTexture?
+            get() = Registrar.arcanology.client.fluidBarTexture.find(this)
+
+        val Fluid.texture: Texture
+            get() = coloredTexture?.texture ?: empty
+
+        val Fluid.color: Int
+            get() = coloredTexture?.color ?: 0xFF_FFFFFF.toInt()
     }
 }

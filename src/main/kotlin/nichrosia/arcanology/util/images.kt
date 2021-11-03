@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import javax.imageio.ImageIO
 
+/** Scales the specified image using tiling. */
 fun BufferedImage.scale(newWidth: Int, newHeight: Int): BufferedImage {
     val image = BufferedImage(newWidth, newHeight, type)
 

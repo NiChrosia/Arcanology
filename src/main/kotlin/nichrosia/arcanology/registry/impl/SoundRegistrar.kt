@@ -8,19 +8,19 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
 import nichrosia.common.identity.ID
-import nichrosia.registry.BasicRegistrar
+import nichrosia.common.registry.type.basic.BasicContentRegistrar
 import java.io.File
 import kotlin.math.roundToLong
 
-open class SoundRegistrar : BasicRegistrar<SoundRegistrar.DurativeSoundEvent>() {
+open class SoundRegistrar : BasicContentRegistrar<SoundRegistrar.DurativeSoundEvent>() {
     open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
     val machinery by memberOf(Arcanology.identify("machinery")) { DurativeSoundEvent(it) }
 
-    override fun <E : DurativeSoundEvent> register(location: ID, value: E): E {
-        return super.register(location, value).also {
-            Registry.register(Registry.SOUND_EVENT, location, value)
-            Arcanology.packManager.english.lang["subtitles.${location.split(".")}"] = languageGenerator.generateLang(location)
+    override fun <E : DurativeSoundEvent> register(input: ID, output: E): E {
+        return super.register(input, output).also {
+            Registry.register(Registry.SOUND_EVENT, input, output)
+            Arcanology.packManager.english.lang["subtitles.${input.split(".")}"] = languageGenerator.generateLang(input)
         }
     }
 

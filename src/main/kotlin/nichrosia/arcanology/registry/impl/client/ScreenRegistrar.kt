@@ -8,13 +8,13 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.Text
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
-import nichrosia.arcanology.type.content.gui.SeparatorGui
-import nichrosia.registry.BasicRegistrar
-import nichrosia.registry.Registrar
+import nichrosia.arcanology.Arcanology.Category.arcanology
+import nichrosia.arcanology.type.content.gui.SmelterGui
+import nichrosia.common.registry.type.basic.BasicContentRegistrar
+import nichrosia.common.registry.type.Registrar
 
-open class ScreenRegistrar : BasicRegistrar<Unit>() {
-    val pulverizer by memberOf(Arcanology.identify("pulverizer")) { create(Registrar.arcanology.guiDescription.separator, ::SeparatorGui) }
+open class ScreenRegistrar : BasicContentRegistrar<Unit>() {
+    val pulverizer by memberOf(Arcanology.identify("pulverizer")) { create(Registrar.arcanology.guiDescription.smelter, ::SmelterGui) }
 
     fun <T : ScreenHandler, S> create(type: ScreenHandlerType<T>, factory: (T, PlayerInventory, Text) -> S) where S : Screen, S : ScreenHandlerProvider<T> {
         ScreenRegistry.register(type, factory)

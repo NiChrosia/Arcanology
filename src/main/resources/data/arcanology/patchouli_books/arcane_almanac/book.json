@@ -1,8 +1,0 @@
-{
-  "name": "Arcane Almanac",
-  "landing_text": "<placeholder>",
-  "index_icon": "arcanology:arcane_almanac",
-  "pause_game": false,
-  "dont_generate_book": true,
-  "version": 1
-}

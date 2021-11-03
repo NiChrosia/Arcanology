@@ -8,19 +8,19 @@ import net.minecraft.screen.ScreenHandlerType
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.registry.lang.LanguageGenerator
 import nichrosia.arcanology.registry.lang.impl.BasicLanguageGenerator
-import nichrosia.arcanology.type.content.gui.description.SeparatorGuiDescription
+import nichrosia.arcanology.type.content.gui.description.SmelterGuiDescription
 import nichrosia.common.identity.ID
-import nichrosia.registry.BasicRegistrar
+import nichrosia.common.registry.type.basic.BasicContentRegistrar
 
-open class GUIDescriptionRegistrar : BasicRegistrar<ScreenHandlerType<*>>() {
+open class GUIDescriptionRegistrar : BasicContentRegistrar<ScreenHandlerType<*>>() {
     open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 
-    val separator by memberOf(Arcanology.identify("separator")) { create(it, ::SeparatorGuiDescription) }
+    val smelter by memberOf(Arcanology.identify("smelter")) { create(it, ::SmelterGuiDescription) }
 
-    override fun <E : ScreenHandlerType<*>> register(location: ID, value: E): E {
-        Arcanology.packManager.english.lang["${Arcanology.modID}.gui.title.${location.path}"] = languageGenerator.generateLang(location)
+    override fun <E : ScreenHandlerType<*>> register(input: ID, output: E): E {
+        Arcanology.packManager.english.lang["${Arcanology.modID}.gui.title.${input.path}"] = languageGenerator.generateLang(input)
 
-        return value
+        return output
     }
 
     fun <T : ScreenHandler> create(location: ID, screenHandler: (Int, PlayerInventory, ScreenHandlerContext) -> T): ScreenHandlerType<T> {

@@ -4,7 +4,6 @@ package nichrosia.arcanology.type.content.block
 
 import net.devtech.arrp.json.blockstate.JState
 import net.devtech.arrp.json.models.JModel
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
@@ -34,7 +33,7 @@ import nichrosia.common.identity.ID
 import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST")
-abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : MachineBlockEntity<B, S, *, *>>(
+abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : MachineBlockEntity<B, S, *, E>>(
     settings: Settings,
     val entityConstructor: (BlockPos, BlockState, B) -> E,
     val type: () -> BlockEntityType<E>,
@@ -46,13 +45,9 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         EnergyStorage.SIDED.registerForBlocks({ _, _, _, blockEntity, _ ->
             (blockEntity as? MachineBlockEntity<*, *, *, *>)?.energyStorage
         }, this)
-
-        FluidStorage.SIDED.registerForBlocks({ _, _, _, blockEntity, _ ->
-            (blockEntity as? MachineBlockEntity<*, *, *, *>)?.fluidStorage
-        }, this)
     }
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): E {
         return entityConstructor(pos, state, this as B)
     }
 
@@ -73,7 +68,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, this.type()) { checkedWorld, checkedPos, checkedState, machine ->
+        return checkType(type, type()) { checkedWorld, checkedPos, checkedState, machine ->
             (machine as? MachineBlockEntity<*, *, *, *>)?.tick(checkedWorld, checkedPos, checkedState)
         }
     }

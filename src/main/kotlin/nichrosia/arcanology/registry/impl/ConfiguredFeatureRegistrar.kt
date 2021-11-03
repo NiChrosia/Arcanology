@@ -3,10 +3,10 @@
 package nichrosia.arcanology.registry.impl
 
 import net.minecraft.world.gen.feature.ConfiguredFeature
-import nichrosia.registry.BasicRegistrar
+import nichrosia.common.registry.type.basic.BasicContentRegistrar
 
 @Suppress("UNCHECKED_CAST")
-open class ConfiguredFeatureRegistrar : BasicRegistrar<ConfiguredFeature<*, *>>() {
+open class ConfiguredFeatureRegistrar : BasicContentRegistrar<ConfiguredFeature<*, *>>() {
 //    open val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
 //
 //    open val metadataRegistry: MutableMap<ID, FeatureMetadata> = mutableMapOf()

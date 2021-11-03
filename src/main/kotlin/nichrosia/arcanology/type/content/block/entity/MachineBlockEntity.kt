@@ -22,46 +22,41 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import nichrosia.arcanology.registry.category.ArcanologyCategory.arcanology
+import nichrosia.arcanology.Arcanology.Category.arcanology
 import nichrosia.arcanology.type.content.block.MachineBlock
-import nichrosia.arcanology.type.content.block.entity.inventory.AInventory
+import nichrosia.arcanology.type.content.block.entity.inventory.BasicInventory
 import nichrosia.arcanology.type.content.recipe.MachineRecipe
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
 import nichrosia.arcanology.type.storage.energy.ExtensibleEnergyStorage
-import nichrosia.arcanology.type.storage.fluid.SimpleFluidStorage
-import nichrosia.arcanology.util.asNullable
+import nichrosia.arcanology.util.isServer
+import nichrosia.arcanology.util.repeat
 import nichrosia.arcanology.util.setToList
 import nichrosia.arcanology.util.toDefaultedList
-import nichrosia.registry.Registrar
+import nichrosia.common.registry.type.Registrar
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 
 /** A machine block entity with unified abstract methods for simplified usage. */
 @Suppress("UnstableApiUsage", "DEPRECATION", "UNCHECKED_CAST")
 abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, R : MachineRecipe<T, R>, T : MachineBlockEntity<B, S, R, T>>(
-    type: BlockEntityType<*>,
+    type: BlockEntityType<T>,
     pos: BlockPos,
     state: BlockState,
-    override val inputSlots: IntArray,
+    override val inputSlots: Array<Int>,
     override val block: B,
-    val outputSlots: IntArray,
+    val outputSlots: Array<Int>,
     val guiDescriptionConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
     val recipeType: MachineRecipe.Type<T, R>,
     val inputDirections: Array<Direction> = Direction.values(),
     val screenName: Text = TranslatableText(block.translationKey),
-) : BlockEntity(type, pos, state), NamedScreenHandlerFactory, AInventory, PropertyDelegateHolder, BlockEntityWithBlock<B>, NbtContainer {
-    override val items: Array<ItemStack> = Array(inputSlots.size + outputSlots.size) { ItemStack.EMPTY }
-    override val nbtObjects: MutableList<NbtObject> = mutableListOf()
+) : BlockEntity(type, pos, state), NbtContainer, NamedScreenHandlerFactory, BasicInventory, PropertyDelegateHolder, BlockEntityWithBlock<B> {
+    override val nbtObjects = mutableListOf<NbtObject>()
+    override val items = BlockEntityItems()
 
     open val energyStorage = BlockEntityEnergyStorage(block.tier)
-    open val fluidStorage = BlockEntityFluidStorage().also(nbtObjects::add)
-
-    open val fluidID: Int
-        get() = Registry.FLUID.indexOf(fluidStorage.variant.fluid)
 
     open val sound = Registrar.arcanology.sound.machinery
 
@@ -71,101 +66,103 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
         this::progress,
         block.tier::maxProgress,
         energyStorage::energyAmount,
-        energyStorage::energyCapacity,
-        fluidStorage::fluidAmount,
-        fluidStorage::fluidCapacity,
-        this::fluidID,
+        energyStorage::energyCapacity
     )
 
-    open var progress by nbtFieldOf(0.0)
+    open var progress by nbtFieldOf(0L)
     open var soundProgress = 0L
 
-    override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        Inventories.writeNbt(nbt, items.toDefaultedList())
+    override fun getDisplayName() = screenName
+    override fun getPropertyDelegate() = delegate
 
+    override fun canInsert(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
+        return inputDirections.contains(dir) && inputSlots.contains(slot)
+    }
+
+    override fun canExtract(slot: Int, stack: ItemStack, dir: Direction): Boolean {
+        return outputDirections.contains(dir) && outputSlots.contains(slot)
+    }
+
+    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
+        return guiDescriptionConstructor(syncId, inv, ScreenHandlerContext.create(player.world, pos))
+    }
+
+    override fun writeNbt(nbt: NbtCompound): NbtCompound {
         nbtObjects.forEach { it.writeNbt(nbt) }
 
         return super.writeNbt(nbt)
     }
 
     override fun readNbt(nbt: NbtCompound) {
-        val stacks = items.toDefaultedList()
-        Inventories.readNbt(nbt, stacks)
-        items.setToList(stacks)
-
         nbtObjects.forEach { it.readNbt(nbt) }
 
         super.readNbt(nbt)
     }
 
-    override fun canInsert(slot: Int, stack: ItemStack, dir: Direction?) = inputDirections.contains(dir) && inputSlots.contains(slot)
-    override fun canExtract(slot: Int, stack: ItemStack, dir: Direction) = outputDirections.contains(dir) && outputSlots.contains(slot)
-    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity) = guiDescriptionConstructor(syncId, inv, ScreenHandlerContext.create(player.world, pos))
-    override fun getDisplayName() = screenName
-    override fun getPropertyDelegate() = delegate
-
-    /** The core ticking for this block entity. Should not be overridden unless core behavior needs to be changed. */
     open fun tick(world: World, pos: BlockPos, state: BlockState) {
-        machineTick(world, pos, state)
+        if (world.isServer) {
+            if (canProgress(world)) {
+                progress += block.tier.progressionSpeed
 
-        if (progress >= block.tier.maxProgress) onRecipeCompletion(world, pos, state)
-        if (soundProgress >= sound.length) onSoundCompletion(world, pos)
-    }
+                setState(world, pos, state, MachineBlock.active, true)
+                changeEnergyBy(block.tier.consumptionSpeed)
+                progressSound(world, pos)
 
-    /** Various machine functions, such as consuming power when progressing, playing sound, etc. */
-    // TODO find a more intuitive name & split into more definitive functions
-    open fun machineTick(world: World, pos: BlockPos, state: BlockState) {
-        if (canProgress(world)) {
-            progress += block.tier.progressionSpeed
+                markDirty()
+            } else {
+                setState(world, pos, state, MachineBlock.active, false)
+            }
 
-            setState(world, pos, state, MachineBlock.active, true)
-
-            if (soundProgress == 0L && !world.isClient) world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
-
-            soundProgress += 1
-
-            val transaction = Transaction.openOuter()
-
-            energyStorage.extract(block.tier.consumptionSpeed, transaction)
-            transaction.commit()
-
-            markDirty()
-        } else {
-            if (!world.isClient) setState(world, pos, state, MachineBlock.active, false)
+            if (progress >= block.tier.maxProgress) onRecipeCompletion(world, pos, state)
+            if (soundProgress >= sound.length) onSoundCompletion(world, pos)
         }
     }
 
-    /** Whether the machine can increase the progression value & consume power. */
     open fun canProgress(world: World): Boolean {
-        return inputSlots.any { !items[it].isEmpty } &&
-            energyStorage.amount >= block.tier.consumptionSpeed &&
-            world.recipeManager.getFirstMatch(recipeType, this as T, world).isPresent
+        return inputSlots.any { !items[it].isEmpty } && energyStorage.amount >= block.tier.consumptionSpeed && world.recipeManager.getFirstMatch(recipeType, this as T, world).isPresent
     }
 
-    /** What to do once the machine progress reaches maximum. */
-    open fun onRecipeCompletion(world: World, pos: BlockPos, state: BlockState) {
-        progress = 0.0
+    open fun progressSound(world: World, pos: BlockPos) {
+        if (soundProgress == 0L) {
+            world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
+        }
 
-        world.recipeManager.getFirstMatch(recipeType, this as T, world).asNullable?.craft(this)
+        soundProgress++
+    }
+
+    open fun onRecipeCompletion(world: World, pos: BlockPos, state: BlockState) {
+        progress = 0L
+
+        world.recipeManager.getFirstMatch(recipeType, this as T, world).ifPresent { it.craft(this) }
         if (items[inputSlots[0]].isEmpty) setState(world, pos, state, MachineBlock.active, false)
 
         markDirty()
     }
 
-    /** What to do when finished with playing sound, used for looping by default. */
     open fun onSoundCompletion(world: World, pos: BlockPos) {
         soundProgress = 0L
 
-        if (!world.isClient) world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
+        world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1f, 1f)
 
         markDirty()
     }
 
-    /** Utility function for setting [BlockState]s for sprite changes. */
     open fun <T : Comparable<T>> setState(world: World, pos: BlockPos, currentState: BlockState, property: Property<T>, value: T): BlockState {
         return currentState.with(property, value).also {
             world.setBlockState(pos, it)
         }
+    }
+
+    open fun changeEnergyBy(amount: Long) {
+        val transaction = Transaction.openOuter()
+
+        when {
+            amount > 0 -> energyStorage.insert(amount, transaction)
+            amount < 0 -> energyStorage.extract(amount, transaction)
+            else -> throw IllegalArgumentException("Cannot change energy by value of zero.")
+        }
+
+        transaction.commit()
     }
 
     open inner class KPropertyDelegate(vararg properties: KProperty0<Number>) : PropertyDelegate {
@@ -186,16 +183,28 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
         }
     }
 
-    open inner class BlockEntityEnergyStorage(tier: EnergyTier, initial: Long = 0L) : ExtensibleEnergyStorage(tier.storage, tier.maxInputSpeed, tier.maxOutputSpeed) {
-        override var energyAmount by nbtFieldOf(initial)
+    open inner class BlockEntityItems : MutableList<ItemStack> by ItemStack.EMPTY.repeat(inputSlots.size + outputSlots.size, ItemStack::copy), NbtObject {
+        init {
+            nbtObjects.add(this)
+        }
 
-        override fun onFinalCommit() {
-            markDirty()
+        override fun writeNbt(nbt: NbtCompound): NbtCompound {
+            return nbt.apply {
+                Inventories.writeNbt(nbt, toDefaultedList())
+            }
+        }
+
+        override fun readNbt(nbt: NbtCompound) {
+            val stacks = toDefaultedList()
+
+            Inventories.readNbt(nbt, stacks)
+
+            setToList(stacks)
         }
     }
 
-    open inner class BlockEntityFluidStorage(initial: Long = 0L) : SimpleFluidStorage(initial = initial) {
-        override var fluidAmount by nbtFieldOf(initial)
+    open inner class BlockEntityEnergyStorage(tier: EnergyTier, initial: Long = 0L) : ExtensibleEnergyStorage(tier.storage, tier.maxInputSpeed, tier.maxOutputSpeed) {
+        override var energyAmount by nbtFieldOf(initial)
 
         override fun onFinalCommit() {
             markDirty()

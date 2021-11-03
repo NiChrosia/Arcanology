@@ -3,19 +3,18 @@ package nichrosia.arcanology.util
 import net.minecraft.item.ItemStack
 import net.minecraft.util.collection.DefaultedList
 
-/** Set all the elements in this array to the given element. */
-fun <T> Array<T>.setAllTo(element: T) {
+fun <T> MutableList<T>.setAllTo(element: T) {
     indices.forEach { this[it] = element }
 }
 
-/** Convert this array to a [DefaultedList] */
-fun Array<ItemStack>.toDefaultedList(): DefaultedList<ItemStack> {
-    return DefaultedList.copyOf(ItemStack.EMPTY, *this)
+fun MutableList<ItemStack>.toDefaultedList(): DefaultedList<ItemStack> {
+    return DefaultedList.copyOf(ItemStack.EMPTY, *toTypedArray())
 }
 
-fun <T, L : List<T>> Array<T>.setToList(list: L) {
+fun <T, L : List<T>> MutableList<T>.setToList(list: L) {
     indices.forEach { this[it] = list[it] }
 }
 
-/** Utility function to allow destructuring 6 element lists. */
+inline fun <reified T> T.repeat(times: Int, noinline modifier: (T) -> T = { it }) = Array(times) { modifier(this) }.toMutableList()
+
 operator fun <T> List<T>.component6() = this[5]

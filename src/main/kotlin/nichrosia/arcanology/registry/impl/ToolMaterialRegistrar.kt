@@ -1,6 +1,6 @@
 package nichrosia.arcanology.registry.impl
 
 import net.minecraft.item.ToolMaterial
-import nichrosia.registry.BasicRegistrar
+import nichrosia.common.registry.type.basic.BasicContentRegistrar
 
-open class ToolMaterialRegistrar : BasicRegistrar<ToolMaterial>()
+open class ToolMaterialRegistrar : BasicContentRegistrar<ToolMaterial>()

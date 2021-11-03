@@ -7,13 +7,14 @@ open class EnergyTier(
     open val maxOutputSpeed: Long,
 
     open val consumptionSpeed: Long,
-    open val progressionSpeed: Double,
+    open val progressionSpeed: Long,
 
-    open val maxProgress: Int = 1000
+    open val maxProgress: Int = 10000
 ) {
     companion object {
-        val standard = EnergyTier(5_000L, 32L, 16L, 8L, 5.0)
-        val industrial = EnergyTier(25_000L, 128L, 64L, 32L, 8 + 1.0 / 3.0)
-        val vanguard = EnergyTier(100_000L, 512L, 256L, 128L, 25.0)
+        val primitive = EnergyTier(1_000L, 8L, 4L, 2L, 25)
+        val standard = EnergyTier(5_000L, 32L, 16L, 8L, 50)
+        val industrial = EnergyTier(25_000L, 128L, 64L, 32L, 100)
+        val vanguard = EnergyTier(100_000L, 512L, 256L, 128L, 250)
     }
 }
