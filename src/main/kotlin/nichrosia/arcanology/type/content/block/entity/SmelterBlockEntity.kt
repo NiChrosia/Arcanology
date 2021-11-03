@@ -11,5 +11,5 @@ import nichrosia.common.registry.type.Registrar
 open class SmelterBlockEntity(
     pos: BlockPos, state: BlockState, block: SmelterBlock
 ) : FluidMachineBlockEntity<SmelterBlock, SmelterGuiDescription, SmelterRecipe, SmelterBlockEntity>(
-    Registrar.arcanology.blockEntity.smelter, pos, state, arrayOf(0), block, arrayOf(1), ::SmelterGuiDescription, SmelterRecipe.Type
+    Registrar.arcanology.blockEntity.smelter, pos, state, arrayOf(0), block, arrayOf(), ::SmelterGuiDescription, SmelterRecipe.Type
 )

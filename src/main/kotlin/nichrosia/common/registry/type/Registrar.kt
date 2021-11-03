@@ -3,7 +3,6 @@ package nichrosia.common.registry.type
 import nichrosia.common.registry.type.registry.Registry
 
 /** A base registrar class for registering any type of content. */
-@Suppress("UNCHECKED_CAST")
 interface Registrar<I, O> {
     val registry: Registry<I, O>
     

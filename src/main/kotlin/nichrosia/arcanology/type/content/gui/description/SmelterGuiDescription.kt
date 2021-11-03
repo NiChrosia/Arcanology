@@ -19,7 +19,7 @@ open class SmelterGuiDescription(
     syncId,
     playerInventory,
     context,
-    2,
+    1,
     7,
     Arcanology.modID.let { "$it.gui.title.smelter" },
     150,
@@ -33,14 +33,8 @@ open class SmelterGuiDescription(
             val progressBar = WProcessBar()
             add(progressBar, 72, 36, 18, 18)
 
-            val outputSlot = WItemSlot(blockInventory, 1, 1, 1, true).apply {
-                isInsertingAllowed = false
-            }
-
-            add(outputSlot, 99, 36)
-
             val outputLiquid = WFluidBar { Registry.FLUID[propertyDelegate[6]] }
-            add(outputLiquid, 140, 16, WFluidBar.width, WFluidBar.height)
+            add(outputLiquid, 95, 16, WFluidBar.width, WFluidBar.height)
 
             add(createPlayerInventoryPanel(), 0, 90)
 

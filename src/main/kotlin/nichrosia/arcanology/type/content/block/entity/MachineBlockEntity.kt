@@ -9,7 +9,6 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.NamedScreenHandlerFactory
@@ -31,10 +30,7 @@ import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
 import nichrosia.arcanology.type.storage.energy.ExtensibleEnergyStorage
-import nichrosia.arcanology.util.isServer
-import nichrosia.arcanology.util.repeat
-import nichrosia.arcanology.util.setToList
-import nichrosia.arcanology.util.toDefaultedList
+import nichrosia.arcanology.util.*
 import nichrosia.common.registry.type.Registrar
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
@@ -157,8 +153,8 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
         val transaction = Transaction.openOuter()
 
         when {
-            amount > 0 -> energyStorage.insert(amount, transaction)
-            amount < 0 -> energyStorage.extract(amount, transaction)
+            amount > 0L -> energyStorage.insert(amount, transaction)
+            amount < 0L -> energyStorage.extract(amount, transaction)
             else -> throw IllegalArgumentException("Cannot change energy by value of zero.")
         }
 
@@ -183,23 +179,19 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
         }
     }
 
-    open inner class BlockEntityItems : MutableList<ItemStack> by ItemStack.EMPTY.repeat(inputSlots.size + outputSlots.size, ItemStack::copy), NbtObject {
+    open inner class BlockEntityItems : ModifiableList<ItemStack>(
+        ItemStack.EMPTY.repeat(inputSlots.size + outputSlots.size, ItemStack::copy)
+    ), NbtObject {
         init {
             nbtObjects.add(this)
         }
 
         override fun writeNbt(nbt: NbtCompound): NbtCompound {
-            return nbt.apply {
-                Inventories.writeNbt(nbt, toDefaultedList())
-            }
+            return nbt.putInventory(this)
         }
 
         override fun readNbt(nbt: NbtCompound) {
-            val stacks = toDefaultedList()
-
-            Inventories.readNbt(nbt, stacks)
-
-            setToList(stacks)
+            nbt.readToInventory(this)
         }
     }
 

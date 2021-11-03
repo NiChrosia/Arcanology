@@ -20,6 +20,13 @@ fun BufferedImage.scale(newWidth: Int, newHeight: Int): BufferedImage {
     return image
 }
 
+/** Splits the specified image into tiles of the given size. */
+fun BufferedImage.verticalTiles(tileHeight: Int): List<BufferedImage> {
+    return (0 until (height / tileHeight)).map {
+        getSubimage(0, it * tileHeight, width, tileHeight)
+    }
+}
+
 fun BufferedImage.toStream(): InputStream {
     val outputStream = ByteArrayOutputStream()
     ImageIO.write(this, "png", outputStream)

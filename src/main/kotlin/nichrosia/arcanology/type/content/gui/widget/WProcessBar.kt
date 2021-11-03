@@ -19,7 +19,7 @@ open class WProcessBar(
         val progress = properties[field]
         val max = properties[max]
 
-        if (max <= 0) return
+        if (max <= 0 || progress <= 0) return
 
         val percentage = progress * 100 / max
 

@@ -6,12 +6,13 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
+import nichrosia.arcanology.util.ModifiableList
 import nichrosia.arcanology.util.decrement
 import nichrosia.arcanology.util.increment
 import nichrosia.arcanology.util.setAllTo
 
 interface BasicInventory : SidedInventory {
-    val items: MutableList<ItemStack>
+    val items: ModifiableList<ItemStack>
     val inputSlots: Array<Int>
 
     override fun canExtract(slot: Int, stack: ItemStack, dir: Direction) = true
