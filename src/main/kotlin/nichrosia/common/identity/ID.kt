@@ -15,5 +15,11 @@ open class ID(namespace: String, path: String = "") : Identifier(namespace, path
 
     companion object {
         const val defaultSeparator = ":"
+
+        fun deserialize(source: String, separator: String = defaultSeparator): ID {
+            val (namespace, path) = source.split(separator)
+
+            return ID(namespace, path)
+        }
     }
 }

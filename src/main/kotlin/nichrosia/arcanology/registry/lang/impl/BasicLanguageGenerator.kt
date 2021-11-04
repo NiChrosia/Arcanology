@@ -5,6 +5,6 @@ import nichrosia.arcanology.util.capitalize
 
 open class BasicLanguageGenerator : LanguageGenerator {
     override fun generateLang(rawID: String): String {
-        return rawID.split("_").joinToString(" ") { it.capitalize() }
+        return rawID.replace("_", " ").capitalize(true)
     }
 }

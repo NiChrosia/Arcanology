@@ -25,7 +25,7 @@ import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology.Category.arcanology
 import nichrosia.arcanology.type.content.block.MachineBlock
 import nichrosia.arcanology.type.content.block.entity.inventory.BasicInventory
-import nichrosia.arcanology.type.content.recipe.MachineRecipe
+import nichrosia.arcanology.type.content.recipe.SimpleRecipe
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
@@ -37,7 +37,7 @@ import kotlin.reflect.KProperty0
 
 /** A machine block entity with unified abstract methods for simplified usage. */
 @Suppress("UnstableApiUsage", "DEPRECATION", "UNCHECKED_CAST")
-abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, R : MachineRecipe<T, R>, T : MachineBlockEntity<B, S, R, T>>(
+abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, R : SimpleRecipe<T, R>, T : MachineBlockEntity<B, S, R, T>>(
     type: BlockEntityType<T>,
     pos: BlockPos,
     state: BlockState,
@@ -45,7 +45,7 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     override val block: B,
     val outputSlots: Array<Int>,
     val guiDescriptionConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
-    val recipeType: MachineRecipe.Type<T, R>,
+    val recipeType: SimpleRecipe.Type<R>,
     val inputDirections: Array<Direction> = Direction.values(),
     val screenName: Text = TranslatableText(block.translationKey),
 ) : BlockEntity(type, pos, state), NbtContainer, NamedScreenHandlerFactory, BasicInventory, PropertyDelegateHolder, BlockEntityWithBlock<B> {

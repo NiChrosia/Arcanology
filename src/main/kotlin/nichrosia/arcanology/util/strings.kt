@@ -1,6 +1,8 @@
 package nichrosia.arcanology.util
 
 /** Capitalize the given [String]. */
-fun String.capitalize(): String {
-    return replaceFirstChar { it.uppercaseChar() }
+fun String.capitalize(capitalizeAllLetters: Boolean = false): String {
+    if (split(" ").size == 1 || !capitalizeAllLetters) return replaceFirstChar { it.uppercaseChar() }
+
+    return split(" ").joinToString(" ") { it.capitalize() }
 }

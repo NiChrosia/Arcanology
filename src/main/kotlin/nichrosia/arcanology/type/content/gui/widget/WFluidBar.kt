@@ -22,7 +22,7 @@ open class WFluidBar(
     val fluidProvider: () -> Fluid,
 ) : WTriLayerBar(minField, maxField, bottom, overlay, { fluidProvider().texture }, { fluidProvider().color }) {
     override fun tick() {
-        fluidProvider().animatedTexture?.tick()
+        fluidProvider().animated?.tick()
     }
 
     override fun addTooltip(information: TooltipBuilder) {
@@ -59,13 +59,13 @@ open class WFluidBar(
         val overlay = Texture(Arcanology.identify("textures/gui/widget/liquid_overlay.png"))
         val empty = Texture(Arcanology.identify("textures/gui/widget/liquid_empty.png"))
 
-        val Fluid.animatedTexture: AnimatedTexture?
-            get() = Registrar.arcanology.client.fluidBarTexture.find(this)
+        val Fluid.animated: AnimatedTexture?
+            get() = Registrar.arcanology.client.fluidTexture.findSized(this, width, height)
 
         val Fluid.texture: Texture
-            get() = animatedTexture?.texture ?: empty
+            get() = animated?.texture ?: empty
 
         val Fluid.color: Int
-            get() = animatedTexture?.color ?: 0xFF_FFFFFF.toInt()
+            get() = animated?.color ?: 0xFF_FFFFFF.toInt()
     }
 }

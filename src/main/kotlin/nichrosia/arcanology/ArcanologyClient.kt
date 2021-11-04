@@ -2,7 +2,7 @@ package nichrosia.arcanology
 
 import net.fabricmc.api.ClientModInitializer
 import nichrosia.arcanology.registry.impl.client.BlockEntityRendererRegistrar
-import nichrosia.arcanology.registry.impl.client.FluidBarTextureRegistrar
+import nichrosia.arcanology.registry.impl.client.FluidTextureRegistrar
 import nichrosia.arcanology.registry.impl.client.ScreenRegistrar
 import nichrosia.arcanology.type.mod.IdentifiedMod
 import nichrosia.arcanology.util.capitalize
@@ -22,12 +22,13 @@ object ArcanologyClient : IdentifiedMod, ClientModInitializer {
         log.info("${modID.capitalize()} (client) loaded successfully.")
     }
 
+    @Suppress("unused")
     object Category : RegistrarCategory(ID(modID)) {
         val Arcanology.Category.client: Category
             get() = this@Category
 
         val blockEntityRenderer by registrarOf(::BlockEntityRendererRegistrar)
         val screen by registrarOf(::ScreenRegistrar)
-        val fluidBarTexture by registrarOf(::FluidBarTextureRegistrar)
+        val fluidTexture by registrarOf(::FluidTextureRegistrar)
     }
 }

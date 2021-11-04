@@ -13,10 +13,11 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.type.content.block.FluidMachineBlock
-import nichrosia.arcanology.type.content.recipe.MachineRecipe
+import nichrosia.arcanology.type.content.recipe.SimpleRecipe
+import nichrosia.arcanology.type.content.recipe.fluid.FluidRecipe
 import nichrosia.arcanology.type.storage.fluid.SimpleFluidStorage
 
-abstract class FluidMachineBlockEntity<B : FluidMachineBlock<B, S, T>, S : ScreenHandler, R : MachineRecipe<T, R>, T : FluidMachineBlockEntity<B, S, R, T>>(
+abstract class FluidMachineBlockEntity<B : FluidMachineBlock<B, S, T>, S : ScreenHandler, R : FluidRecipe<T, R>, T : FluidMachineBlockEntity<B, S, R, T>>(
     type: BlockEntityType<T>,
     pos: BlockPos,
     state: BlockState,
@@ -24,7 +25,7 @@ abstract class FluidMachineBlockEntity<B : FluidMachineBlock<B, S, T>, S : Scree
     block: B,
     outputSlots: Array<Int>,
     guiDescriptionConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
-    recipeType: MachineRecipe.Type<T, R>,
+    recipeType: SimpleRecipe.Type<R>,
     inputDirections: Array<Direction> = Direction.values(),
     screenName: Text = TranslatableText(block.translationKey)
 ) : MachineBlockEntity<B, S, R, T>(type, pos, state, inputSlots, block, outputSlots, guiDescriptionConstructor, recipeType, inputDirections, screenName) {
