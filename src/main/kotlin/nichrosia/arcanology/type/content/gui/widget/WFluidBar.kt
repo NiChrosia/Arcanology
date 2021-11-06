@@ -10,11 +10,11 @@ import net.minecraft.fluid.Fluid
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.Arcanology.Category.arcanology
-import nichrosia.arcanology.ArcanologyClient.Category.client
+import nichrosia.arcanology.Arcanology.arcanology
+import nichrosia.arcanology.ArcanologyClient.client
 import nichrosia.arcanology.type.texture.AnimatedTexture
 import nichrosia.arcanology.util.formatted
-import nichrosia.common.registry.type.Registrar
+import nichrosia.common.record.registrar.Registrar
 
 open class WFluidBar(
     minField: Int = 4,
@@ -60,7 +60,7 @@ open class WFluidBar(
         val empty = Texture(Arcanology.identify("textures/gui/widget/liquid_empty.png"))
 
         val Fluid.animated: AnimatedTexture?
-            get() = Registrar.arcanology.client.fluidTexture.findSized(this, width, height)
+            get() = Registrar.arcanology.client.fluidTexture.find(this, width, height)
 
         val Fluid.texture: Texture
             get() = animated?.texture ?: empty

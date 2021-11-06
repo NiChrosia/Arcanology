@@ -8,10 +8,11 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.math.BlockPos
 import nichrosia.arcanology.type.content.block.entity.FluidMachineBlockEntity
+import nichrosia.arcanology.type.content.block.settings.ArcanologyBlockSettings
 import nichrosia.arcanology.type.energy.EnergyTier
 
 abstract class FluidMachineBlock<B : FluidMachineBlock<B, S, E>, S : ScreenHandler, E : FluidMachineBlockEntity<B, S, *, E>>(
-    settings: Settings,
+    settings: ArcanologyBlockSettings,
     entityConstructor: (BlockPos, BlockState, B) -> E,
     type: () -> BlockEntityType<E>,
     tier: EnergyTier

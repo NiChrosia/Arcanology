@@ -1,15 +1,25 @@
 package nichrosia.arcanology.util
 
+import net.devtech.arrp.api.RuntimeResourcePack
+import net.devtech.arrp.json.blockstate.JState
+import net.devtech.arrp.json.models.JModel
 import net.devtech.arrp.json.models.JTextures
+import nichrosia.common.identity.ID
 
 ///** A separate method for creating a silk touch predicate due to the complexity. */
 //fun silkTouchPredicate(): JCondition {
 //    return predicate("minecraft:match_tool")
-//        .parameter("predicate", JsonObject().apply { add("enchantments", jsonArray(
-//            JsonObject()
-//                .apply { addProperty("enchantment", "minecraft:silk_touch") }
-//                .apply { add("levels", jsonObject("min" to 1)) }
-//        )) })
+//        .parameter("predicate", JsonObject().apply {
+//            add("enchantments", JsonArray().apply {
+//                add(
+//                    JsonObject()
+//                        .apply { addProperty("enchantment", "minecraft:silk_touch") }
+//                        .apply { add("levels", JsonObject().apply {
+//                            addProperty("min",  1)
+//                        })}
+//                )
+//            })
+//        })
 //}
 
 ///** A loot table generator to make an [OreBlock] drop its raw ore [Item]. */
@@ -46,14 +56,20 @@ import net.devtech.arrp.json.models.JTextures
 //    }
 //}
 
-/** Renamed function to avoid requiring backticks. */
-fun JTextures.variable(name: String, value: String) = `var`(name, value)
+fun RuntimeResourcePack.addModel(ID: ID, model: JModel): ByteArray {
+    return addModel(model, ID)
+}
 
-/** Utility function for using [Pair]s instead of individual values. */
-fun JTextures.variable(entry: Pair<String, String>) = variable(entry.first, entry.second)
+fun RuntimeResourcePack.addBlockstate(ID: ID, blockstate: JState): ByteArray {
+    return addBlockState(blockstate, ID)
+}
 
-/** Utility function to add several variables at once to the texture. */
-fun JTextures.variables(vararg entries: Pair<String, String>): JTextures {
-    entries.forEach(this::variable)
-    return this
+fun JTextures.addProperty(name: String, value: String) = `var`(name, value)
+
+fun JTextures.addProperty(entry: Pair<String, String>) = addProperty(entry.first, entry.second)
+
+fun JTextures.addProperties(vararg entries: Pair<String, String>): JTextures {
+    return apply {
+        entries.forEach(this::addProperty)
+    }
 }

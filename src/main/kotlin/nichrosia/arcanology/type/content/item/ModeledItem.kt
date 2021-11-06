@@ -2,7 +2,7 @@ package nichrosia.arcanology.type.content.item
 
 import net.devtech.arrp.json.models.JModel
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.type.data.RuntimeResourcePackManager
+import nichrosia.arcanology.type.data.runtimeresource.RuntimeResourcePackManager
 import nichrosia.common.identity.ID
 
 interface ModeledItem {

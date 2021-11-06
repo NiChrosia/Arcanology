@@ -114,3 +114,11 @@ The primary categorization of machines will be based on tiers & type. The two ty
 #### Virtualization
 
 (Concept) Multiple modules could be combined inside a fabrication chamber (or possibly a dedicated block, e.g., *Spatial condensation chamber*), creating a virtual machine chain, allowing for significantly more complicated assembly lines. (This can only be performed once (may be increased in the future), to prevent crash-inducing recursion.) This system would only be available to vanguard.
+
+## Chronomanipulation
+
+(Concept) A fancy synonym for time manipulation, would be used for both standstill (machine) and mobile (handheld) time manipulation in a region around the player, allowing for interesting concepts such as accelerating block growth, machine speed, etc.
+
+### Chronokinetics
+
+A subconcept of chronomanipulation, that would utilize rewinding time to go back to previously marked locations, effectively creating teleportation.

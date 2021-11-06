@@ -5,10 +5,10 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
-import nichrosia.arcanology.Arcanology.Category.arcanology
+import nichrosia.arcanology.Arcanology.arcanology
 import nichrosia.arcanology.type.content.gui.widget.WFluidBar
 import nichrosia.arcanology.type.content.gui.widget.WProcessBar
-import nichrosia.common.registry.type.Registrar
+import nichrosia.common.record.registrar.Registrar
 
 open class SmelterGuiDescription(
     syncId: Int,

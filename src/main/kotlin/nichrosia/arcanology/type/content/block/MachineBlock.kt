@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.state.StateManager
@@ -25,20 +26,32 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import nichrosia.arcanology.Arcanology
+import nichrosia.arcanology.Arcanology.arcanology
 import nichrosia.arcanology.type.content.block.entity.MachineBlockEntity
-import nichrosia.arcanology.type.data.RuntimeResourcePackManager
+import nichrosia.arcanology.type.content.block.settings.ArcanologyBlockSettings
+import nichrosia.arcanology.type.data.runtimeresource.RuntimeResourcePackManager
+import nichrosia.arcanology.type.data.runtimeresource.tag.BlockTag
+import nichrosia.arcanology.type.data.runtimeresource.tag.ContentTag
 import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.util.variables
+import nichrosia.arcanology.util.addProperties
 import nichrosia.common.identity.ID
+import nichrosia.common.record.registrar.Registrar
 import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST")
 abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : MachineBlockEntity<B, S, *, E>>(
-    settings: Settings,
+    settings: ArcanologyBlockSettings,
     val entityConstructor: (BlockPos, BlockState, B) -> E,
     val type: () -> BlockEntityType<E>,
     val tier: EnergyTier
-) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, BlockWithState {
+) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, MultistateBlock, TaggedBlock, ItemBlock, LootableBlock {
+    override val tags: List<ContentTag<Block>> = listOf(
+        BlockTag.Basic(BlockTag.pickaxeMineable, mutableListOf(this)),
+        BlockTag.Basic(BlockTag.needsToolLevelX(settings.miningLevel), mutableListOf(this))
+    )
+
+    override val item: BlockItem = BlockItem(this, Registrar.arcanology.item.settings)
+
     init {
         defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
 
@@ -118,7 +131,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         return world.getBlockEntity(pos) as MachineBlockEntity<*, *, *, *>
     }
 
-    override fun generateBlockState(ID: ID): Map<ID, JState> {
+    override fun generateBlockstate(ID: ID): Map<ID, JState> {
         val name = Registry.BLOCK.getId(this).path
 
         val variant = JState.variant()
@@ -144,7 +157,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_top")
-                        .variables(
+                        .addProperties(
                             "east" to side,
                             "west" to side,
                             "north" to "${Arcanology.modID}:block/${ID.path}_front",
@@ -157,7 +170,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
                 .textures(
                     JModel.textures()
                         .particle("${Arcanology.modID}:block/${ID.path}_top")
-                        .variables(
+                        .addProperties(
                             "east" to side,
                             "west" to side,
                             "north" to "${Arcanology.modID}:block/${ID.path}_front_active",

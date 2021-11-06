@@ -37,9 +37,13 @@
   "accessWidener": "arcanology.accesswidener",
   "depends": {
     "fabricloader": ">=0.8.7",
-    "fabric": "*",
+    "fabric": ">=0.42.0",
     "fabric-language-kotlin": "*",
-    "minecraft": "1.17.x"
+    "minecraft": "1.17.x",
+    "team_reborn_energy": "*",
+    "advanced_runtime_resource_pack": ">=0.5.2",
+    "libgui": "*",
+    "patchouli": "*"
   },
   "suggests": {
     "flamingo": "*"

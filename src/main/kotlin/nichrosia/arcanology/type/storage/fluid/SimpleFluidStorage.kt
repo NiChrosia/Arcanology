@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.type.nbt.NbtObject
+import nichrosia.arcanology.type.stack.FluidStack
 import kotlin.math.min
 
 open class SimpleFluidStorage(
@@ -23,6 +24,9 @@ open class SimpleFluidStorage(
     initial: Long = 0L
 ) : SnapshotParticipant<Long>(), SingleSlotStorage<FluidVariant>, NbtObject {
     open var fluidAmount = initial
+
+    open val asStack: FluidStack
+        get() = FluidStack(variant.fluid, fluidAmount, fluidCapacity)
 
     init {
         StoragePreconditions.notNegative(fluidCapacity)

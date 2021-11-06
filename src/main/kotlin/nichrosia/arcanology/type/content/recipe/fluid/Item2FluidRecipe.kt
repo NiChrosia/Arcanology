@@ -15,18 +15,10 @@ abstract class Item2FluidRecipe<I : FluidMachineBlockEntity<*, *, *, I>, T : Ite
     }
 
     override fun matches(inventory: I, world: World): Boolean {
-        return inventory.items[inventory.inputSlots[0]].let {
-            val hasInput = it.item == input.item
-            val notEmpty = !it.isEmpty
+        val inputMatches = inputStackMatches(inventory.items[inventory.inputSlots[0]])
+        val outputMatches = outputFluidMatches(inventory.fluidStorage.asStack)
 
-            hasInput && notEmpty
-        } && inventory.fluidStorage.let {
-            val isEmpty = it.variant.fluid == Fluids.EMPTY
-            val hasOutputFluid = it.variant.fluid == output.fluid
-            val notFull = it.fluidAmount <= it.fluidCapacity - output.amount
-
-            (isEmpty || hasOutputFluid) && notFull
-        }
+        return inputMatches && outputMatches
     }
 
     override fun craft(inventory: I): ItemStack {
@@ -39,5 +31,20 @@ abstract class Item2FluidRecipe<I : FluidMachineBlockEntity<*, *, *, I>, T : Ite
         }
 
         return ItemStack.EMPTY.copy()
+    }
+
+    open fun inputStackMatches(stack: ItemStack): Boolean {
+        val hasInput = stack.item == input.item
+        val notEmpty = !stack.isEmpty
+
+        return hasInput && notEmpty
+    }
+
+    open fun outputFluidMatches(stack: FluidStack): Boolean {
+        val isEmpty = stack.fluid == Fluids.EMPTY
+        val hasOutputFluid = stack.fluid == output.fluid
+        val notFull = stack.amount <= stack.capacity - output.amount
+
+        return (isEmpty || hasOutputFluid) && notFull
     }
 }

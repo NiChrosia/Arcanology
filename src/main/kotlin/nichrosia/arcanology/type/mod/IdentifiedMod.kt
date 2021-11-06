@@ -1,7 +1,7 @@
 package nichrosia.arcanology.type.mod
 
 import nichrosia.common.identity.ID
-import nichrosia.common.registry.type.category.RegistrarCategory
+import nichrosia.common.record.category.RegistrarCategory
 import org.apache.logging.log4j.Logger
 
 /** A simple unified interface for a mod with an ID. */

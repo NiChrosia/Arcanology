@@ -22,7 +22,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import nichrosia.arcanology.Arcanology.Category.arcanology
+import nichrosia.arcanology.Arcanology.arcanology
 import nichrosia.arcanology.type.content.block.MachineBlock
 import nichrosia.arcanology.type.content.block.entity.inventory.BasicInventory
 import nichrosia.arcanology.type.content.recipe.SimpleRecipe
@@ -31,7 +31,7 @@ import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
 import nichrosia.arcanology.type.storage.energy.ExtensibleEnergyStorage
 import nichrosia.arcanology.util.*
-import nichrosia.common.registry.type.Registrar
+import nichrosia.common.record.registrar.Registrar
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 
