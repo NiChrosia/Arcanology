@@ -1,10 +1,12 @@
-<div align="center"><img alt="Icon" src="src/main/resources/assets/arcanology/icon.png" width="128"></img></div>
+<div align="center">
+    <img alt="Icon" src="src/main/resources/assets/arcanology/icon.png" width="128"/>
+</div>
 
 # <div align="center">Arcanology</div>
 
 ## About
 
-A mod focused on adding magical integration to technology.
+A technology mod focused on space & time.
 
 ## Credits
 
