@@ -50,13 +50,6 @@ jobs:
           name: artifacts
           path: '**/build/libs/'
 
-      - name: Upload reports
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: reports
-          path: '**/build/reports/'
-
       - name: Cleanup Gradle cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock

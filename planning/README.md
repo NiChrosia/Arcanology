@@ -113,12 +113,20 @@ The primary categorization of machines will be based on tiers & type. The two ty
 
 #### Virtualization
 
-(Concept) Multiple modules could be combined inside a fabrication chamber (or possibly a dedicated block, e.g., *Spatial condensation chamber*), creating a virtual machine chain, allowing for significantly more complicated assembly lines. (This can only be performed once (may be increased in the future), to prevent crash-inducing recursion.) This system would only be available to vanguard.
+Multiple modules could be combined inside a fabrication chamber (or possibly a dedicated block, e.g., *Spatial condensation chamber*), creating a virtual machine chain, allowing for significantly more complicated assembly lines. (This can only be performed once (may be increased in the future), to prevent crash-inducing recursion.) This system would only be available to vanguard.
 
-## Chronomanipulation
+## Time manipulation
 
-(Concept) A fancy synonym for time manipulation, would be used for both standstill (machine) and mobile (handheld) time manipulation in a region around the player, allowing for interesting concepts such as accelerating block growth, machine speed, etc.
+Chronomanipulation, a fancy synonym for time manipulation, would be used for both standstill (machine) and mobile (handheld) time manipulation in a region around the player, allowing for interesting concepts such as accelerating block growth, machine speed, etc.
 
-### Chronokinetics
+### Chronokinesis
 
 A subconcept of chronomanipulation, that would utilize rewinding time to go back to previously marked locations, effectively creating teleportation.
+
+## Light manipulation
+
+Photofabrication, the feature of light to be able to deconstruct & reconstruct matter from light, allowing for extremely fast transportation systems, including low-scale wireless transport. An additional application is combining a mining laser with photofabrication, (which does not affect the mining capability), allowing it to both mine subterranean minerals and transport them to the surface without the usage of manual transportation. This can also be used for constructing complicated nanomaterials, albeit at an (unmodded) slow speed.
+
+### Superluminal energy transportation
+
+Primarily used to transport energy & information between dimensions. The process goes by inputting light energy (that can also be matter via photofabrication) into a spatial disruptor, and selecting the appropriate channel to connect it to. This works by creating wormholes for the object to travel through, and works efficiently for long-distance transportation. However, creating a spatial disruptor is no easy task, as it requires fabricating a hyperspatial catalyst in an intense gravitational reaction by fusing a chronopearl (formed by condensing time energy into an extremely dense spherical object) and a singularity (formed by bombarding neutrinos toward a central point, at a rapidly increasing speed).
