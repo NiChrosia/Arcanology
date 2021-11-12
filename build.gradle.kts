@@ -75,7 +75,7 @@ loom {
     accessWidenerPath.set(file("src/main/resources/arcanology.accesswidener"))
 
     runs {
-        create("servertest") {
+        create("serverTest") {
             server()
             source(sourceSets.main.get())
             vmArg("-Dfabric-api.gametest=1")

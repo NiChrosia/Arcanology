@@ -1,6 +1,6 @@
 # Credit to Axieum for making the example mod that contains this workflow
 
-name: Build
+name: Test
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
       - '**/build.gradle'
       - '**/gradle.properties'
       - '**/settings.gradle'
-      - .github/workflows/build.yml
+      - .github/workflows/test.yml
       - LICENCE.txt
   push:
     paths:
@@ -17,7 +17,7 @@ on:
       - '**/build.gradle'
       - '**/gradle.properties'
       - '**/settings.gradle'
-      - .github/workflows/build.yml
+      - .github/workflows/test.yml
       - LICENCE.txt
 
 jobs:
@@ -48,14 +48,13 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build artifacts
-        run: gradle clean build
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts
-          path: '**/build/libs/'
+      - name: Autotest Server
+        timeout-minutes: 10
+        run: |
+            mkdir run && echo "eula=true" >> run/eula.txt
+            ./gradlew runServerTest --stacktrace
+            ! grep -q FATAL run/logs/latest.log
 
       - name: Cleanup Gradle cache
         run: |
