@@ -28,7 +28,6 @@ import nichrosia.arcanology.type.content.gui.property.KPropertyDelegate
 import nichrosia.arcanology.type.content.recipe.SimpleRecipe
 import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
-import nichrosia.arcanology.type.sound.DurativeSoundEvent
 import nichrosia.arcanology.util.isServer
 import nichrosia.arcanology.util.repeat
 import nichrosia.arcanology.util.setState
@@ -53,11 +52,11 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     override val items = BlockEntityItems(this, ItemStack.EMPTY.repeat(inputSlots.size + outputSlots.size, ItemStack::copy).toMutableList())
     override val energyStorage = BlockEntityEnergyStorage(this, block.tier)
     override val delegate = KPropertyDelegate(this::progress, block.tier::maxProgress, energyStorage::energyAmount, energyStorage::energyCapacity)
-    override val sound: DurativeSoundEvent = Registrar.arcanology.sound.machinery
-
-    open val outputDirections = Direction.values()
+    override val sound = Registrar.arcanology.sound.machinery
 
     override var soundProgress = 0L
+
+    open val outputDirections = Direction.values()
 
     open var progress by nbtFieldOf(0L)
 
@@ -79,6 +78,8 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
 
     open fun tick(world: World, pos: BlockPos, state: BlockState) {
         if (world.isServer) {
+            var dirty = false
+
             if (canProgress(world)) {
                 progress += block.tier.progressionSpeed
 
@@ -86,20 +87,22 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
                 changeEnergyBy(block.tier.consumptionSpeed)
                 progressSound(world, pos)
 
-                markDirty()
+                dirty = true
             } else {
                 setState(world, pos, state, MachineBlock.active, false)
             }
 
             if (progress >= block.tier.maxProgress) {
                 onRecipeCompletion(world, pos, state)
-                markDirty()
+                dirty = true
             }
 
             if (soundProgress >= sound.length) {
                 onSoundCompletion(world, pos)
-                markDirty()
+                dirty = true
             }
+
+            if (dirty) markDirty()
         }
     }
 

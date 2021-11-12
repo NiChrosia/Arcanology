@@ -61,6 +61,8 @@ dependencies {
     modIncludeImplementation("io.github.cottonmc:LibGui:${getProp("libgui_version")}")
 
     modApi(include("teamreborn:energy:${getProp("tech_reborn_energy_version")}")!!)
+
+    implementation("com.googlecode.soundlibs:vorbisspi:1.0.3-1")
 }
 
 tasks.processResources {
