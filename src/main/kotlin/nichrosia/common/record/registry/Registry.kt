@@ -5,6 +5,8 @@ interface Registry<K, V> {
 
     fun <E : V> record(key: K, value: E): E {
         return value.also {
+            if (find(key) != null) throw IllegalArgumentException("Attempted to register value under pre-existing key.")
+
             catalog[key] = it
         }
     }

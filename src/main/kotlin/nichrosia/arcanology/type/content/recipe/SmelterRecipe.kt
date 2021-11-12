@@ -12,15 +12,12 @@ import nichrosia.arcanology.type.content.recipe.fluid.Item2FluidRecipe
 import nichrosia.arcanology.type.stack.FluidStack
 import nichrosia.arcanology.util.readFluidStack
 import nichrosia.arcanology.util.writeFluidStack
-import nichrosia.common.identity.ID
 
 open class SmelterRecipe(input: ItemStack, output: FluidStack) : Item2FluidRecipe<SmelterBlockEntity, SmelterRecipe>(input, output) {
-    override val type: SimpleRecipe.Type<SmelterRecipe> = Type
-    override val serializer: SimpleRecipe.Serializer<SmelterRecipe> = Serializer
+    override val type = Type
+    override val serializer = Serializer
 
-    object Type : SimpleRecipe.Type<SmelterRecipe> {
-        override val ID: ID = Arcanology.identify("smelting")
-    }
+    object Type : SimpleRecipe.Type.Basic<SmelterRecipe>(Arcanology.identify("smelting"))
 
     object Serializer : SimpleRecipe.Serializer<SmelterRecipe> {
         override fun write(buf: PacketByteBuf, recipe: SmelterRecipe) {

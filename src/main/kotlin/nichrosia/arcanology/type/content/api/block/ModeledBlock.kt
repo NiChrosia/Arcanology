@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.content.block
+package nichrosia.arcanology.type.content.api.block
 
 import net.devtech.arrp.json.models.JModel
 import nichrosia.arcanology.Arcanology
@@ -11,6 +11,8 @@ interface ModeledBlock {
     fun generateModel(ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager): Map<ID, JModel> {
         return generateDefaultModel(ID, packManager)
     }
+
+    fun textureID(name: String, modID: String = Arcanology.modID) = "$modID:block/$name"
 
     companion object {
         fun generateDefaultModel(ID: ID, packManager: RuntimeResourcePackManager = Arcanology.packManager): Map<ID, JModel> {

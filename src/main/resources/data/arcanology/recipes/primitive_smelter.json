@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "CCC",
+        "CRC",
+        "DBD"
+    ],
+    "key": {
+        "C": {
+            "item": "minecraft:copper_ingot"
+        },
+        "D": {
+            "item": "minecraft:cobbled_deepslate"
+        },
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "B": {
+            "item": "minecraft:furnace"
+        }
+    },
+    "result": {
+        "item": "arcanology:primitive_smelter",
+        "count": 1
+    }
+}

@@ -68,7 +68,7 @@ open class RuntimeResourcePackManager(
     }
 
     fun folderID(folder: String, ID: ID): ID {
-        return ID(ID.namespace, "$folder/${ID.path}")
+        return ID.path { "$folder/$it" }
     }
 
     fun blockModelID(ID: ID) = folderID("block", ID)

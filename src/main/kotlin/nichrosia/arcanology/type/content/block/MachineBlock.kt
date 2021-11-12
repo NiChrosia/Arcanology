@@ -27,30 +27,33 @@ import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.Arcanology.arcanology
+import nichrosia.arcanology.type.content.api.block.*
 import nichrosia.arcanology.type.content.block.entity.MachineBlockEntity
-import nichrosia.arcanology.type.content.block.settings.ArcanologyBlockSettings
+import nichrosia.arcanology.type.content.block.settings.MachineBlockSettings
 import nichrosia.arcanology.type.data.runtimeresource.RuntimeResourcePackManager
 import nichrosia.arcanology.type.data.runtimeresource.tag.BlockTag
 import nichrosia.arcanology.type.data.runtimeresource.tag.ContentTag
-import nichrosia.arcanology.type.energy.EnergyTier
-import nichrosia.arcanology.util.addProperties
+import nichrosia.arcanology.util.JModel
+import nichrosia.arcanology.util.JTextures
 import nichrosia.common.identity.ID
 import nichrosia.common.record.registrar.Registrar
 import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST")
 abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : MachineBlockEntity<B, S, *, E>>(
-    settings: ArcanologyBlockSettings,
-    val entityConstructor: (BlockPos, BlockState, B) -> E,
-    val type: () -> BlockEntityType<E>,
-    val tier: EnergyTier
-) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, MultistateBlock, TaggedBlock, ItemBlock, LootableBlock {
+    settings: MachineBlockSettings,
+    open val entityConstructor: (BlockPos, BlockState, B) -> E
+) : BlockWithEntity(settings), InventoryProvider, ModeledBlock, MultistateBlock, TaggedBlock, ItemBlock, LootableBlock,
+    EntityBlock<E> {
     override val tags: List<ContentTag<Block>> = listOf(
         BlockTag.Basic(BlockTag.pickaxeMineable, mutableListOf(this)),
         BlockTag.Basic(BlockTag.needsToolLevelX(settings.miningLevel), mutableListOf(this))
     )
 
-    override val item: BlockItem = BlockItem(this, Registrar.arcanology.item.settings)
+    override val item = BlockItem(this, Registrar.arcanology.item.settings)
+    override val type = Registrar.arcanology.blockEntity.create(entityConstructor, this as B)
+
+    open val tier = settings.energyTier
 
     init {
         defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
@@ -81,7 +84,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         state: BlockState,
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
-        return checkType(type, type()) { checkedWorld, checkedPos, checkedState, machine ->
+        return checkType(type, type) { checkedWorld, checkedPos, checkedState, machine ->
             (machine as? MachineBlockEntity<*, *, *, *>)?.tick(checkedWorld, checkedPos, checkedState)
         }
     }
@@ -150,36 +153,36 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     }
 
     override fun generateModel(ID: ID, packManager: RuntimeResourcePackManager): Map<ID, JModel> {
-        val side = "${Arcanology.modID}:block/${ID.path}_side"
+        val side = textureID("${tier.name}_side")
+        val bottom = textureID("${tier.name}_bottom")
+        val top = textureID("${tier.name}_top")
 
-        return mapOf(
-            packManager.blockModelID(ID) to JModel.model("minecraft:block/cube")
-                .textures(
-                    JModel.textures()
-                        .particle("${Arcanology.modID}:block/${ID.path}_top")
-                        .addProperties(
-                            "east" to side,
-                            "west" to side,
-                            "north" to "${Arcanology.modID}:block/${ID.path}_front",
-                            "south" to side,
-                            "down" to "${Arcanology.modID}:block/${ID.path}_bottom",
-                            "up" to "${Arcanology.modID}:block/${ID.path}_top"
-                        )
-                ),
-            packManager.blockModelID(ID.path { it + "_active" }) to JModel.model("minecraft:block/cube")
-                .textures(
-                    JModel.textures()
-                        .particle("${Arcanology.modID}:block/${ID.path}_top")
-                        .addProperties(
-                            "east" to side,
-                            "west" to side,
-                            "north" to "${Arcanology.modID}:block/${ID.path}_front_active",
-                            "south" to side,
-                            "down" to "${Arcanology.modID}:block/${ID.path}_bottom",
-                            "up" to "${Arcanology.modID}:block/${ID.path}_top"
-                        )
-                )
-        )
+        val inactiveID = ID.path { "block/$it" }
+        val activeID = inactiveID.path { "${it}_active" }
+
+        val inactive = JModel("minecraft:block/cube")
+            .textures(JTextures(
+                "particle" to top,
+                "east" to side,
+                "west" to side,
+                "north" to "${Arcanology.modID}:block/${ID.path}_front",
+                "south" to side,
+                "down" to bottom,
+                "up" to top
+            ))
+
+        val active = JModel("minecraft:block/cube")
+            .textures(JTextures(
+                "particle" to top,
+                "east" to side,
+                "west" to side,
+                "north" to "${Arcanology.modID}:block/${ID.path}_front_active",
+                "south" to side,
+                "down" to bottom,
+                "up" to top
+            ))
+
+        return mapOf(inactiveID to inactive, activeID to active)
     }
 
     companion object {

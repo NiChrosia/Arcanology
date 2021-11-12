@@ -1,4 +1,4 @@
-package nichrosia.arcanology.type.content.block
+package nichrosia.arcanology.type.content.api.block
 
 import net.devtech.arrp.json.blockstate.JState
 import nichrosia.common.identity.ID

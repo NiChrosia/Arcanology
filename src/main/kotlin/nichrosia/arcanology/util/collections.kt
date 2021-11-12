@@ -61,4 +61,7 @@ open class ModifiableList<T>(protected val internal: MutableList<T> = mutableLis
     operator fun set(index: Int, value: T) {
         internal[index] = value
     }
+
+    // should not be modified
+    open fun toMutableList() = internal
 }

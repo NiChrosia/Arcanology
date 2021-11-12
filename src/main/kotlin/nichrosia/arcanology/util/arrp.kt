@@ -73,3 +73,13 @@ fun JTextures.addProperties(vararg entries: Pair<String, String>): JTextures {
         entries.forEach(this::addProperty)
     }
 }
+
+fun JTextures(vararg properties: Pair<String, String>): JTextures {
+    return JTextures().apply {
+        properties.forEach(this::addProperty)
+    }
+}
+
+fun JModel(parent: String): JModel {
+    return JModel.model(parent)
+}

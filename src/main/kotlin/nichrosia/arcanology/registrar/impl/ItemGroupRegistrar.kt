@@ -12,7 +12,7 @@ import nichrosia.common.record.registrar.content.ContentRegistrar
 
 open class ItemGroupRegistrar : ContentRegistrar.Basic<ItemGroup>() {
     val main by memberOf(Arcanology.identify("main")) {
-        create(it) { ItemStack(Registrar.arcanology.block.smelter.item) }
+        create(it) { ItemStack(Registrar.arcanology.block.standardSmelter.item) }
     }
 
     override fun <E : ItemGroup> publish(key: ID, value: E, registerIfAbsent: Boolean): E {

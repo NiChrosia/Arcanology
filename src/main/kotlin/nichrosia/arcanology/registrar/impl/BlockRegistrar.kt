@@ -5,10 +5,10 @@ import net.minecraft.block.Material
 import net.minecraft.util.registry.Registry
 import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.Arcanology.arcanology
-import nichrosia.arcanology.registrar.lang.LanguageGenerator
 import nichrosia.arcanology.registrar.lang.impl.BasicLanguageGenerator
+import nichrosia.arcanology.type.content.api.block.*
 import nichrosia.arcanology.type.content.block.*
-import nichrosia.arcanology.type.content.block.settings.ArcanologyBlockSettings
+import nichrosia.arcanology.type.content.block.settings.MachineBlockSettings
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.registar.registry.VanillaRegistrar
 import nichrosia.arcanology.util.addBlockstate
@@ -17,15 +17,21 @@ import nichrosia.common.identity.ID
 import nichrosia.common.record.registrar.Registrar
 
 open class BlockRegistrar : VanillaRegistrar.Basic<Block>(Registry.BLOCK) {
-    val languageGenerator: LanguageGenerator = BasicLanguageGenerator()
+    val languageGenerator = BasicLanguageGenerator()
 
-    val smelter by memberOf(Arcanology.identify("smelter")) {
+    val standardSmelter by memberOf(Arcanology.identify("standard_smelter")) {
         SmelterBlock(
-            ArcanologyBlockSettings(Material.METAL, 2)
+            MachineBlockSettings(Material.METAL, 2, EnergyTier.standard)
                 .requiresTool()
                 .strength(5f, 100f)
-                as ArcanologyBlockSettings,
-            EnergyTier.standard
+        )
+    }
+
+    val primitiveSmelter by memberOf(Arcanology.identify("primitive_smelter")) {
+        SmelterBlock(
+            MachineBlockSettings(Material.METAL, 1, EnergyTier.primitive)
+                .requiresTool()
+                .strength(5f, 75f)
         )
     }
 
@@ -60,12 +66,16 @@ open class BlockRegistrar : VanillaRegistrar.Basic<Block>(Registry.BLOCK) {
                 Registrar.arcanology.item.publish(key, it.item, true)
 
                 if (it is LootableBlock) {
-                    val lootTables = it.generateLootTable(key, key)
+                    val lootTables = it.generateLootTable(key)
 
                     lootTables.forEach { (ID, table) ->
                         Arcanology.packManager.main.addLootTable(ID.path { "blocks/$it" }, table)
                     }
                 }
+            }
+
+            if (it is EntityBlock<*>) {
+                Registrar.arcanology.blockEntity.publish(key, it.type)
             }
         }
     }

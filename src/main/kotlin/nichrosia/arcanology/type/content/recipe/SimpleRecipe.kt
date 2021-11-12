@@ -7,7 +7,7 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.type.content.block.entity.inventory.BasicInventory
+import nichrosia.arcanology.type.content.api.block.entity.inventory.BasicInventory
 import nichrosia.arcanology.util.tryNumber
 import nichrosia.arcanology.util.tryObject
 import nichrosia.arcanology.util.tryPrimitive
@@ -39,6 +39,8 @@ interface SimpleRecipe<I : BasicInventory, T : SimpleRecipe<I, T>> : Recipe<I> {
 
     interface Type<T : SimpleRecipe<*, T>> : RecipeType<T> {
         val ID: ID
+
+        open class Basic<T : SimpleRecipe<*, T>>(override val ID: ID) : Type<T>
     }
 
     interface Serializer<T : SimpleRecipe<*, T>> : RecipeSerializer<T>
