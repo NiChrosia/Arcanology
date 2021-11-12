@@ -7,7 +7,7 @@ import nichrosia.arcanology.Arcanology
 import nichrosia.arcanology.Arcanology.arcanology
 import nichrosia.arcanology.registrar.lang.impl.BasicLanguageGenerator
 import nichrosia.arcanology.type.content.api.block.*
-import nichrosia.arcanology.type.content.block.*
+import nichrosia.arcanology.type.content.block.SmelterBlock
 import nichrosia.arcanology.type.content.block.settings.MachineBlockSettings
 import nichrosia.arcanology.type.energy.EnergyTier
 import nichrosia.arcanology.type.registar.registry.VanillaRegistrar
@@ -37,6 +37,10 @@ open class BlockRegistrar : VanillaRegistrar.Basic<Block>(Registry.BLOCK) {
 
     override fun <E : Block> register(key: ID, value: E): E {
         return super.register(key, value).also {
+            if (it is ItemBlock) {
+                Registrar.arcanology.item.register(key, it.item)
+            }
+
             if (it is TaggedBlock) {
                 it.tags.forEach { tag ->
                     Registrar.arcanology.tags.blocks.addAll(tag.location, tag.values)
@@ -45,8 +49,8 @@ open class BlockRegistrar : VanillaRegistrar.Basic<Block>(Registry.BLOCK) {
         }
     }
 
-    override fun <E : Block> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : Block> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Arcanology.packManager.english.lang["block.${key.namespace}.${key.path}"] = languageGenerator.generateLang(key)
 
             val models = when(it) {
@@ -63,8 +67,6 @@ open class BlockRegistrar : VanillaRegistrar.Basic<Block>(Registry.BLOCK) {
             blockstates.forEach(Arcanology.packManager.main::addBlockstate)
 
             if (it is ItemBlock) {
-                Registrar.arcanology.item.publish(key, it.item, true)
-
                 if (it is LootableBlock) {
                     val lootTables = it.generateLootTable(key)
 

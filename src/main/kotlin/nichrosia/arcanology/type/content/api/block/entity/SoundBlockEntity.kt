@@ -3,10 +3,10 @@ package nichrosia.arcanology.type.content.api.block.entity
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import nichrosia.arcanology.registrar.impl.SoundRegistrar
+import nichrosia.arcanology.type.sound.DurativeSoundEvent
 
 interface SoundBlockEntity {
-    val sound: SoundRegistrar.DurativeSoundEvent
+    val sound: DurativeSoundEvent
 
     var soundProgress: Long
 

@@ -73,6 +73,14 @@ tasks.processResources {
 
 loom {
     accessWidenerPath.set(file("src/main/resources/arcanology.accesswidener"))
+
+    runs {
+        create("servertest") {
+            server()
+            source(sourceSets.main.get())
+            vmArg("-Dfabric-api.gametest=1")
+        }
+    }
 }
 
 tasks.withType<JavaCompile> {

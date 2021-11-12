@@ -9,8 +9,8 @@ import nichrosia.common.record.registry.content.ContentRegistry
 interface VanillaRegistrar<T> : ContentRegistrar<T> {
     val minecraftRegistry: Registry<T>
 
-    override fun <E : T> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : T> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Registry.register(minecraftRegistry, key, value)
         }
     }

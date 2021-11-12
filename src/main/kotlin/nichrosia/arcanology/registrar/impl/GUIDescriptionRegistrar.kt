@@ -16,8 +16,8 @@ open class GUIDescriptionRegistrar : ContentRegistrar.Basic<ScreenHandlerType<*>
 
     val smelter by memberOf(Arcanology.identify("smelter")) { create(it, ::SmelterGuiDescription) }
 
-    override fun <E : ScreenHandlerType<*>> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : ScreenHandlerType<*>> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Arcanology.packManager.english.lang["${Arcanology.modID}.gui.title.${key.path}"] = languageGenerator.generateLang(key)
         }
     }

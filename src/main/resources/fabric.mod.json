@@ -29,6 +29,12 @@
         "adapter": "kotlin",
         "value": "nichrosia.arcanology.ArcanologyClient"
       }
+    ],
+    "fabric-gametest": [
+      {
+        "adapter": "kotlin",
+        "value": "nichrosia.arcanology.ArcanologyTest"
+      }
     ]
   },
   "mixins": [

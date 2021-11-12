@@ -10,8 +10,8 @@ import nichrosia.common.record.registrar.content.ContentRegistrar
 open class StatusEffectRegistrar : ContentRegistrar.Basic<StatusEffect>() {
     open val languageGenerator = BasicLanguageGenerator()
 
-    override fun <E : StatusEffect> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : StatusEffect> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Registry.register(Registry.STATUS_EFFECT, key, it)
             Arcanology.packManager.english.lang["status_effect.${key.split(".")}"] = languageGenerator.generateLang(key)
         }

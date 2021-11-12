@@ -19,8 +19,8 @@ open class ItemRegistrar : VanillaRegistrar.Basic<Item>(Registry.ITEM) {
     val settings: FabricItemSettings
         get() = FabricItemSettings().group(Registrar.arcanology.itemGroup.main)
 
-    override fun <E : Item> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : Item> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Arcanology.packManager.english.lang["item.${key.split(".")}"] = languageGenerator.generateLang(key)
 
             when(it) {

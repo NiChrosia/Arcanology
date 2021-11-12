@@ -15,8 +15,8 @@ open class ItemGroupRegistrar : ContentRegistrar.Basic<ItemGroup>() {
         create(it) { ItemStack(Registrar.arcanology.block.standardSmelter.item) }
     }
 
-    override fun <E : ItemGroup> publish(key: ID, value: E, registerIfAbsent: Boolean): E {
-        return super.publish(key, value, registerIfAbsent).also {
+    override fun <E : ItemGroup> publish(key: ID, value: E): E {
+        return super.publish(key, value).also {
             Arcanology.packManager.english.lang["itemGroup.${key.split(".")}"] = Arcanology.modID.capitalize()
         }
     }

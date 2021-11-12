@@ -14,9 +14,7 @@ interface Registrar<K, V> {
     fun <E : V> register(key: K, value: E) = registry.record(key, value)
 
     /** Publish the given object to external registries, and optionally register it if it does not already exist. */
-    fun <E : V> publish(key: K, value: E, registerIfAbsent: Boolean = false) = value.also {
-        if (registerIfAbsent && find(key) == null) register(key, value)
-    }
+    fun <E : V> publish(key: K, value: E) = value
 
     fun find(key: K) = registry.find(key)
 
