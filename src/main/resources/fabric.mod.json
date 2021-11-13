@@ -33,7 +33,7 @@
     "fabric-gametest": [
       {
         "adapter": "kotlin",
-        "value": "nichrosia.arcanology.ArcanologyTest"
+        "value": "nichrosia.arcanology.test.ArcanologyTest"
       }
     ]
   },

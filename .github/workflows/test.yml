@@ -5,24 +5,16 @@ name: Test
 on:
   pull_request:
     paths:
-      - '**/src/**'
-      - '**/build.gradle'
-      - '**/gradle.properties'
-      - '**/settings.gradle'
+      - 'src/main/nichrosia/arcanology/test/**'
       - .github/workflows/test.yml
-      - LICENCE.txt
   push:
     paths:
-      - '**/src/**'
-      - '**/build.gradle'
-      - '**/gradle.properties'
-      - '**/settings.gradle'
+      - 'src/main/nichrosia/arcanology/test/**'
       - .github/workflows/test.yml
-      - LICENCE.txt
 
 jobs:
   build:
-    name: Build
+    name: Test
 
     runs-on: ubuntu-latest
 

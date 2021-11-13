@@ -4,21 +4,23 @@ name: Build
 
 on:
   pull_request:
-    paths:
-      - '**/src/**'
-      - '**/build.gradle'
-      - '**/gradle.properties'
-      - '**/settings.gradle'
-      - .github/workflows/build.yml
-      - LICENCE.txt
+    paths-ignore:
+      - 'src/main/nichrosia/arcanology/test/**'
+      - '.github/workflows/test.yml'
+      - 'planning/**'
+      - '**.md'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
   push:
-    paths:
-      - '**/src/**'
-      - '**/build.gradle'
-      - '**/gradle.properties'
-      - '**/settings.gradle'
-      - .github/workflows/build.yml
-      - LICENCE.txt
+    paths-ignore:
+      - 'src/main/nichrosia/arcanology/test/**'
+      - '.github/workflows/test.yml'
+      - 'planning/**'
+      - '**.md'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
 
 jobs:
   build:
