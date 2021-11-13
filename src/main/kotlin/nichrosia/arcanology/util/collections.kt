@@ -46,7 +46,7 @@ fun <T> Array<T>.toModifiableList(): ModifiableList<T> {
     return ModifiableList(toMutableList())
 }
 
-inline fun <reified T> T.repeat(times: Int, noinline modifier: (T) -> T = { it }) = Array(times) { modifier(this) }.toModifiableList()
+inline fun <reified T> T.repeat(times: Int, noinline modifier: (T) -> T = { it }) = Array(times) { modifier(this) }
 
 // component extensions
 
@@ -56,12 +56,7 @@ operator fun <T> List<T>.component6() = this[5]
 
 /** A mutable list with a fixed size. */
 open class ModifiableList<T>(protected val internal: MutableList<T> = mutableListOf()) : List<T> by internal {
-    constructor(internal: ModifiableList<T>) : this(internal.internal)
-
     operator fun set(index: Int, value: T) {
         internal[index] = value
     }
-
-    // should not be modified
-    open fun toMutableList() = internal
 }

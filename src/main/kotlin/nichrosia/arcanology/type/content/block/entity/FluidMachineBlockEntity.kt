@@ -25,21 +25,23 @@ abstract class FluidMachineBlockEntity<B : FluidMachineBlock<B, S, T>, S : Scree
     inputSlots: Array<Int>,
     block: B,
     outputSlots: Array<Int>,
-    guiDescriptionConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
+    handlerConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
     recipeType: SimpleRecipe.Type<R>,
-    inputDirections: Array<Direction> = Direction.values(),
-    title: Text = TranslatableText(block.translationKey)
+    title: Text = TranslatableText(block.translationKey),
+    inputSides: Array<Direction> = Direction.values(),
+    outputSides: Array<Direction> = Direction.values()
 ) : MachineBlockEntity<B, S, R, T>(
     type,
     pos,
     state,
     inputSlots,
-    block,
-    guiDescriptionConstructor,
-    title,
     outputSlots,
+    block,
+    handlerConstructor,
+    title,
     recipeType,
-    inputDirections
+    inputSides,
+    outputSides
 ) {
     open val fluidStorage = BlockEntityFluidStorage()
 

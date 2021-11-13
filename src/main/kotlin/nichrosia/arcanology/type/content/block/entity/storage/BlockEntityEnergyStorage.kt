@@ -7,14 +7,10 @@ import nichrosia.arcanology.type.storage.energy.ExtensibleEnergyStorage
 
 @Suppress("UnstableApiUsage")
 open class BlockEntityEnergyStorage<E>(
-    val entity: E,
+    protected val entity: E,
     tier: EnergyTier,
     initial: Long = 0L
-) : ExtensibleEnergyStorage(
-    tier.storage,
-    tier.maxInputSpeed,
-    tier.maxOutputSpeed
-) where E : BlockEntity, E : NbtContainer {
+) : ExtensibleEnergyStorage(tier, initial) where E : BlockEntity, E : NbtContainer {
     // override it to declare it as an nbt field to allow dynamic serialization
     override var energyAmount by entity.nbtFieldOf(initial)
 

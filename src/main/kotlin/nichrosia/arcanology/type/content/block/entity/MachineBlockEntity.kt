@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -16,20 +15,14 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import nichrosia.arcanology.Arcanology.arcanology
-import nichrosia.arcanology.type.content.api.block.entity.BlockEntityWithBlock
-import nichrosia.arcanology.type.content.api.block.entity.EnergyBlockEntity
-import nichrosia.arcanology.type.content.api.block.entity.ScreenBlockEntity
-import nichrosia.arcanology.type.content.api.block.entity.SoundBlockEntity
-import nichrosia.arcanology.type.content.api.block.entity.inventory.BasicInventory
+import nichrosia.arcanology.type.content.api.block.entity.*
+import nichrosia.arcanology.type.content.api.block.entity.inventory.SimpleInventory
 import nichrosia.arcanology.type.content.block.MachineBlock
-import nichrosia.arcanology.type.content.block.entity.storage.BlockEntityEnergyStorage
-import nichrosia.arcanology.type.content.block.entity.storage.BlockEntityItems
 import nichrosia.arcanology.type.content.gui.property.KPropertyDelegate
 import nichrosia.arcanology.type.content.recipe.SimpleRecipe
 import nichrosia.arcanology.type.nbt.NbtContainer
 import nichrosia.arcanology.type.nbt.NbtObject
 import nichrosia.arcanology.util.isServer
-import nichrosia.arcanology.util.repeat
 import nichrosia.arcanology.util.setState
 import nichrosia.common.record.registrar.Registrar
 
@@ -40,51 +33,48 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
     pos: BlockPos,
     state: BlockState,
     override val inputSlots: Array<Int>,
+    override val outputSlots: Array<Int>,
     override val block: B,
     override val handlerConstructor: (Int, PlayerInventory, ScreenHandlerContext) -> S,
     override val title: Text = TranslatableText(block.translationKey),
-    val outputSlots: Array<Int>,
-    val recipeType: SimpleRecipe.Type<R>,
-    val inputDirections: Array<Direction> = Direction.values(),
-) : BlockEntity(type, pos, state), NbtContainer, BasicInventory, BlockEntityWithBlock<B>, EnergyBlockEntity, ScreenBlockEntity<S>, SoundBlockEntity {
+    override val recipeType: SimpleRecipe.Type<R>,
+    override val inputSides: Array<Direction> = Direction.values(),
+    override val outputSides: Array<Direction> = Direction.values(),
+) : BlockEntity(type, pos, state), NbtContainer, SimpleInventory, BlockEntityWithBlock<B>, EnergyBlockEntity, ScreenBlockEntity<S>, SoundBlockEntity, EnergyRecipeBlockEntity<T, R, SimpleRecipe.Type<R>> {
     override val nbtObjects = mutableListOf<NbtObject>()
     override val blockPos = pos
-    override val items = BlockEntityItems(this, ItemStack.EMPTY.repeat(inputSlots.size + outputSlots.size, ItemStack::copy).toMutableList())
-    override val energyStorage = BlockEntityEnergyStorage(this, block.tier)
-    override val delegate = KPropertyDelegate(this::progress, block.tier::maxProgress, energyStorage::energyAmount, energyStorage::energyCapacity)
+    override val tier = block.tier
+    override val items = emptyInventoryOf(slotSize)
+    override val energyStorage = energyStorageOf(tier)
+    override val delegate = KPropertyDelegate(this::progress, tier::maxProgress, energyStorage::energyAmount, energyStorage::energyCapacity)
     override val sound = Registrar.arcanology.sound.machinery
 
     override var soundProgress = 0L
-
-    open val outputDirections = Direction.values()
-
-    open var progress by nbtFieldOf(0L)
-
-    override fun canInsert(slot: Int, stack: ItemStack, dir: Direction?): Boolean {
-        return inputDirections.contains(dir) && inputSlots.contains(slot)
-    }
-
-    override fun canExtract(slot: Int, stack: ItemStack, dir: Direction): Boolean {
-        return outputDirections.contains(dir) && outputSlots.contains(slot)
-    }
+    override var progress by nbtFieldOf(0L)
 
     override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        return super.writeNbt(writeNbtObjects(nbt))
+        return super<BlockEntity>.writeNbt(nbt.apply {
+            super<SimpleInventory>.writeNbt(this)
+            writeNbtObjects(this)
+        })
     }
 
     override fun readNbt(nbt: NbtCompound) {
-        super.readNbt(readNbtObjects(nbt))
+        super<BlockEntity>.readNbt(nbt.apply {
+            super<SimpleInventory>.readNbt(this)
+            readNbtObjects(this)
+        })
     }
 
     open fun tick(world: World, pos: BlockPos, state: BlockState) {
         if (world.isServer) {
             var dirty = false
 
-            if (canProgress(world)) {
-                progress += block.tier.progressionSpeed
+            if (canProgress(this as T, world)) {
+                progress += tier.progressionSpeed
 
                 setState(world, pos, state, MachineBlock.active, true)
-                changeEnergyBy(block.tier.consumptionSpeed)
+                changeEnergyBy(tier.consumptionSpeed)
                 progressSound(world, pos)
 
                 dirty = true
@@ -92,8 +82,8 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
                 setState(world, pos, state, MachineBlock.active, false)
             }
 
-            if (progress >= block.tier.maxProgress) {
-                onRecipeCompletion(world, pos, state)
+            if (progress >= tier.maxProgress) {
+                onRecipeCompletion(this, world, pos, state)
                 dirty = true
             }
 
@@ -104,18 +94,5 @@ abstract class MachineBlockEntity<B : MachineBlock<B, S, T>, S : ScreenHandler, 
 
             if (dirty) markDirty()
         }
-    }
-
-    open fun canProgress(world: World): Boolean {
-        return inputSlots.any { !items[it].isEmpty } && energyStorage.amount >= block.tier.consumptionSpeed && world.recipeManager.getFirstMatch(recipeType, this as T, world).isPresent
-    }
-
-    open fun onRecipeCompletion(world: World, pos: BlockPos, state: BlockState) {
-        progress = 0L
-
-        world.recipeManager.getFirstMatch(recipeType, this as T, world).ifPresent { it.craft(this) }
-        if (items[inputSlots[0]].isEmpty) setState(world, pos, state, MachineBlock.active, false)
-
-        markDirty()
     }
 }

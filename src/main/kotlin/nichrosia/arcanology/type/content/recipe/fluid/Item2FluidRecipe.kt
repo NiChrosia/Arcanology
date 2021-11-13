@@ -22,7 +22,7 @@ abstract class Item2FluidRecipe<I : FluidMachineBlockEntity<*, *, *, I>, T : Ite
     }
 
     override fun craft(inventory: I): ItemStack {
-        inventory.decrementStack(inventory.inputSlots[0])
+        inventory.removeStack(inventory.inputSlots[0], 1)
 
         inventory.fluidStorage.let {
             if (it.variant.fluid != output.fluid) it.variant = FluidVariant.of(output.fluid)

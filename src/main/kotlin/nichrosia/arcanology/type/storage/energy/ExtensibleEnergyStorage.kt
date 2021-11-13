@@ -5,6 +5,7 @@ package nichrosia.arcanology.type.storage.energy
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
+import nichrosia.arcanology.type.energy.EnergyTier
 import team.reborn.energy.api.EnergyStorage
 import team.reborn.energy.api.base.SimpleEnergyStorage
 import kotlin.math.min
@@ -19,6 +20,8 @@ open class ExtensibleEnergyStorage(open val energyCapacity: Long, open val maxIn
         StoragePreconditions.notNegative(maxExtract)
         StoragePreconditions.notNegative(initial)
     }
+
+    constructor(tier: EnergyTier, initial: Long = 0L) : this(tier.storage, tier.maxInputSpeed, tier.maxOutputSpeed, initial)
 
     override fun createSnapshot(): Long? {
         return energyAmount

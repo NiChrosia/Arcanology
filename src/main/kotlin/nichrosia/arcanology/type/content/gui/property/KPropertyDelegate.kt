@@ -4,9 +4,7 @@ import net.minecraft.screen.PropertyDelegate
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 
-open class KPropertyDelegate(vararg properties: KProperty0<Number>) : PropertyDelegate {
-    open val properties = mutableListOf(*properties)
-
+open class KPropertyDelegate(vararg val properties: KProperty0<Number>) : PropertyDelegate {
     override operator fun get(index: Int): Int {
         return properties[index]().toInt()
     }
