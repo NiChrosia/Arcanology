@@ -11,6 +11,8 @@ open class ArcanologyTest {
 
     @GameTest(structureName = FabricGameTest.EMPTY_STRUCTURE)
     fun test(helper: TestContext) {
-        log.info("Arcanology test loaded successfully.")
+        helper.complete()
+
+        log.info("Arcanology test completed successfully.")
     }
 }
