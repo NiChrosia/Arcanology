@@ -2,7 +2,7 @@ package nichrosia.arcanology.util
 
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.registry.Registry
-import nichrosia.arcanology.type.stack.FluidStack
+import nichrosia.arcanology.type.world.data.storage.fluid.FluidStack
 import nichrosia.common.identity.ID
 
 fun PacketByteBuf.writeFluidStack(stack: FluidStack): PacketByteBuf {

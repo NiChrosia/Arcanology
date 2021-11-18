@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "NIN",
+        "ICI",
+        "DBD"
+    ],
+    "key": {
+        "N": {
+            "item": "arcanology:palladium_nugget"
+        },
+        "I": {
+            "item": "arcanology:palladium_ingot"
+        },
+        "D": {
+            "item": "minecraft:polished_deepslate"
+        },
+        "B": {
+            "item": "minecraft:blast_furnace"
+        },
+        "C": {
+            "item": "arcanology:machine_core"
+        }
+    },
+    "result": {
+        "item": "arcanology:standard_smelter",
+        "count": 1
+    }
+}

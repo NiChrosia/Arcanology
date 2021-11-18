@@ -5,7 +5,7 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import nichrosia.arcanology.type.tooltip.CustomTooltipDataProvider;
+import nichrosia.arcanology.type.world.item.tooltip.CustomTooltipDataProvider;
 import nichrosia.arcanology.util.OptionalsKt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
