@@ -21,19 +21,19 @@
     "main": [
       {
         "adapter": "kotlin",
-        "value": "nichrosia.arcanology.Arcanology"
+        "value": "arcanology.Arcanology"
       }
     ],
     "client": [
       {
         "adapter": "kotlin",
-        "value": "nichrosia.arcanology.ArcanologyClient"
+        "value": "arcanology.ArcanologyClient"
       }
     ],
     "fabric-gametest": [
       {
         "adapter": "kotlin",
-        "value": "nichrosia.arcanology.test.ArcanologyTest"
+        "value": "arcanology.test.ArcanologyTest"
       }
     ]
   },

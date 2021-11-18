@@ -4,7 +4,8 @@ name: Test
 
 on:
   workflow_run:
-    name: Build
+    workflows:
+      - Build
 
 jobs:
   build:

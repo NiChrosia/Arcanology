@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "nichrosia.arcanology.mixin",
+  "package": "arcanology.mixin",
   "mixins": [
     "client.MixinScreen"
   ],

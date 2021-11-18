@@ -4,7 +4,7 @@ import nichrosia.common.identity.ID
 import nichrosia.common.record.registrar.Registrar
 import nichrosia.common.record.registrar.content.ContentRegistrar
 
-/** A category of registrars, typically has an extension property of Registrar.Companion that mirrors this. */
+/** A category of registrars, typically with an extension property of Registrar.Companion that mirrors this. */
 open class RegistrarCategory(open val ID: ID) {
     open val categories = mutableListOf<Lazy<RegistrarCategory>>()
     open val registrars = mutableListOf<Lazy<Registrar<*, *>>>()
