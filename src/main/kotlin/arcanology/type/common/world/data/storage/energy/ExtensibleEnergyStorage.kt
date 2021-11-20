@@ -21,7 +21,7 @@ open class ExtensibleEnergyStorage(open val energyCapacity: Long, open val maxIn
         StoragePreconditions.notNegative(initial)
     }
 
-    constructor(tier: EnergyTier, initial: Long = 0L) : this(tier.storage, tier.maxInputSpeed, tier.maxOutputSpeed, initial)
+    constructor(tier: EnergyTier, initial: Long = 0L) : this(tier.capacity, tier.maxInputSpeed, tier.maxOutputSpeed, initial)
 
     override fun createSnapshot(): Long? {
         return energyAmount

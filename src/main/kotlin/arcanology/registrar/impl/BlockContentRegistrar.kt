@@ -5,10 +5,13 @@ import arcanology.Arcanology.arcanology
 import arcanology.type.api.common.world.block.*
 import arcanology.type.common.registar.lang.VanillaLangRegistrar
 import arcanology.type.common.world.block.SmelterBlock
-import arcanology.type.common.world.block.settings.MachineBlockSettings
+import arcanology.type.common.world.block.settings.FluidMachineBlockSettings
 import arcanology.type.common.world.data.energy.EnergyTier
+import arcanology.type.common.world.data.fluid.FluidTier
 import arcanology.util.data.gen.addBlockstate
 import arcanology.util.data.gen.addModel
+import arcanology.util.world.blocks.requiresToolExtension
+import arcanology.util.world.blocks.strengthExtension
 import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.util.registry.Registry
@@ -17,9 +20,9 @@ import nichrosia.common.record.registrar.Registrar
 
 open class BlockContentRegistrar : VanillaLangRegistrar.Basic<Block>(Registry.BLOCK, "block") {
     val smelter by memberOf(Arcanology.identify("standard_smelter")) {
-        val settings = MachineBlockSettings(Material.METAL, 1, EnergyTier.standard)
-            .requiresTool()
-            .strength(5f, 75f)
+        val settings = FluidMachineBlockSettings(Material.METAL, 1, EnergyTier.standard, FluidTier.standard)
+            .requiresToolExtension()
+            .strengthExtension(5f, 75f)
 
         SmelterBlock(settings)
     }

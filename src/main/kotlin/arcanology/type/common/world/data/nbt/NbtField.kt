@@ -9,8 +9,7 @@ import kotlin.reflect.KProperty
 open class NbtField<T>(
     open val container: NbtContainer,
     open var value: T,
-    open var name: String = "",
-    open val usePropertyName: Boolean = true
+    open var name: String? = null
 ) : ReadWriteProperty<Any, T>, PropertyDelegateProvider<Any, NbtField<T>>, NbtObject {
     override fun getValue(thisRef: Any, property: KProperty<*>) = value
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T) { this.value = value }
@@ -19,11 +18,13 @@ open class NbtField<T>(
         return apply {
             container.nbtObjects.add(this)
 
-            if (usePropertyName) name = property.name
+            if (name == null) name = property.name
         }
     }
 
     override fun writeNbt(nbt: NbtCompound): NbtCompound {
+        name!!
+
         return nbt.apply {
             when(value) {
                 is Short -> nbt.putShort(name, value as Short)
@@ -37,6 +38,8 @@ open class NbtField<T>(
 
     @Suppress("UNCHECKED_CAST")
     override fun readNbt(nbt: NbtCompound) {
+        name!!
+
         nbt.apply {
             when(value) {
                 is Short -> value = nbt.getShort(name) as T

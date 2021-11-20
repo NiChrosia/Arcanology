@@ -2,7 +2,7 @@ package arcanology.type.common.world.data.energy
 
 open class EnergyTier(
     open val name: String,
-    open val storage: Long,
+    open val capacity: Long,
 
     open val maxInputSpeed: Long,
     open val maxOutputSpeed: Long,

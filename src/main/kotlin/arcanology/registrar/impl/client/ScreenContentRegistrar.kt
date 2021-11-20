@@ -14,7 +14,7 @@ import nichrosia.common.record.registrar.Registrar
 import nichrosia.common.record.registrar.content.ContentRegistrar
 
 open class ScreenContentRegistrar : ContentRegistrar.Basic<Unit>() {
-    val pulverizer by memberOf(Arcanology.identify("pulverizer")) { create(Registrar.arcanology.guiDescription.smelter, ::SmelterScreen) }
+    val pulverizer by memberOf(Arcanology.identify("pulverizer")) { create(Registrar.arcanology.guiDescriptor.smelter, ::SmelterScreen) }
 
     fun <T : ScreenHandler, S> create(type: ScreenHandlerType<T>, factory: (T, PlayerInventory, Text) -> S) where S : Screen, S : ScreenHandlerProvider<T> {
         ScreenRegistry.register(type, factory)

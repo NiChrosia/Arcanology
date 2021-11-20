@@ -32,6 +32,22 @@ fun <T, L : List<T>> L.previous(element: T, loop: Boolean = true): T {
     return this[previous]
 }
 
+fun <L : List<Long>> L.productBy(base: Long = 1L): Long {
+    var original = base
+
+    forEach { original *= it }
+
+    return original
+}
+
+fun <E, L : MutableList<E>> L.search(value: E, create: Boolean = true): E? {
+    val present = contains(value)
+
+    if (!present && create) add(value)
+
+    return if (!present && !create) null else value
+}
+
 fun <T, L : ModifiableList<T>> L.setAllTo(element: T) {
     indices.forEach { this[it] = element }
 }

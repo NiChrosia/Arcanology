@@ -2,6 +2,7 @@ package arcanology.type.api.common.world.block.inventory
 
 import arcanology.type.common.world.data.nbt.NbtObject
 import arcanology.util.collections.iterables.repeat
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
@@ -9,7 +10,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.util.math.Direction
 
-interface SimpleInventory : SidedInventory, NbtObject {
+interface SimpleInventory : SidedInventory {
     val items: Array<ItemStack>
 
     val inputSides: Array<Direction>
@@ -20,6 +21,43 @@ interface SimpleInventory : SidedInventory, NbtObject {
 
     val slotSize: Int
         get() = inputSlots.size + outputSlots.size
+
+    val inventoryNbtObject: NbtObject
+        get() = object : NbtObject {
+            override fun writeNbt(nbt: NbtCompound): NbtCompound {
+                return nbt.apply {
+                    val list = NbtList()
+
+                    items.forEachIndexed { slot, stack ->
+                        val slotCompound = NbtCompound()
+
+                        slotCompound.putInt("Slot", slot)
+                        slotCompound.put("Stack", stack.writeNbt(NbtCompound()))
+
+                        list.add(slotCompound)
+                    }
+
+                    put("Items", list)
+                }
+            }
+
+            override fun readNbt(nbt: NbtCompound) {
+                nbt.apply {
+                    val itemsNbt = get("Items") ?: throw IllegalArgumentException("Provided NbtCompound does not contain items.")
+
+                    if (itemsNbt is NbtList) {
+                        itemsNbt.forEach { compound ->
+                            if (compound is NbtCompound) {
+                                val slot = compound.getInt("Slot")
+                                val stack = ItemStack.fromNbt(compound.getCompound("Stack"))
+
+                                items[slot] = stack
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     // from SidedInventory
 
@@ -81,43 +119,7 @@ interface SimpleInventory : SidedInventory, NbtObject {
         }
     }
 
-    // from NbtObject
-
-    override fun writeNbt(nbt: NbtCompound): NbtCompound {
-        return nbt.apply {
-            val list = NbtList()
-
-            items.forEachIndexed { slot, stack ->
-                val slotCompound = NbtCompound()
-
-                slotCompound.putInt("Slot", slot)
-                slotCompound.put("Stack", stack.writeNbt(NbtCompound()))
-
-                list.add(slotCompound)
-            }
-
-            put("Items", list)
-        }
-    }
-
-    override fun readNbt(nbt: NbtCompound) {
-        nbt.apply {
-            val itemsNbt = get("Items") ?: throw IllegalArgumentException("Provided NbtCompound does not contain items.")
-
-            if (itemsNbt is NbtList) {
-                itemsNbt.forEach { compound ->
-                    if (compound is NbtCompound) {
-                        val slot = compound.getInt("Slot")
-                        val stack = ItemStack.fromNbt(compound.getCompound("Stack"))
-
-                        items[slot] = stack
-                    }
-                }
-            }
-        }
-    }
-
-    fun emptyInventoryOf(size: Int): Array<ItemStack> {
+    fun <E> E.emptyInventoryOf(size: Int): Array<ItemStack> where E : BlockEntity,  E : SimpleInventory {
         return ItemStack.EMPTY.repeat(size, ItemStack::copy)
     }
 }

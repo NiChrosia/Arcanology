@@ -5,7 +5,7 @@ import net.minecraft.nbt.NbtCompound
 interface NbtContainer {
     val nbtObjects: MutableList<NbtObject>
 
-    fun <T> nbtFieldOf(value: T, name: String = "", usePropertyName: Boolean = true) = NbtField(this, value, name, usePropertyName)
+    fun <T> nbtFieldOf(value: T, name: String? = null) = NbtField(this, value, name)
 
     fun writeNbtObjects(nbt: NbtCompound): NbtCompound {
         return nbt.apply {

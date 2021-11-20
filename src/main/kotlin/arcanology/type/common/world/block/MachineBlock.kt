@@ -10,6 +10,7 @@ import arcanology.type.common.world.block.entity.MachineBlockEntity
 import arcanology.type.common.world.block.settings.MachineBlockSettings
 import arcanology.type.common.world.data.tag.BlockTag
 import arcanology.type.common.world.data.tag.ContentTag
+import arcanology.type.common.world.item.machine.MachineUpgradeItem
 import arcanology.util.data.gen.JModel
 import arcanology.util.data.gen.JTextures
 import net.devtech.arrp.json.blockstate.JState
@@ -53,7 +54,7 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     override val item = BlockItem(this, Registrar.arcanology.item.settings)
     override val type = Registrar.arcanology.blockEntity.create(entityConstructor, this as B)
 
-    open val tier = settings.energyTier
+    open val energyTier = settings.energyTier
 
     init {
         defaultState = stateManager.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(active, false)
@@ -97,7 +98,9 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
         hand: Hand,
         hit: BlockHitResult
     ): ActionResult {
-        player.openHandledScreen(state.createScreenHandlerFactory(world, pos))
+        if (!world.isClient && player.activeItem.item !is MachineUpgradeItem) {
+            player.openHandledScreen(state.createScreenHandlerFactory(world, pos))
+        }
 
         return ActionResult.SUCCESS
     }
@@ -154,9 +157,9 @@ abstract class MachineBlock<B : MachineBlock<B, S, E>, S : ScreenHandler, E : Ma
     }
 
     override fun generateModel(ID: ID, packManager: RuntimeResourcePackManager): Map<ID, JModel> {
-        val side = textureID("${tier.name}_machine_side")
-        val bottom = textureID("${tier.name}_machine_bottom")
-        val top = textureID("${tier.name}_machine_top")
+        val side = textureID("${energyTier.name}_machine_side")
+        val bottom = textureID("${energyTier.name}_machine_bottom")
+        val top = textureID("${energyTier.name}_machine_top")
 
         val inactiveID = ID.path { "block/$it" }
         val activeID = inactiveID.path { "${it}_active" }

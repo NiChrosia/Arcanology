@@ -4,6 +4,7 @@ import arcanology.Arcanology
 import arcanology.Arcanology.arcanology
 import arcanology.type.common.registar.lang.VanillaLangRegistrar
 import arcanology.type.common.world.item.ModeledItem
+import arcanology.type.common.world.item.machine.SpeedUpgradeItem
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
@@ -19,6 +20,9 @@ open class ItemContentRegistrar : VanillaLangRegistrar.Basic<Item>(Registry.ITEM
     val silicon by memberOf(Arcanology.identify("silicon")) { Item(settings) }
 
     val machineCore by memberOf(Arcanology.identify("machine_core")) { Item(settings) }
+
+    // upgrades
+    val speedUpgrade by memberOf(Arcanology.identify("standard_speed_upgrade")) { SpeedUpgradeItem(settings, 2) }
 
     // metals
     val palladiumIngot by memberOf(Arcanology.identify("palladium_ingot")) { Item(settings) }

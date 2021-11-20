@@ -1,16 +1,16 @@
 package arcanology.type.api.common.world.block.entity
 
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
-import net.minecraft.block.entity.BlockEntity
-import arcanology.type.common.world.data.storage.energy.BlockEntityEnergyStorage
+import arcanology.type.common.world.block.machine.Machine
 import arcanology.type.common.world.data.energy.EnergyTier
 import arcanology.type.common.world.data.nbt.NbtContainer
-import team.reborn.energy.api.EnergyStorage
+import arcanology.type.common.world.data.storage.energy.BlockEntityEnergyStorage
+import arcanology.type.graphics.ui.gui.property.KPropertyDelegate
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
+import net.minecraft.block.entity.BlockEntity
 
 @Suppress("UnstableApiUsage")
 interface EnergyBlockEntity {
-    val tier: EnergyTier
-    val energyStorage: EnergyStorage
+    val energyStorage: BlockEntityEnergyStorage<*>
 
     fun changeEnergyBy(amount: Long) {
         val transaction = Transaction.openOuter()
@@ -24,7 +24,11 @@ interface EnergyBlockEntity {
         transaction.commit()
     }
 
-    fun <E> E.energyStorageOf(tier: EnergyTier = this.tier): BlockEntityEnergyStorage<E> where E : BlockEntity, E : NbtContainer, E : EnergyBlockEntity {
+    fun <E> E.energyStorageOf(tier: EnergyTier): BlockEntityEnergyStorage<E> where E : BlockEntity, E : NbtContainer, E : EnergyBlockEntity {
         return BlockEntityEnergyStorage(this, tier)
+    }
+
+    fun <E> E.energyPropertyDelegateOf(tier: EnergyTier): KPropertyDelegate where E : BlockEntity, E : EnergyBlockEntity, E : Machine {
+        return KPropertyDelegate(recipeProgressor::progress, recipeProgressor::maxProgress, energyStorage::energyAmount, energyStorage::energyCapacity)
     }
 }

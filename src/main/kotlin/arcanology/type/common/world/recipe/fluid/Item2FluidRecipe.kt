@@ -2,12 +2,12 @@
 
 package arcanology.type.common.world.recipe.fluid
 
+import arcanology.type.common.world.block.entity.FluidMachineBlockEntity
+import arcanology.type.common.world.data.storage.fluid.FluidStack
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
-import arcanology.type.common.world.block.entity.FluidMachineBlockEntity
-import arcanology.type.common.world.data.storage.fluid.FluidStack
 
 abstract class Item2FluidRecipe<I : FluidMachineBlockEntity<*, *, *, I>, T : Item2FluidRecipe<I, T>>(open val input: ItemStack, open val output: FluidStack) : FluidRecipe<I, T> {
     override fun getOutput(): ItemStack {

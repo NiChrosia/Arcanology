@@ -15,7 +15,7 @@ open class ArcanologyCategory : RegistrarCategory(Arcanology.identify("main")) {
     val blockEntity by registrarOf(::BlockEntityContentRegistrar)
     val toolMaterial by registrarOf(::ToolMaterialContentRegistrar)
     val statusEffect by registrarOf(::StatusEffectContentRegistrar)
-    val guiDescription by registrarOf(::GUIDescriptionContentRegistrar)
+    val guiDescriptor by registrarOf(::GUIDescriptionContentRegistrar)
     val configuredFeature by registrarOf(::ConfiguredFeatureContentRegistrar)
     val recipeType by registrarOf(::RecipeTypeContentRegistrar)
     val recipeSerializer by registrarOf(::RecipeSerializerContentRegistrar)

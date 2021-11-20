@@ -1,5 +1,6 @@
 package arcanology.type.common.ui.descriptor
 
+import arcanology.type.common.ui.widget.WEnergyBar
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WLabel
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel
@@ -9,7 +10,6 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.TranslatableText
-import arcanology.type.common.ui.widget.WEnergyBar
 
 abstract class MachineGuiDescriptor(
     type: ScreenHandlerType<*>,

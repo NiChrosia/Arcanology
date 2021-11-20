@@ -15,7 +15,7 @@ open class SmelterGuiDescriptor(
     playerInventory: PlayerInventory,
     context: ScreenHandlerContext,
 ) : MachineGuiDescriptor(
-    Registrar.arcanology.guiDescription.smelter,
+    Registrar.arcanology.guiDescriptor.smelter,
     syncId,
     playerInventory,
     context,
