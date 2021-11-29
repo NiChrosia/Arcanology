@@ -23,24 +23,11 @@
         "adapter": "kotlin",
         "value": "arcanology.Arcanology"
       }
-    ],
-    "client": [
-      {
-        "adapter": "kotlin",
-        "value": "arcanology.ArcanologyClient"
-      }
-    ],
-    "fabric-gametest": [
-      {
-        "adapter": "kotlin",
-        "value": "arcanology.test.ArcanologyTest"
-      }
     ]
   },
   "mixins": [
     "arcanology.mixins.json"
   ],
-  "accessWidener": "arcanology.accesswidener",
   "depends": {
     "fabricloader": ">=0.8.7",
     "fabric": ">=0.42.0",

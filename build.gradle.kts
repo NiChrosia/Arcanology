@@ -1,6 +1,13 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 @Suppress("unchecked_cast")
-fun getProp(name: String) = project.ext[name] as String
-fun DependencyHandler.modIncludeImplementation(url: String) = modImplementation(include(url)!!)
+fun getProperty(name: String): String {
+    return project.ext[name] as String
+}
+
+fun DependencyHandler.bundledModImplementation(notation: Any): Dependency? {
+    return include(notation)?.let(this::modImplementation)
+}
 
 plugins {
     id("fabric-loom") version "0.10-SNAPSHOT"
@@ -9,9 +16,9 @@ plugins {
 }
 
 base {
-    archivesName.set(getProp("archives_base_name"))
-    version = getProp("mod_version")
-    group = getProp("maven_group")
+    archivesName.set(getProperty("archives_base_name"))
+    version = getProperty("mod_version")
+    group = getProperty("maven_group")
 }
 
 repositories {
@@ -46,36 +53,35 @@ repositories {
         name = "CottonMC"
         setUrl("https://server.bbkr.space/artifactory/libs-release")
     }
+
+    maven {
+        name = "Modrinth"
+        setUrl("https://api.modrinth.com/maven")
+        content {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${getProp("minecraft_version")}")
-    mappings("net.fabricmc:yarn:${getProp("yarn_mappings")}:v2")
+    minecraft("com.mojang:minecraft:${getProperty("minecraft_version")}")
+    mappings("net.fabricmc:yarn:${getProperty("yarn_mappings")}:v2")
 
-    modImplementation("net.fabricmc:fabric-loader:${getProp("loader_version")}")
-    modIncludeImplementation("net.fabricmc.fabric-api:fabric-api:${getProp("fabric_api_version")}")
-    modIncludeImplementation("net.fabricmc:fabric-language-kotlin:${getProp("fabric_kotlin_version")}")
-    modIncludeImplementation("net.devtech:arrp:${getProp("arrp_version")}")
+    modImplementation("net.fabricmc:fabric-loader:${getProperty("loader_version")}")
+    bundledModImplementation("net.fabricmc.fabric-api:fabric-api:${getProperty("fabric_api_version")}")
+    bundledModImplementation("net.fabricmc:fabric-language-kotlin:${getProperty("fabric_kotlin_version")}")
+    bundledModImplementation("net.devtech:arrp:${getProperty("arrp_version")}")
+    modApi("maven.modrinth:nucleus:${getProperty("nucleus_version")}")
 
-    modIncludeImplementation("vazkii.patchouli:Patchouli:${getProp("patchouli_version")}")
-    modIncludeImplementation("io.github.cottonmc:LibGui:${getProp("libgui_version")}")
+    bundledModImplementation("vazkii.patchouli:Patchouli:${getProperty("patchouli_version")}")
+    bundledModImplementation("io.github.cottonmc:LibGui:${getProperty("libgui_version")}")
 
-    modApi(include("teamreborn:energy:${getProp("tech_reborn_energy_version")}")!!)
+    modApi(include("teamreborn:energy:${getProperty("tech_reborn_energy_version")}")!!)
 
     implementation("com.googlecode.soundlibs:vorbisspi:1.0.3-1")
 }
 
-tasks.processResources {
-    inputs.property("version", getProp("mod_version"))
-
-    filesMatching("fabric.mod.json") {
-        expand("version" to getProp("mod_version"))
-    }
-}
-
 loom {
-    accessWidenerPath.set(file("src/main/resources/arcanology.accesswidener"))
-
     runs {
         create("serverTest") {
             server()
@@ -85,20 +91,29 @@ loom {
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-
-    options.release.set(16)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_16.toString()
+tasks {
+    "compileJava"(JavaCompile::class) {
+        options.encoding = "UTF-8"
+        options.release.set(16)
     }
-}
 
-tasks.jar {
-    from("LICENSE") {
-        rename { "${it}_${base.archivesName.get()}"}
+    "compileKotlin"(KotlinCompile::class) {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_16.toString()
+        }
+    }
+
+    "processResources"(ProcessResources::class) {
+        inputs.property("version", getProperty("mod_version"))
+
+        filesMatching("fabric.mod.json") {
+            expand("version" to getProperty("mod_version"))
+        }
+    }
+
+    "jar"(Jar::class) {
+        from("LICENSE") {
+            rename { "${it}_${base.archivesName.get()}"}
+        }
     }
 }
