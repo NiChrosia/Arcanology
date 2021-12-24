@@ -1,8 +1,8 @@
 accessWidener v1 named
-accessible field net/minecraft/client/texture/Sprite images [Lnet/minecraft/client/texture/NativeImage;
-accessible field net/minecraft/client/texture/Sprite animation Lnet/minecraft/client/texture/Sprite$Animation;
-accessible class net/minecraft/client/texture/Sprite$Animation
-accessible field net/minecraft/client/texture/Sprite$Animation frames Ljava/util/List;
-accessible class net/minecraft/client/texture/Sprite$AnimationFrame
-accessible field net/minecraft/client/texture/Sprite$AnimationFrame index I
-accessible field net/minecraft/client/texture/Sprite$AnimationFrame time I
+#accessible field net/minecraft/client/texture/Sprite images [Lnet/minecraft/client/texture/NativeImage;
+#accessible field net/minecraft/client/texture/Sprite animation Lnet/minecraft/client/texture/Sprite$Animation;
+#accessible class net/minecraft/client/texture/Sprite$Animation
+#accessible field net/minecraft/client/texture/Sprite$Animation frames Ljava/util/List;
+#accessible class net/minecraft/client/texture/Sprite$AnimationFrame
+#accessible field net/minecraft/client/texture/Sprite$AnimationFrame index I
+#accessible field net/minecraft/client/texture/Sprite$AnimationFrame time I
