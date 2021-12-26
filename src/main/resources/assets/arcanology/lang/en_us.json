@@ -1,4 +1,4 @@
 {
-    "arcanology.gui.widget.process": "Progress: %s",
-    "arcanology.gui.widget.energy": "Energy: %s"
+    "arcanology.common.gui.widget.process": "Progress: %s",
+    "arcanology.common.gui.widget.energy": "Energy: %s"
 }

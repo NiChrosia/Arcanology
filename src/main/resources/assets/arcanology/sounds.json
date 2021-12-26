@@ -1,6 +1,6 @@
 {
     "machinery": {
-        "subtitle": "subtitles.arcanology.machinery",
+        "subtitle": "subtitles.arcanology.common.machinery",
         "sounds": [
             "arcanology:machinery"
         ]

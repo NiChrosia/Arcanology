@@ -21,7 +21,13 @@
     "main": [
       {
         "adapter": "kotlin",
-        "value": "arcanology.Arcanology"
+        "value": "arcanology.common.Arcanology"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "arcanology.client.ClientArcanology"
       }
     ]
   },
