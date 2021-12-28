@@ -11,13 +11,18 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import kotlin.math.max
 
-open class ModularScreenHandler(syncId: Int, inventory: PlayerInventory, context: ScreenHandlerContext) : SyncedGuiDescription(
+open class ModularScreenHandler(
+    syncId: Int,
+    inventory: PlayerInventory,
+    context: ScreenHandlerContext,
+) : SyncedGuiDescription(
     Arcanology.content.screenHandler.modular,
     syncId,
     inventory,
     getBlockInventory(context),
     getBlockPropertyDelegate(context)
 ) {
+    val machine = getMachine(context)
     val module = getModule(context)
 
     init {
@@ -42,10 +47,12 @@ open class ModularScreenHandler(syncId: Int, inventory: PlayerInventory, context
             val center = (root.height - playerInventoryHeight) / 2
             val y = center - component.widget.height / 2
 
-            root.add(component.widget, x, y)
+            root.add(component.widget, x, y, component.widget.width, component.widget.height)
         }
 
-        root.add(createPlayerInventoryPanel(), 0, root.height - playerInventoryHeight)
+        root.add(createPlayerInventoryPanel(), 0, root.height - playerInventoryHeight + 6)
+
+        root.validate(this)
     }
 
     companion object {
@@ -59,6 +66,12 @@ open class ModularScreenHandler(syncId: Int, inventory: PlayerInventory, context
                 val entity = world.getBlockEntity(pos) as? MachineBlockEntity
 
                 entity?.module
+            }.get()
+        }
+
+        fun getMachine(context: ScreenHandlerContext): MachineBlockEntity {
+            return context.get { world, pos ->
+                world.getBlockEntity(pos) as? MachineBlockEntity
             }.get()
         }
 
