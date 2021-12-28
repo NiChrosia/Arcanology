@@ -7,8 +7,8 @@ import arcanology.common.type.api.world.block.entity.inventory.ItemInventory
 import arcanology.common.type.api.world.block.entity.property.NbtContainer
 import arcanology.common.type.api.world.block.entity.property.NbtProperty
 import arcanology.common.type.impl.screen.ModularScreenHandler
-import assemble.common.type.api.storage.fluid.EnergyInventory
-import assemble.common.type.api.storage.fluid.ProgressInventory
+import assemble.common.type.api.storage.EnergyInventory
+import assemble.common.type.api.storage.ProgressInventory
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -24,6 +24,7 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import team.reborn.energy.api.base.SimpleEnergyStorage
 
 open class MachineBlockEntity(
     pos: BlockPos,
@@ -32,8 +33,7 @@ open class MachineBlockEntity(
     override val items = emptyInventory(2)
     override val properties = mutableMapOf<String, NbtProperty<*>>()
 
-    override val capacity by registered("EnergyCapacity", 50000L)
-    override var energy by registered("Energy", capacity)
+    override val energyStorage = SimpleEnergyStorage(50000L, 1000L, 1000L)
     override var progress by registered("Progress", 0L)
 
     open var module = Arcanology.content.moduleType.itemProcessing.provider(this)

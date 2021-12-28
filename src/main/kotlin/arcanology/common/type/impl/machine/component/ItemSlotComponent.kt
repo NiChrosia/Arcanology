@@ -3,7 +3,7 @@ package arcanology.common.type.impl.machine.component
 import arcanology.common.type.api.machine.component.ModuleComponent
 import arcanology.common.type.impl.world.block.entity.MachineBlockEntity
 import assemble.common.type.api.assembly.GradualAssembly
-import assemble.common.type.impl.assembly.item.slot.ItemInputSlot
+import assemble.common.type.impl.assembly.slot.item.ItemInputSlot
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import net.minecraft.item.ItemStack
 

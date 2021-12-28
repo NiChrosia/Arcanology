@@ -7,7 +7,7 @@ import arcanology.common.type.impl.machine.component.EnergyBarComponent
 import arcanology.common.type.impl.machine.component.ItemSlotComponent
 import arcanology.common.type.impl.world.block.entity.MachineBlockEntity
 import assemble.common.Assemble
-import assemble.common.type.impl.assembly.energy.EnergyItemProcessingAssembly
+import assemble.common.type.impl.assembly.gradual.energy.EnergyItemProcessingAssembly
 
 open class ItemProcessingModuleType : ModuleType<EnergyItemProcessingAssembly<MachineBlockEntity>>({
     val assembly = Assemble.matching(Arcanology.content.assemblyType.itemProcessing).first()
