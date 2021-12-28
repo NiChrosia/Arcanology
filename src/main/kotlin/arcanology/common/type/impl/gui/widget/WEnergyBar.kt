@@ -3,7 +3,7 @@ package arcanology.common.type.impl.gui.widget
 import arcanology.common.Arcanology
 import arcanology.common.type.api.gui.widget.WLayeredBar
 
-open class WEnergyBar(energy: () -> Long, capacity: () -> Long) : WLayeredBar(background, top, full, energy, capacity) {
+open class WEnergyBar(energy: () -> Long, capacity: () -> Long) : WLayeredBar(background, top, full, energy, capacity, Direction.UP) {
     override fun getWidth() = 16 // corresponds to image width & height
     override fun getHeight() = 84
 
