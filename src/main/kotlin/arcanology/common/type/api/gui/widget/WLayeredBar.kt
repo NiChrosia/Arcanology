@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
+/** A [WDynamicBar] that draws an overlay on top of the bottom & full textures. Primarily used for drawing highlights. */
 open class WLayeredBar(
     background: Identifier,
     top: Identifier,
