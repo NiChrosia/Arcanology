@@ -6,7 +6,6 @@ import nucleus.common.builtin.division.content.ContentCategory
 open class ArcanologyContent(root: Arcanology) : ContentCategory<Arcanology>(root) {
     override val block = ABlockRegistrar(root)
     override val blockEntity = ABlockEntityTypeRegistrar(root)
-    val moduleType = AModuleTypeRegistrar(root)
 
     override val item = AItemRegistrar(root)
     override val itemGroup = AItemGroupRegistrar(root)
@@ -17,4 +16,5 @@ open class ArcanologyContent(root: Arcanology) : ContentCategory<Arcanology>(roo
 
     val energyTier = AEnergyTierRegistrar(root)
     val fluidTier = AFluidTierRegistrar(root)
+    val machineTier = AMachineTierRegistrar(root)
 }
