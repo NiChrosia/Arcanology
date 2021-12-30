@@ -5,4 +5,8 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 
-abstract class MachineBlockEntity(type: BlockEntityType<out MachineBlockEntity>, pos: BlockPos, state: BlockState) : BlockEntity(type, pos, state), TickableBlockEntity
+abstract class MachineBlockEntity<E : MachineBlockEntity<E>>(
+    type: BlockEntityType<E>,
+    pos: BlockPos,
+    state: BlockState
+) : BlockEntity(type, pos, state), TickableBlockEntity<E>

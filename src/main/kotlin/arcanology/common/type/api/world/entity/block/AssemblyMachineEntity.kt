@@ -9,16 +9,16 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class AssemblyMachineEntity<A : GradualAssembly<AssemblyMachineEntity<A, T>>, T : AssemblyType<AssemblyMachineEntity<A, T>, A>>(
-    type: BlockEntityType<out AssemblyMachineEntity<A, T>>,
+abstract class AssemblyMachineEntity<E : AssemblyMachineEntity<E, A, T>, A : GradualAssembly<E>, T : AssemblyType<E, A>>(
+    type: BlockEntityType<E>,
     pos: BlockPos,
     state: BlockState
-) : MachineBlockEntity(type, pos, state), ProgressInventory {
+) : MachineBlockEntity<E>(type, pos, state), ProgressInventory {
     abstract val assemblyType: T
 
     override var progress = 0L
 
-    override fun tick(world: World, pos: BlockPos, state: BlockState) {
+    override fun E.tick(world: World, pos: BlockPos, state: BlockState) {
         val assembly = Assemble.matching(assemblyType).first()
 
         if (assembly.matches(this)) {

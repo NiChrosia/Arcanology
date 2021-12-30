@@ -9,7 +9,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class MachineBlock<E : MachineBlockEntity>(settings: Settings) : BlockWithEntity(settings), TickableBlock<MachineBlock<E>, E> {
+abstract class MachineBlock<E : MachineBlockEntity<E>>(settings: Settings) : BlockWithEntity(settings), TickableBlock<MachineBlock<E>, E> {
     abstract val entityFactory: (BlockPos, BlockState) -> E
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): E {
