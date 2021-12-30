@@ -3,11 +3,23 @@
 name: Test
 
 on:
-  workflow_run:
-    workflows:
-      - Build
-    types:
-      - completed
+  pull_request:
+    paths:
+      - '**/src/**'
+      - '**/build.gradle'
+      - '**/gradle.properties'
+      - '**/settings.gradle'
+      - .github/workflows/test.yml
+      - LICENCE
+
+  push:
+    paths:
+      - '**/src/**'
+      - '**/build.gradle'
+      - '**/gradle.properties'
+      - '**/settings.gradle'
+      - .github/workflows/test.yml
+      - LICENCE
 
 jobs:
   build:

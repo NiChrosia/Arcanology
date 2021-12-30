@@ -10,7 +10,7 @@ on:
       - '**/gradle.properties'
       - '**/settings.gradle'
       - .github/workflows/build.yml
-      - LICENCE.txt
+      - LICENCE
 
   push:
     paths:
@@ -19,7 +19,7 @@ on:
       - '**/gradle.properties'
       - '**/settings.gradle'
       - .github/workflows/build.yml
-      - LICENCE.txt
+      - LICENCE
 
 
 jobs:
