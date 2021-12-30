@@ -1,5 +1,6 @@
 package arcanology.common.type.api.machine.module
 
+import arcanology.common.Arcanology
 import arcanology.common.type.impl.world.block.entity.MachineBlockEntity
 import assemble.common.type.api.assembly.GradualAssembly
 
@@ -32,4 +33,18 @@ ModuleType({ machine: MachineBlockEntity ->
     MachineModule(machine, assembly, components)
 })
 */
-open class ModuleType<A : GradualAssembly<MachineBlockEntity>>(val provider: (MachineBlockEntity) -> MachineModule<A>)
+open class ModuleType<A : GradualAssembly<MachineBlockEntity>>(protected val provider: (MachineBlockEntity) -> MachineModule<A>, val configurator: MachineBlockEntity.() -> Unit) {
+    open fun of(machine: MachineBlockEntity): MachineModule<A> {
+        return provider(machine).also {
+            machine.energyStorage = machine.run { energyStorageOf(Arcanology.content.energyTier.blank) }
+            machine.fluidStorage = machine.run { fluidStorageOf(Arcanology.content.fluidTier.blank, 0) }
+            machine.itemStorage = machine.run { itemStorageOf(0) }
+
+            machine.energyStorage.disable()
+            machine.fluidStorage.disable()
+            machine.itemStorage.disable()
+
+            configurator(machine)
+        }
+    }
+}

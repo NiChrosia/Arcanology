@@ -3,7 +3,7 @@ package arcanology.common.type.impl.machine.component
 import arcanology.common.type.api.machine.component.ModuleComponent
 import arcanology.common.type.impl.world.block.entity.MachineBlockEntity
 import assemble.common.type.api.assembly.GradualAssembly
-import assemble.common.type.impl.assembly.slot.item.ItemInputSlot
+import assemble.common.type.impl.assembly.slot.item.ItemStorageInput
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import net.minecraft.item.ItemStack
 
@@ -34,10 +34,10 @@ open class ItemSlotComponent<A : GradualAssembly<MachineBlockEntity>>(
             big: Boolean = false,
         ): ItemSlotComponent<A> {
             return ItemSlotComponent(machine, assembly, slot, slotsWide, slotsHigh, big, {
-                val inputs = assembly.inputs.filterIsInstance<ItemInputSlot<MachineBlockEntity>>()
+                val inputs = assembly.inputs.filterIsInstance<ItemStorageInput<MachineBlockEntity>>()
                 val input = inputs.first { it.slot == slot }
 
-                input.type.test(it)
+                input.stack.type.test(it)
             })
         }
 

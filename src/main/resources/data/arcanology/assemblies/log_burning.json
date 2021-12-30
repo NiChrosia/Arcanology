@@ -2,7 +2,8 @@
     "type": "arcanology:item_processing",
 
     "ingredient": {
-        "tag": "minecraft:logs"
+        "tag": "minecraft:logs",
+        "consumption": 1
     },
 
     "result": {

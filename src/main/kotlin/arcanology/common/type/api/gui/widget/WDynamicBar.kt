@@ -6,7 +6,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Texture
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.MathHelper
 import kotlin.math.roundToInt
 
 /** A WBar that relies on custom lambdas to provide `value` and `max`, rather than the painfully inefficient
@@ -46,27 +45,23 @@ open class WDynamicBar(
 
         when(direction) {
             Direction.UP -> {
-                val adjustedTop = MathHelper.lerp(percent, bottomEdge, topEdge)
+                val offsetY = y + height - pixels
 
-                ScreenDrawing.texturedRect(matrices, x, y, width, pixels, full.image, leftEdge, adjustedTop, rightEdge, bottomEdge, -1)
+                ScreenDrawing.texturedRect(matrices, x, offsetY, width, pixels, full.image, leftEdge, 1f - percent, rightEdge, bottomEdge, -1)
             }
 
             Direction.RIGHT -> {
-                val adjustedRight = MathHelper.lerp(percent, leftEdge, rightEdge)
-
-                ScreenDrawing.texturedRect(matrices, x, y, width, pixels, full.image, leftEdge, topEdge, adjustedRight, bottomEdge, -1)
+                ScreenDrawing.texturedRect(matrices, x, y, pixels, height, full.image, leftEdge, topEdge, percent, bottomEdge, -1)
             }
 
             Direction.DOWN -> {
-                val adjustedBottom = MathHelper.lerp(percent, topEdge, bottomEdge)
-
-                ScreenDrawing.texturedRect(matrices, x, y, width, pixels, full.image, leftEdge, topEdge, rightEdge, adjustedBottom, -1)
+                ScreenDrawing.texturedRect(matrices, x, y, width, pixels, full.image, leftEdge, topEdge, rightEdge, percent, -1)
             }
 
             Direction.LEFT -> {
-                val adjustedLeft = MathHelper.lerp(percent, rightEdge, leftEdge)
+                val offsetX = x + width - pixels
 
-                ScreenDrawing.texturedRect(matrices, x, y, width, pixels, full.image, adjustedLeft, topEdge, rightEdge, bottomEdge, -1)
+                ScreenDrawing.texturedRect(matrices, offsetX, y, pixels, height, full.image, 1 - percent, topEdge, rightEdge, bottomEdge, -1)
             }
         }
     }

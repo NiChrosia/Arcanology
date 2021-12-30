@@ -11,6 +11,6 @@ open class EnergyBarComponent<A : GradualAssembly<MachineBlockEntity>>(
 ) : ModuleComponent<A, WEnergyBar>(
     machine,
     assembly,
-    WEnergyBar(machine.energyStorage::amount, machine.energyStorage::capacity),
+    WEnergyBar(machine.energyStorage::getAmount, machine.energyStorage::getCapacity),
     -1
 )

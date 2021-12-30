@@ -10,4 +10,4 @@ open class BlankModuleType : ModuleType<BlankGradualAssembly<MachineBlockEntity>
     val assembly = BlankGradualAssembly<MachineBlockEntity>(Arcanology.identify("blank"))
 
     MachineModule(it, assembly, listOf())
-})
+}, {})

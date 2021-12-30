@@ -1,13 +1,13 @@
 package arcanology.common.type.api.world.block.entity.property
 
-import arcanology.common.type.api.world.nbt.type.NbtType
-import net.minecraft.nbt.NbtElement
+import dev.nathanpb.ktdatatag.serializer.DataSerializer
+import net.minecraft.nbt.NbtCompound
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 open class NbtProperty<V>(
     val name: String,
-    val type: NbtType<V>,
+    val serializer: DataSerializer<V>,
     initial: V
 ) : ReadWriteProperty<Any, V> {
     open var value = initial
@@ -20,11 +20,11 @@ open class NbtProperty<V>(
         this.value = value
     }
 
-    open fun toNbt(): NbtElement {
-        return type.toNbt(value)
+    open fun read(compound: NbtCompound) {
+        value = serializer.read(compound, name)
     }
 
-    open fun fromNbt(element: NbtElement) {
-        value = type.fromNbt(element)
+    open fun write(compound: NbtCompound) {
+        serializer.write(compound, name, value)
     }
 }

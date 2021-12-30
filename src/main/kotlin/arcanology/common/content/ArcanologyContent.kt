@@ -13,4 +13,8 @@ open class ArcanologyContent(root: Arcanology) : ContentCategory<Arcanology>(roo
 
     override val screenHandler = AScreenHandlerRegistrar(root)
     val assemblyType = AAssemblyTypeRegistrar(root)
+    val nbtSerializer = ANbtSerializerRegistrar(root)
+
+    val energyTier = AEnergyTierRegistrar(root)
+    val fluidTier = AFluidTierRegistrar(root)
 }
