@@ -8,10 +8,10 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.hit.BlockHitResult
 import nucleus.common.builtin.division.content.ScreenHandlerRegistrar
 
-open class AScreenHandlerRegistrar(root: Arcanology) : ScreenHandlerRegistrar<Arcanology>(root) {
+class AScreenHandlerRegistrar(root: Arcanology) : ScreenHandlerRegistrar<Arcanology>(root) {
 //    val modular by memberOf(root.identify("modular")) { contextualTypeOf(::ModularScreenHandler)}
 
-    open fun <T : ScreenHandler> contextualTypeOf(constructor: (Int, PlayerInventory, ScreenHandlerContext) -> T): ScreenHandlerType<T> {
+    fun <T : ScreenHandler> contextualTypeOf(constructor: (Int, PlayerInventory, ScreenHandlerContext) -> T): ScreenHandlerType<T> {
         return ScreenHandlerType { syncId, inventory ->
             val hit = inventory.player.raycast(5.0, 1f, false) as BlockHitResult
 

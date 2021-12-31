@@ -4,7 +4,7 @@ import arcanology.common.Arcanology
 import arcanology.common.type.api.registrar.EnergyTierRegistrar
 import arcanology.common.type.impl.world.storage.tier.EnergyTier
 
-open class AEnergyTierRegistrar(root: Arcanology) : EnergyTierRegistrar<Arcanology>(root) {
+class AEnergyTierRegistrar(root: Arcanology) : EnergyTierRegistrar<Arcanology>(root) {
     val blank by memberOf(root.identify("blank")) { EnergyTier(0L) }
 
     val standard by memberOf(root.identify("standard")) { EnergyTier(100_000L) }

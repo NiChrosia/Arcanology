@@ -6,12 +6,8 @@ import arcanology.common.type.impl.assembly.gradual.energy.EnergyItemProcessingA
 import arcanology.common.type.impl.assembly.type.gradual.energy.EnergyItemProcessingType
 import assemble.common.type.api.storage.EnergyInventory
 import assemble.common.type.api.storage.ItemInventory
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
-import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
-import team.reborn.energy.api.base.SimpleEnergyStorage
 
 open class ItemProcessingMachine(
     pos: BlockPos,
@@ -23,6 +19,6 @@ open class ItemProcessingMachine(
 ), EnergyInventory, ItemInventory {
     override val assemblyType = Arcanology.content.assemblyType.itemProcessing
 
-    override val energyStorage = SimpleEnergyStorage(0L, 0L, 0L)
-    override val itemStorage = CombinedStorage<ItemVariant, SingleSlotStorage<ItemVariant>>(mutableListOf())
+    override val energyStorage = Arcanology.content.energyTier.standard.fullStorageOf()
+    override val itemStorage = itemStorageOf(2)
 }
