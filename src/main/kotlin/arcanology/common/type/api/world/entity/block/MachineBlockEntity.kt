@@ -26,6 +26,4 @@ abstract class MachineBlockEntity<E : MachineBlockEntity<E>>(
 
         return CombinedStorage(slots)
     }
-
-
 }

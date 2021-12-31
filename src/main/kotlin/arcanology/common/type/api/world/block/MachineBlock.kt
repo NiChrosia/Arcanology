@@ -1,6 +1,7 @@
 package arcanology.common.type.api.world.block
 
 import arcanology.common.type.api.world.entity.block.MachineBlockEntity
+import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.BlockWithEntity
 import net.minecraft.block.entity.BlockEntity
@@ -22,5 +23,9 @@ abstract class MachineBlock<E : MachineBlockEntity<E>>(settings: Settings) : Blo
         type: BlockEntityType<T>
     ): BlockEntityTicker<T>? {
         return tickerOf(type)
+    }
+
+    override fun getRenderType(state: BlockState): BlockRenderType {
+        return BlockRenderType.MODEL
     }
 }

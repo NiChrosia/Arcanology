@@ -7,11 +7,11 @@ class ItemStackStorage(
     @JvmField
     var stack: ItemStack
 ) : SingleStackStorage() {
-    override fun getStack(): ItemStack {
+    public override fun getStack(): ItemStack {
         return stack
     }
 
-    override fun setStack(stack: ItemStack) {
+    public override fun setStack(stack: ItemStack) {
         this.stack = stack
     }
 }
