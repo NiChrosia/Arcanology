@@ -2,13 +2,18 @@ package arcanology.common.type.impl.world.entity.block
 
 import arcanology.common.Arcanology
 import arcanology.common.type.api.world.entity.block.AssemblyMachineEntity
-import arcanology.common.type.api.world.entity.block.ScreenBlockEntity
 import arcanology.common.type.impl.assembly.gradual.energy.EnergyItemProcessingAssembly
 import arcanology.common.type.impl.assembly.type.gradual.energy.EnergyItemProcessingType
 import arcanology.common.type.impl.gui.description.ItemProcessingDescription
 import assemble.common.type.api.storage.EnergyInventory
 import assemble.common.type.api.storage.ItemInventory
 import net.minecraft.block.BlockState
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.NamedScreenHandlerFactory
+import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 
 open class ItemProcessingMachine(
@@ -18,12 +23,17 @@ open class ItemProcessingMachine(
     Arcanology.content.blockEntity.itemProcessingMachine,
     pos,
     state
-), EnergyInventory, ItemInventory, ScreenBlockEntity<ItemProcessingMachine, ItemProcessingDescription> {
+), EnergyInventory, ItemInventory, NamedScreenHandlerFactory {
     override val assemblyType = Arcanology.content.assemblyType.itemProcessing
-    override val handlerConstructor = ::ItemProcessingDescription
 
     override val energyStorage = Arcanology.content.energyTier.standard.fullStorageOf()
     override val itemStorage = itemStorageOf(2)
 
-    override val title = blockName()
+    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ItemProcessingDescription {
+        return ItemProcessingDescription(syncId, inv, ScreenHandlerContext.create(world, pos))
+    }
+
+    override fun getDisplayName(): Text {
+        return TranslatableText(cachedState.block.translationKey)
+    }
 }

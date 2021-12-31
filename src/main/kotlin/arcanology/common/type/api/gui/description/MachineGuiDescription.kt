@@ -2,6 +2,7 @@ package arcanology.common.type.api.gui.description
 
 import arcanology.common.type.api.world.entity.block.MachineBlockEntity
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.widget.WPanel
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -32,6 +33,10 @@ abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDe
             val spacing = spacing * widgets.size
 
             return initialX + width + spacing
+        }
+
+        fun <W : WWidget> centeredY(root: WPanel, widget: W): Int {
+            return root.height / 2 - widget.height / 2
         }
     }
 }
