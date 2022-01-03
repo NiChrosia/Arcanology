@@ -1,7 +1,11 @@
 package arcanology.common.type.api.gui.description
 
+import arcanology.common.type.api.world.entity.block.AssemblyMachineEntity
 import arcanology.common.type.api.world.entity.block.MachineBlockEntity
 import arcanology.common.type.impl.gui.widget.WEnergyBar
+import arcanology.common.type.impl.gui.widget.WProcessingBar
+import assemble.common.type.api.assembly.GradualAssembly
+import assemble.common.type.api.assembly.type.gradual.GradualAssemblyType
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WPanel
@@ -49,6 +53,10 @@ abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDe
 
         fun EnergyStorage.barOf(): WEnergyBar {
             return WEnergyBar(this::getAmount, this::getCapacity)
+        }
+        
+        fun <A : GradualAssembly<E>, T : GradualAssemblyType<E, A>, E : AssemblyMachineEntity<E, A, T>> E.processingBarOf(): WProcessingBar {
+            return WProcessingBar(this::progress, assemblyType::end)
         }
     }
 }

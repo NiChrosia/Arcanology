@@ -1,9 +1,7 @@
 package arcanology.common.type.impl.assembly.gradual.energy
 
 import assemble.common.type.api.assembly.GradualAssembly
-import assemble.common.type.api.storage.EnergyInventory
-import assemble.common.type.api.storage.ItemInventory
-import assemble.common.type.api.storage.ProgressInventory
+import assemble.common.type.api.storage.*
 import assemble.common.type.impl.assembly.slot.gradual.GradualEnergyInput
 import assemble.common.type.impl.assembly.slot.item.ItemStorageInput
 import assemble.common.type.impl.assembly.slot.item.ItemStorageOutput
@@ -29,4 +27,4 @@ open class EnergyItemProcessingAssembly<C> @JvmOverloads constructor(
     listOf(),
     speed,
     end,
-) where C : ItemInventory, C : EnergyInventory, C : ProgressInventory
+) where C : ItemStorageInventory, C : EnergyStorageInventory, C : Progressable

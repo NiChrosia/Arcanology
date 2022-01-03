@@ -5,8 +5,8 @@ import arcanology.common.type.api.world.entity.block.AssemblyMachineEntity
 import arcanology.common.type.impl.assembly.gradual.energy.EnergyItemProcessingAssembly
 import arcanology.common.type.impl.assembly.type.gradual.energy.EnergyItemProcessingType
 import arcanology.common.type.impl.gui.description.ItemProcessingDescription
-import assemble.common.type.api.storage.EnergyInventory
-import assemble.common.type.api.storage.ItemInventory
+import assemble.common.type.api.storage.EnergyStorageInventory
+import assemble.common.type.api.storage.ItemStorageInventory
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -23,7 +23,7 @@ open class ItemProcessingMachine(
     Arcanology.content.blockEntity.itemProcessingMachine,
     pos,
     state
-), EnergyInventory, ItemInventory, NamedScreenHandlerFactory {
+), EnergyStorageInventory, ItemStorageInventory, NamedScreenHandlerFactory {
     override val assemblyType = Arcanology.content.assemblyType.itemProcessing
 
     override val energyStorage = Arcanology.content.energyTier.standard.fullStorageOf()
