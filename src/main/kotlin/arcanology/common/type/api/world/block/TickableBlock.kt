@@ -10,7 +10,7 @@ import net.minecraft.block.entity.BlockEntityType
 interface TickableBlock<B, E> where B : BlockWithEntity, E : BlockEntity, E : TickableBlockEntity<E> {
     val type: () -> BlockEntityType<E>
 
-    fun <T : BlockEntity> B.tickerOf(given: BlockEntityType<T>): BlockEntityTicker<T>? {
+    fun <T : BlockEntity> B.tickerOf(given: BlockEntityType<T>): BlockEntityTicker<T>? { // return type is cursed, but it's Mojang's fault
         return checkType(given, type()) { world, pos, state, entity ->
             entity?.apply {
                 tick(world, pos, state)

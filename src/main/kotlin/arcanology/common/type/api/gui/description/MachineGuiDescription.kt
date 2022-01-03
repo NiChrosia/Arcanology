@@ -1,12 +1,16 @@
 package arcanology.common.type.api.gui.description
 
 import arcanology.common.type.api.world.entity.block.MachineBlockEntity
+import arcanology.common.type.impl.gui.widget.WEnergyBar
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WPanel
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.Inventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
+import team.reborn.energy.api.EnergyStorage
 
 abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDescription<E, G>>(
     type: ScreenHandlerType<G>,
@@ -37,6 +41,14 @@ abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDe
 
         fun <W : WWidget> centeredY(root: WPanel, widget: W): Int {
             return root.height / 2 - widget.height / 2
+        }
+
+        fun Inventory.slotOf(index: Int, width: Int = 1, height: Int = 1, big: Boolean = false): WItemSlot {
+            return WItemSlot(this, index, width, height, big)
+        }
+
+        fun EnergyStorage.barOf(): WEnergyBar {
+            return WEnergyBar(this::getAmount, this::getCapacity)
         }
     }
 }

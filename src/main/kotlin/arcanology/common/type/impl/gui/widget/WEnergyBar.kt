@@ -7,6 +7,8 @@ open class WEnergyBar(energy: () -> Long, capacity: () -> Long) : WLayeredBar(ba
     override fun getWidth() = 16 // corresponds to image width & height
     override fun getHeight() = 84
 
+    override fun canResize() = false
+
     companion object {
         val background = Arcanology.identify("textures/gui/widget/energy_bottom.png")
         val full = Arcanology.identify("textures/gui/widget/energy_full.png")

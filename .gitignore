@@ -30,3 +30,7 @@ bin/
 # fabric
 
 run/
+
+# misc
+
+design/

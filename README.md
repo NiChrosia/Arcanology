@@ -2,11 +2,11 @@
     <img alt="Icon" src="src/main/resources/assets/arcanology/icon.png" width="128"/>
 </div>
 
-# <div align="center">Arcanology</div>
+# <div align="center">Mechanize</div>
 
 ## About
 
-A technology mod focused on space & time.
+An industrialization mod focused on automating resource production.
 
 ## Credits
 
