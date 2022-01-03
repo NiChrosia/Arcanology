@@ -5,10 +5,9 @@ import net.fabricmc.api.ClientModInitializer
 import nucleus.client.builtin.division.ClientModRoot
 
 object ClientArcanology : ClientModRoot<ClientArcanology>("arcanology"), ClientModInitializer {
-    override val instance = this
-    override val content = ClientContent(instance)
+    override val content = ClientContent(this)
 
     override fun onInitializeClient() {
-        launch()
+        launch(this)
     }
 }

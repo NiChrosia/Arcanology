@@ -5,10 +5,9 @@ import net.fabricmc.api.ModInitializer
 import nucleus.common.builtin.division.ModRoot
 
 object Arcanology : ModRoot<Arcanology>("arcanology"), ModInitializer {
-    override val instance = this
-    override val content = ArcanologyContent(instance)
+    override val content = ArcanologyContent(this)
 
     override fun onInitialize() {
-        launch()
+        launch(this)
     }
 }
