@@ -10,6 +10,7 @@ import assemble.common.type.api.storage.ItemStorageInventory
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.NamedScreenHandlerFactory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.Text
@@ -21,11 +22,10 @@ open class ItemProcessingMachine(
     state: BlockState
 ) : AssemblyMachineEntity<ItemProcessingMachine, EnergyItemProcessingAssembly<ItemProcessingMachine>, EnergyItemProcessingType<ItemProcessingMachine>>(
     Arcanology.content.blockEntity.itemProcessingMachine,
+    Arcanology.content.assemblyType.itemProcessing,
     pos,
     state
 ), EnergyStorageInventory, ItemStorageInventory, NamedScreenHandlerFactory {
-    override val assemblyType = Arcanology.content.assemblyType.itemProcessing
-
     override val energyStorage = Arcanology.content.energyTier.standard.fullStorageOf()
     override val itemStorage = itemStorageOf(2)
 
@@ -35,5 +35,19 @@ open class ItemProcessingMachine(
 
     override fun getDisplayName(): Text {
         return TranslatableText(cachedState.block.translationKey)
+    }
+
+    override fun writeNbt(nbt: NbtCompound) {
+        super.writeNbt(nbt)
+
+        nbt.putItemStorage("Items", itemStorage)
+        nbt.putLong("Energy", energyStorage.amount)
+    }
+
+    override fun readNbt(nbt: NbtCompound) {
+        super.readNbt(nbt)
+
+        nbt.getItemStorage("Items", itemStorage)
+        energyStorage.amount = nbt.getLong("Energy")
     }
 }

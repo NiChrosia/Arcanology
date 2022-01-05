@@ -10,7 +10,8 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class ScreenMachineBlock<E>(settings: Settings) : MachineBlock<E>(settings) where E : MachineBlockEntity<E>, E : NamedScreenHandlerFactory {
+/** A machine that can be configured via a dedicated screen. */
+abstract class ConfigurableMachineBlock<E>(settings: Settings) : MachineBlock<E>(settings) where E : MachineBlockEntity<E>, E : NamedScreenHandlerFactory {
     override fun onUse(
         state: BlockState,
         world: World,

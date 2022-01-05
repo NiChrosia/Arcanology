@@ -10,10 +10,12 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WPanel
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import net.minecraft.block.Block
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.server.world.ServerWorld
 import team.reborn.energy.api.EnergyStorage
 
 abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDescription<E, G>>(
@@ -22,7 +24,14 @@ abstract class MachineGuiDescription<E : MachineBlockEntity<E>, G : MachineGuiDe
     inventory: PlayerInventory,
     context: ScreenHandlerContext
 ) : SyncedGuiDescription(type, syncId, inventory) {
-    open val machine = getMachine<E>(context)
+    val machine = getMachine<E>(context)
+
+    init {
+        // sync state to client
+        if (world!! is ServerWorld) {
+            world.updateListeners(machine.pos, machine.cachedState, machine.cachedState, Block.NOTIFY_ALL)
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     companion object {

@@ -8,6 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.WPlainPanel
 import io.github.cottonmc.cotton.gui.widget.data.Insets
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import kotlin.math.max
 
 open class ItemProcessingDescription(
     syncId: Int,
@@ -30,14 +31,18 @@ open class ItemProcessingDescription(
         val energyBar = machine.energyStorage.barOf()
         root.add(energyBar, 0, centeredY(root, energyBar), energyBar.width, energyBar.height)
 
-        val input = storageInventory.slotOf(0)
+        val input = storageInventory.slotOf(machine.assemblyType.slots[0])
         root.add(input, 35, centeredY(root, input))
 
         val processingBar = machine.processingBarOf()
         root.add(processingBar, calculateWidth(input), centeredY(root, processingBar))
 
-        val output = storageInventory.slotOf(1)
+        val output = storageInventory.slotOf(machine.assemblyType.slots[1])
         root.add(output, calculateWidth(input, processingBar), centeredY(root, output))
+
+        val playerPanel = createPlayerInventoryPanel()
+        val x = max(0, root.width / 2 - playerPanel.width / 2)
+        root.add(playerPanel, x, root.height)
 
         root.validate(this)
     }
